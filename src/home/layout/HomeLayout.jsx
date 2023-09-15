@@ -8,10 +8,24 @@ export const HomeLayout = ({ children }) => {
         <Box sx={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column' }}>
             <ResponsiveAppBar />
 
-            <Box sx={{ display: 'flex', flex: '1', flexDirection: 'row', minHeight: '89vh' }}>
+            <Box sx={{
+                display: 'flex',
+                flex: '1',
+                flexDirection: 'row',
+                height: '89vh',
+                maxHeight: '89vh'
+            }}>
                 <InfoBar />
                 <Divider orientation="vertical" flexItem />
-                {children}
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    overflowX: 'hidden'
+                }
+                }>
+                    {children}
+                </Box>
             </Box>
         </Box>
     )
