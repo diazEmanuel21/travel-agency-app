@@ -25,7 +25,7 @@ export const HotelComponent = ({ data }) => {
     const dispatch = useDispatch();
 
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const handleOpenBedRooms = (dataRoom) => {
         setOpen(true);

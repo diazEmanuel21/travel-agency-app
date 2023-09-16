@@ -5,6 +5,7 @@ export const homeSlice = createSlice({
     initialState: {
         dataRooms: [],
         bedRoomSelected: [],
+        activeStep: 0
     },
     reducers: {
         setDataRoom: (state, action) => {
@@ -13,9 +14,13 @@ export const homeSlice = createSlice({
         setBedRoom: (state, action) => {
             state.bedRoomSelected = action.payload;
         },
+        setActiveStep: (state, action) => {
+            state.activeStep = action.payload;
+        },
     }
 });
 export const {
     setDataRoom,
-    setBedRoom
+    setBedRoom,
+    setActiveStep
 } = homeSlice.actions;

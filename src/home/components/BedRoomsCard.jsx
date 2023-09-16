@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
-import { setBedRoom } from '../../store/home/homeSlice';
+import { setActiveStep, setBedRoom } from '../../store/home/homeSlice';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -44,8 +44,9 @@ const useStyles = () => ({
 export const BedRoomsCard = ({ data, index }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    
     const { mode } = useContext(ColorModeContext);
-
+    const { activeStep } = useSelector(store => store.home);
 
     const [expanded, setExpanded] = useState(-1);
 
@@ -58,6 +59,7 @@ export const BedRoomsCard = ({ data, index }) => {
 
     const setRoomSelected = () => {
         dispatch(setBedRoom(data))
+        dispatch(setActiveStep(activeStep + 1));
     }
 
     return (

@@ -1,7 +1,9 @@
-import { forwardRef, useContext, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { forwardRef, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
+import { setActiveStep } from '../../store/home/homeSlice';
 import { Reservation, Rooms, Summary } from '.';
+import { useTheme } from '@mui/material/styles';
 import {
     AppBar, Box, Dialog, DialogContent,
     DialogActions, IconButton, Slide, Tab,
@@ -16,15 +18,15 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TabPanel = ({ children, value, activeStep }) => {
+const TabPanel = ({ children, value, active }) => {
     return (
         <Box
             role="tabpanel"
-            hidden={value !== activeStep}
-            id={`tabpanel-${activeStep}`}
-            aria-labelledby={`tab-${activeStep}`}
+            hidden={value !== active}
+            id={`tabpanel-${active}`}
+            aria-labelledby={`tab-${active}`}
         >
-            {value === activeStep && (
+            {value === active && (
                 <>
                     {children}
                 </>
@@ -36,17 +38,27 @@ const TabPanel = ({ children, value, activeStep }) => {
 const steeps = ['Rooms', 'Reservation', 'Summary'];
 
 export const BedRoomsSteeper = ({ open, handleClose }) => {
-    const { mode } = useContext(ColorModeContext);
     const theme = useTheme();
-    const [activeStep, setActiveStep] = useState(0);
+    const dispatch = useDispatch();
+
+    const { mode } = useContext(ColorModeContext);
+    const { activeStep = 0, bedRoomSelected } = useSelector(store => store.home);
+
     const maxSteps = steeps.length;
 
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        if (activeStep < steeps) return;
+        dispatch(setActiveStep(activeStep + 1));
     };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        if (activeStep > steeps) return;
+        dispatch(setActiveStep(activeStep - 1));
+    };
+
+    const saveReserve = () => {
+        handleClose(false);
+        alert('Guardado')
     };
 
     return (
@@ -103,7 +115,7 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         <TabPanel
                             key={steep}
                             value={index}
-                            activeStep={activeStep}
+                            active={activeStep}
                         >
                             {index === 0 && (
                                 <Rooms
@@ -136,12 +148,12 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         activeStep={activeStep}
                         nextButton={
                             <Button
-                                size="small"
-                                onClick={handleNext}
-                                disabled={activeStep === maxSteps - 1}
+                                variant="contained"
+                                onClick={activeStep === (maxSteps - 1) ? saveReserve : handleNext}
+                                disabled={bedRoomSelected.length < 1}
                                 color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                             >
-                                Next
+                                {activeStep === (maxSteps - 1) ? 'Save' : 'Next'}
                                 {theme.direction === 'rtl' ? (
                                     <KeyboardArrowLeft />
                                 ) : (
@@ -151,7 +163,7 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         }
                         backButton={
                             <Button
-                                size="small"
+                                variant="contained"
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
                                 color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
