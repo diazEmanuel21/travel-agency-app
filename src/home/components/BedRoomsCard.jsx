@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ColorModeContext } from '../../context';
 import { setBedRoom } from '../../store/home/homeSlice';
 import {
@@ -41,147 +41,128 @@ const useStyles = () => ({
     }
 });
 
-export const BedRoomsCard = () => {
+export const BedRoomsCard = ({ data, index }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { dataRooms } = useSelector(store => store.home);
     const { mode } = useContext(ColorModeContext);
 
 
-    const CardBed = ({ data, index }) => {
-        const [expanded, setExpanded] = useState(-1);
+    const [expanded, setExpanded] = useState(-1);
 
-        const qualityRoom = tableRoomQuality[data.rateRoom - 1];
-        const isExpanded = expanded === index;
+    const qualityRoom = tableRoomQuality[data.rateRoom - 1];
+    const isExpanded = expanded === index;
 
-        const handleExpandClick = () => {
-            setExpanded(isExpanded ? -1 : index);
-        };
+    const handleExpandClick = () => {
+        setExpanded(isExpanded ? -1 : index);
+    };
 
-        const setRoomSelected = () => {
-            dispatch(setBedRoom(data))
-        }
-
-        return (
-            <Grid item sx={{ m: 1 }}>
-                <Card sx={{ maxWidth: 345, minWidth: 345 }}>
-                    <CardHeader
-                        avatar={
-                            <Avatar sx={{ bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}` }} aria-label="Diamond Agency">
-                                <DiamondIcon />
-                            </Avatar>
-                        }
-                        action={
-                            <IconButton color="error" aria-label="add to favorites">
-                                <FavoriteIcon />
-                            </IconButton>
-                        }
-                        title={data.roomType}
-                        subheader={`${data.rateRoom}/5 ${qualityRoom}`}
-                    />
-                    <CardMedia
-                        component="img"
-                        height="194"
-                        image={data.imageRoomURL}
-                        alt="Paella dish"
-                    />
-                    <CardContent
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                    >
-                        <Box
-                            sx={classes.contentIcons}
-                        >
-                            <HotelIcon sx={{ mr: 1 }} />
-                            <Typography fontSize={14}>{`${data.numberBed} bed ${data.typeBed}`}</Typography>
-                        </Box>
-                        <Box
-                            sx={classes.contentIcons}
-                        >
-                            <FmdGoodIcon sx={{ mr: 1 }} />
-                            <Typography fontSize={14}>{data.roomLocation}</Typography>
-                        </Box>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                            onClick={setRoomSelected}
-                        >
-                            Book now
-                        </Button>
-                        <Tooltip title="More info" placement="top">
-                            <ExpandMore
-                                expand={isExpanded}
-                                onClick={handleExpandClick}
-                                aria-expanded={isExpanded}
-                                aria-label="show more"
-                            >
-                                <ExpandMoreIcon />
-                            </ExpandMore>
-                        </Tooltip>
-                    </CardActions>
-                    <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                        <CardContent>
-                            {
-                                Object.keys(data.roomDetails).map((key) => (
-                                    <Box
-                                        key={key}
-                                        sx={classes.contentIcons}
-                                    >
-                                        <CheckIcon
-                                            color='success'
-                                            sx={{ mr: 1 }}
-                                        />
-                                        <Typography fontSize={14}>
-                                            {data.roomDetails[key]}
-                                        </Typography>
-                                    </Box>
-                                ))
-                            }
-                            <Box
-                                sx={{
-                                    mt: 1
-                                }}
-                            >
-                                <Box
-                                    sx={classes.contentIcons}
-                                >
-                                    <Typography variant='h6'>
-                                        COP ${data.baseCost} total
-                                    </Typography>
-                                </Box>
-                                <Box
-                                    sx={classes.contentIcons}
-                                >
-                                    <Typography variant='subtitle2'>
-                                        COP %{data.taxes} taxes
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </CardContent>
-                    </Collapse>
-                </Card>
-            </Grid>
-        )
+    const setRoomSelected = () => {
+        dispatch(setBedRoom(data))
     }
 
     return (
-        <>
-            {dataRooms.length > 0 && (
-                <Grid container sx={{ mb: 6, justifyContent: 'center' }}>
-                    {dataRooms.map((bedRoom, index) => (
-                        <CardBed
-                            key={bedRoom.roomID}
-                            data={bedRoom}
-                            index={index}
-                        />
-                    ))}
-                </Grid>
-            )}
-        </>
-    );
+        <Grid item sx={{ m: 1 }}>
+            <Card sx={{ maxWidth: 298, minWidth: 298 }}>
+                <CardHeader
+                    avatar={
+                        <Avatar sx={{ bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}` }} aria-label="Diamond Agency">
+                            <DiamondIcon />
+                        </Avatar>
+                    }
+                    action={
+                        <IconButton color="error" aria-label="add to favorites">
+                            <FavoriteIcon />
+                        </IconButton>
+                    }
+                    title={data.roomType}
+                    subheader={`${data.rateRoom}/5 ${qualityRoom}`}
+                />
+                <CardMedia
+                    component="img"
+                    height="194"
+                    image={data.imageRoomURL}
+                    alt="Paella dish"
+                />
+                <CardContent
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <Box
+                        sx={classes.contentIcons}
+                    >
+                        <HotelIcon sx={{ mr: 1 }} />
+                        <Typography fontSize={14}>{`${data.numberBed} bed ${data.typeBed}`}</Typography>
+                    </Box>
+                    <Box
+                        sx={classes.contentIcons}
+                    >
+                        <FmdGoodIcon sx={{ mr: 1 }} />
+                        <Typography fontSize={14}>{data.roomLocation}</Typography>
+                    </Box>
+                </CardContent>
+                <CardActions disableSpacing>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                        onClick={setRoomSelected}
+                    >
+                        Book now
+                    </Button>
+                    <Tooltip title="More info" placement="top">
+                        <ExpandMore
+                            expand={isExpanded}
+                            onClick={handleExpandClick}
+                            aria-expanded={isExpanded}
+                            aria-label="show more"
+                        >
+                            <ExpandMoreIcon />
+                        </ExpandMore>
+                    </Tooltip>
+                </CardActions>
+                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                        {
+                            Object.keys(data.roomDetails).map((key) => (
+                                <Box
+                                    key={key}
+                                    sx={classes.contentIcons}
+                                >
+                                    <CheckIcon
+                                        color='success'
+                                        sx={{ mr: 1 }}
+                                    />
+                                    <Typography fontSize={14}>
+                                        {data.roomDetails[key]}
+                                    </Typography>
+                                </Box>
+                            ))
+                        }
+                        <Box
+                            sx={{
+                                mt: 1
+                            }}
+                        >
+                            <Box
+                                sx={classes.contentIcons}
+                            >
+                                <Typography variant='h6'>
+                                    COP ${data.baseCost} total
+                                </Typography>
+                            </Box>
+                            <Box
+                                sx={classes.contentIcons}
+                            >
+                                <Typography variant='subtitle2'>
+                                    COP %{data.taxes} taxes
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </CardContent>
+                </Collapse>
+            </Card>
+        </Grid>
+    )
 }

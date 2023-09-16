@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { ColorModeContext } from '../../context';
-import { BedRoomsComponent } from './BedRoomsComponent';
+import { BedRoomsSteeper } from './BedRoomsSteeper';
 import { setDataRoom } from '../../store/home/homeSlice';
 import {
     Badge,
@@ -138,7 +138,7 @@ export const HotelComponent = ({ data }) => {
 
             }
 
-            <BedRoomsComponent
+            <BedRoomsSteeper
                 open={open}
                 handleClose={handleCloseBedRooms}
             />
