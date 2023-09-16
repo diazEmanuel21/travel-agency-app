@@ -1,6 +1,6 @@
 import { ResponsiveAppBar } from "../../components";
-import { InfoBar } from "../components/InfoBar";
 import { Box, Divider } from "@mui/material";
+import { InfoBar } from "../components";
 
 
 export const HomeLayout = ({ children }) => {

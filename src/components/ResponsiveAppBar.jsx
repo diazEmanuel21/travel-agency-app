@@ -9,7 +9,7 @@ import {
     Menu,
     Container,
     Button,
-    MenuItem
+    MenuItem, Tooltip
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -33,13 +33,11 @@ export const ResponsiveAppBar = () => {
 
     return (
         <AppBar
-            position="sticky"
-            color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-
-        >
+            position="static"
+            sx={{ bgcolor: `${mode === 'dark' ? '#000' : '#001e3c'}` }} >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <DiamondIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    {/* <DiamondIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
                     <Typography
                         variant="h6"
                         noWrap
@@ -94,7 +92,7 @@ export const ResponsiveAppBar = () => {
                             ))}
                         </Menu>
                     </Box>
-                    <DiamondIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                    {/* <DiamondIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
                     <Typography
                         variant="h5"
                         noWrap
@@ -127,23 +125,27 @@ export const ResponsiveAppBar = () => {
                         ))}
                     </Box>
 
-
-                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'end' }}>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            maxWidth: '92px',
-                            flex: 1, bgcolor: 'secondary.main'
-                        }}>
-                            <Button
-                                // onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                Book now
-                            </Button>
+                    <Tooltip title="Discover the world to suit you!">
+                        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'end' }}>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                maxWidth: '92px',
+                                height: 69,
+                                flex: 1,
+                                bgcolor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`
+                            }}>
+                                <Button
+                                    // onClick={handleCloseNavMenu}
+                                    variant='contained'
+                                    color={`${mode === 'dark' ? 'primary' : 'secondary'}`}
+                                >
+                                    <DiamondIcon />
+                                </Button>
+                            </Box>
                         </Box>
-                    </Box>
+                    </Tooltip>
                 </Toolbar>
             </Container>
         </AppBar >
