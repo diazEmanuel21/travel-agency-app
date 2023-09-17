@@ -1,10 +1,15 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Box, Button, ButtonGroup, TextField } from "@mui/material"
 import { ColorModeContext } from "../../context"
 
 export const CounterClients = () => {
   const { mode } = useContext(ColorModeContext);
   const [counter, setCounter] = useState(1);
+
+  useEffect(() => {
+    localStorage.setItem('amount_people', counter);
+  }, [counter])
+  
 
   const setUsers = value => {
     if (value < 1) return;

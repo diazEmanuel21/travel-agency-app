@@ -1,10 +1,30 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ColorModeContext, TravelAgencyContext } from '../../context'
+import { dataHotels } from '../../data/dataHotels'
+import { setDestination, setResHotels } from '../../store/home/homeSlice'
 import { Card, CardContent, Grid, Button } from '@mui/material'
 import { CityTexfield, CounterClients, FilterComponent } from '../components'
-import { ColorModeContext } from '../../context'
 
 export const LandingPage = () => {
+    const dispatch = useDispatch();
+    const { destination_city } = useSelector(store => store.home);
     const { mode } = useContext(ColorModeContext);
+    const { setNotify } = useContext(TravelAgencyContext);
+
+    useEffect(() => {
+        return () => {
+            dispatch(setDestination(''));
+        }
+    }, []);
+
+    const searchHotels = () => {
+        /* Data nights */
+        const filterHotel = dataHotels.filter((hotel) => hotel.location === destination_city);
+        if (filterHotel.length < 1) return setNotify('warning', 'No results found');
+
+        dispatch(setResHotels(filterHotel));
+    }
 
     return (
         <Grid
@@ -43,8 +63,10 @@ export const LandingPage = () => {
                         <CounterClients />
                         <CityTexfield />
                         <Button
+                            onClick={searchHotels}
                             variant="contained"
                             color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                            disabled={destination_city === ""}
                             fullWidth
                         >
                             Search

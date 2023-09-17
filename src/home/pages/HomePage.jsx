@@ -1,13 +1,27 @@
-import { Box } from '@mui/material'
+import { useContext, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { HomeLayout } from '../layout/HomeLayout'
 import { HotelComponent, LandingPage } from '../view'
-import { useContext } from 'react'
 import { ColorModeContext } from '../../context'
-import { dataHotels } from '../../data/dataHotels'
+import { Box } from '@mui/material'
 
 export const HomePage = () => {
   const { mode } = useContext(ColorModeContext);
-  const data = dataHotels ?? [];
+  const { resHotels } = useSelector(store => store.home);
+  const scrollTargetRef = useRef(null);
+
+  useEffect(() => {
+    if (resHotels.length < 1) return;
+    scrollToElement();
+  }, [resHotels]);
+
+  const scrollToElement = () => {
+    const targetElement = scrollTargetRef.current;
+
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <HomeLayout>
@@ -20,6 +34,7 @@ export const HomePage = () => {
         <LandingPage />
       </Box>
       <Box
+        ref={scrollTargetRef}
         sx={{
           display: 'flex',
           flex: 1,
@@ -28,8 +43,8 @@ export const HomePage = () => {
           backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
         }}
       >
-        {data.length > 0 && (
-          <HotelComponent data={data} />
+        {resHotels.length > 0 && (
+          <HotelComponent data={resHotels} />
         )}
       </Box>
     </HomeLayout >

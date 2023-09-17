@@ -1,13 +1,13 @@
-import { forwardRef, useContext } from 'react';
+import { forwardRef, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext } from '../../context';
-import { setActiveStep } from '../../store/home/homeSlice';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { setActiveStep, setBooking, setDataGuest } from '../../store/home/homeSlice';
 import { Reservation, Rooms, Summary } from '.';
 import { useTheme } from '@mui/material/styles';
 import {
     AppBar, Box, Dialog, DialogContent,
     DialogActions, IconButton, Slide, Tab,
-    Tabs, Toolbar, MobileStepper, Button,
+    Tabs, Toolbar, MobileStepper, Button, DialogTitle, DialogContentText,
 } from '@mui/material';
 /* ICONS */
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
@@ -35,16 +35,28 @@ const TabPanel = ({ children, value, active }) => {
     )
 };
 
-const steeps = ['Rooms', 'Reservation', 'Summary'];
+const steeps = ['Rooms', 'Reservation'];
 
 export const BedRoomsSteeper = ({ open, handleClose }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
     const { mode } = useContext(ColorModeContext);
-    const { activeStep = 0, bedRoomSelected } = useSelector(store => store.home);
+    const { setNotify } = useContext(TravelAgencyContext);
+
+    const { bedRoomSelected, dataGuest, destination_city, flagReserve, activeStep = 0 } = useSelector(store => store.home);
+
+    const [openAlert, setOpen] = useState(false);
 
     const maxSteps = steeps.length;
+
+    const handleOpenAlert = () => {
+        setOpen(true);
+    };
+
+    const handleCloseAlert = () => {
+        setOpen(false);
+    };
 
     const handleNext = () => {
         if (activeStep < steeps) return;
@@ -57,9 +69,24 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
     };
 
     const saveReserve = () => {
+        const booking = {
+            bedrooms_id: bedRoomSelected.roomID,
+            user_id: dataGuest.document_number,
+            entry_date: localStorage.getItem('entry_date'),
+            amount_people: localStorage.getItem('amount_people'),
+            departure_date: localStorage.getItem('departure_date'),
+            destination_city,
+            price_booking: localStorage.getItem('price_booking'),
+        };
+        // setNotify('succes', 'Reservation made correctly.');
+        debugger;
+        /* Close dialog */
         handleClose(false);
-        alert('Guardado')
+        /* Close alert */
+        handleCloseAlert(false);
+        dispatch(setBooking(booking));
     };
+
 
     return (
         <>
@@ -149,8 +176,8 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         nextButton={
                             <Button
                                 variant="contained"
-                                onClick={activeStep === (maxSteps - 1) ? saveReserve : handleNext}
-                                disabled={bedRoomSelected.length < 1}
+                                onClick={activeStep === (maxSteps - 1) ? handleOpenAlert : handleNext}
+                                disabled={activeStep === (maxSteps - 1) ? flagReserve : bedRoomSelected.length < 1}
                                 color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                             >
                                 {activeStep === (maxSteps - 1) ? 'Save' : 'Next'}
@@ -179,6 +206,31 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                     />
                 </DialogActions>
             </Dialog >
+
+            <div>
+                <Dialog
+                    open={openAlert}
+                    onClose={handleCloseAlert}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Information"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            We will now send you a booking summary to the email provided. Thank you for choosing us!
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseAlert}>Disagree</Button>
+                        <Button onClick={saveReserve} autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+
         </>
     );
 }

@@ -29,22 +29,12 @@ const ExpandMore = styled((props) => {
 
 const tableRoomQuality = ['Poor ', 'Fair', 'Good', 'Excellent', 'Very Good'];
 
-const useStyles = () => ({
-    contentIcons: {
-        display: 'flex',
-        overflow: 'hidden',
-        height: '30px',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    }
-});
-
 export const BedRoomsCard = ({ data, index }) => {
-    const classes = useStyles();
     const dispatch = useDispatch();
-    
+
+    /* Eliminar, cambiar por redux */
+    const stay_days = parseInt(localStorage.getItem('stay_days'));
+
     const { mode } = useContext(ColorModeContext);
     const { activeStep } = useSelector(store => store.home);
 
@@ -53,6 +43,24 @@ export const BedRoomsCard = ({ data, index }) => {
     const qualityRoom = tableRoomQuality[data.rateRoom - 1];
     const isExpanded = expanded === index;
 
+    /* taxes */
+    const taxes = data.taxes / 100;
+    /* format */
+    const copPrice = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP'
+    });
+    /* Night */
+    const priceRoom = data.baseCost;
+    const priceNight = copPrice.format(priceRoom);
+    /* Total */
+    const nightPrice = priceRoom * stay_days;
+    const totalReserve = nightPrice * (1 + taxes);
+    const priceTotal = totalReserve;
+    const totalPrice = copPrice.format(priceTotal);
+
+    localStorage.setItem('price_booking', priceTotal);
+
     const handleExpandClick = () => {
         setExpanded(isExpanded ? -1 : index);
     };
@@ -60,7 +68,21 @@ export const BedRoomsCard = ({ data, index }) => {
     const setRoomSelected = () => {
         dispatch(setBedRoom(data))
         dispatch(setActiveStep(activeStep + 1));
-    }
+    };
+
+    const ContentIcons = ({ children }) => (
+        <Box sx={{
+            display: 'flex',
+            overflow: 'hidden',
+            height: '30px',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+        }}>
+            {children}
+        </Box>
+    );
 
     return (
         <Grid item sx={{ m: 1 }}>
@@ -91,18 +113,14 @@ export const BedRoomsCard = ({ data, index }) => {
                         flexDirection: 'column',
                     }}
                 >
-                    <Box
-                        sx={classes.contentIcons}
-                    >
+                    <ContentIcons>
                         <HotelIcon sx={{ mr: 1 }} />
                         <Typography fontSize={14}>{`${data.numberBed} bed ${data.typeBed}`}</Typography>
-                    </Box>
-                    <Box
-                        sx={classes.contentIcons}
-                    >
+                    </ContentIcons>
+                    <ContentIcons>
                         <FmdGoodIcon sx={{ mr: 1 }} />
                         <Typography fontSize={14}>{data.roomLocation}</Typography>
-                    </Box>
+                    </ContentIcons>
                 </CardContent>
                 <CardActions disableSpacing>
                     <Button
@@ -128,9 +146,8 @@ export const BedRoomsCard = ({ data, index }) => {
                     <CardContent>
                         {
                             Object.keys(data.roomDetails).map((key) => (
-                                <Box
+                                <ContentIcons
                                     key={key}
-                                    sx={classes.contentIcons}
                                 >
                                     <CheckIcon
                                         color='success'
@@ -139,7 +156,7 @@ export const BedRoomsCard = ({ data, index }) => {
                                     <Typography fontSize={14}>
                                         {data.roomDetails[key]}
                                     </Typography>
-                                </Box>
+                                </ContentIcons>
                             ))
                         }
                         <Box
@@ -147,20 +164,21 @@ export const BedRoomsCard = ({ data, index }) => {
                                 mt: 1
                             }}
                         >
-                            <Box
-                                sx={classes.contentIcons}
-                            >
-                                <Typography variant='h6'>
-                                    COP ${data.baseCost} total
+                            <ContentIcons>
+                                <Typography variant='subtitle1'>
+                                    COP {priceNight} to night
                                 </Typography>
-                            </Box>
-                            <Box
-                                sx={classes.contentIcons}
-                            >
+                            </ContentIcons>
+                            <ContentIcons>
                                 <Typography variant='subtitle2'>
                                     COP %{data.taxes} taxes
                                 </Typography>
-                            </Box>
+                            </ContentIcons>
+                            <ContentIcons>
+                                <Typography variant='h6'>
+                                    COP {totalPrice}
+                                </Typography>
+                            </ContentIcons>
                         </Box>
                     </CardContent>
                 </Collapse>
