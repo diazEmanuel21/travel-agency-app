@@ -1,134 +1,268 @@
-import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
-import { Button, Grid, Typography, TextField, IconButton } from '@mui/material';
-import { useEffect, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-// import Swal from 'sweetalert2';
-// import 'sweetalert2/dist/sweetalert2.css';
+import { useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useForm } from '../../hooks';
+import { setEnabledBtnSaveReserve, setDataGuest } from '../../store/home/homeSlice';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { CityTexfield } from '../../home/components/CityTexfield';
+import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button, Switch } from '@mui/material';
 
-import { useForm } from '../../hooks/useForm';
-import { setActiveHotel, startDeletingNote, startSaveNote, startUploadingFiles } from '../../store/admin';
-import { ImageGallery } from '../components/';
+const fields = {
+  hotelName: 'Intercontinental', //string  
+  location: 30, //number  
+  numberBedRooms: 1, //number  
+  rate: 1, //number  
+  state: true, //boolean  
+  wifi: false, //boolean  
+  pool: false, //boolean  
+  restaurant: false, //boolean  
+  imgURL: 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80', //string  
+  details: 'The best rooms in the city',//string
+};
+
+const formValidations = {
+  hotelName: [(value) => value.length >= 1, 'Field Required'],
+  numberBedRooms: [(value) => value.length >= 1, 'Field Required'],
+  rate: [(value) => value.length >= 1, 'Field Required'],
+  imgURL: [(value) => value.length >= 1, 'Field Required'],
+  details: [(value) => value.length >= 1, 'Field Required'],
+};
 
 export const NoteView = () => {
-    const dispatch = useDispatch();
-    const { active: noteActive, messageSaved, isSaving } = useSelector(state => state.admin);
-    const { body, title, date, onInputChange, formState } = useForm(noteActive);
+  const dispatch = useDispatch();
+  const { mode } = useContext(ColorModeContext);
+  const { setNotify } = useContext(TravelAgencyContext);
 
-    const dateString = useMemo(() => {
-        const newDate = new Date(date);
-        return newDate.toUTCString();
-    }, [date]);
+  const {
+    /* Fields */
+    hotelName,
+    numberBedRooms,
+    rate,
+    state,
+    wifi,
+    pool,
+    restaurant,
+    imgURL,
+    details,
+    /* Validations */
+    onInputChange,
+    formState,
+    isFormValid,
+    /* HelperText */
+    hotelNameValid,
+    numberBedRoomsValid,
+    rateValid,
+    imgURLValid,
+    detailsValid,
+  } = useForm(fields, formValidations);
 
-    const fileInputRef = useRef();
+  const [formSubmited, setformSubmited] = useState(false);
 
-    useEffect(() => {
-        dispatch(setActiveHotel(formState));
-    }, [formState]);
+  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
-    useEffect(() => {
-        if (messageSaved.length > 0) {
-            // Swal.fire('Nota actualizada', messageSaved, 'success');
-        }
-    }, [messageSaved])
+  const saveGuestData = (e) => {
 
-
-
-    const onSaveNote = () => {
-        dispatch(startSaveNote());
-    }
-
-    const onFileInputChange = ({ target }) => {
-        if (target.files === 0) return
-
-        dispatch(startUploadingFiles(target.files));
-    }
-
-    const onDelete = () => {
-        dispatch(startDeletingNote());
-    }
-
-    return (
-        <Grid
-            container
-            direction='row'
-            justifyContent='space-between'
-            alignItems='center'
-            sx={{ mb: 1 }}
-            className='animate__animated animate__fadeIn animate__faster'
-        >
-            <Grid item>
-                <Typography fontSize={39} fontWeight='light' >{dateString}</Typography>
-            </Grid>
-            <Grid item>
-
-                <input
-                    type="file"
-                    multiple
-                    ref={fileInputRef}
-                    onChange={onFileInputChange}
-                    style={{ display: 'none' }}
-                />
-
-                <IconButton
-                    color="primary"
-                    disabled={isSaving}
-                    onClick={() => fileInputRef.current.click()}
-                >
-                    <UploadOutlined />
-                </IconButton>
-
-                <Button
-                    disabled={isSaving}
-                    onClick={onSaveNote}
-                    color="primary"
-                    sx={{ padding: 2 }}
-                >
-                    <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
-                    Guardar
-                </Button>
-            </Grid>
-
-            <Grid container>
-                <TextField
-                    type="text"
-                    variant="filled"
-                    fullWidth
-                    placeholder="Ingrese un título"
-                    label="Título"
-                    sx={{ border: 'none', mb: 1 }}
-                    name="title"
-                    value={title}
-                    onChange={onInputChange}
-                />
-
-                <TextField
-                    type="text"
-                    variant="filled"
-                    fullWidth
-                    multiline
-                    placeholder="¿Qué sucedió en el día de hoy?"
-                    minRows={5}
-                    name="body"
-                    value={body}
-                    onChange={onInputChange}
-                />
-            </Grid>
-
-            <Grid container justifyContent='end'>
-                <Button
-                    onClick={onDelete}
-                    sx={{ mt: 2 }}
-                    color="error"
-                >
-                    <DeleteOutline />
-                    Borrar
-                </Button>
-            </Grid>
+  };
 
 
-            {/* Image gallery */}
-            <ImageGallery images={noteActive.imageUrl} />
+  return (
+    <Card>
+      <Box sx={{
+        bgcolor: `${mode === 'dark' ? '#12151C' : '#001e3c'}`,
+        color: "#FFF",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <Typography variant="button" p={1}>
+          Modify hotel
+        </Typography>
+      </Box>
+      <CardContent>
+        <Grid container spacing={2} flexDirection={'column'}>
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+              fullWidth
+              onChange={onInputChange}
+            >
+              <TextField
+                color={colorMode}
+                label="Name hotel"
+                name="hotelName"
+                value={hotelName}
+                variant="outlined"
+                error={!!hotelNameValid && formSubmited}
+                helperText={hotelNameValid}
+                required
+                inputProps={{
+                  maxLength: 40,
+                  minLength: 2,
+                }}
+              />
+            </FormControl>
+          </Grid>
 
+          <Grid item>
+            {/* <CityTexfield admin /> */}
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+              onChange={onInputChange}
+              fullWidth
+            >
+              <TextField
+                color={colorMode}
+                label="Bed rooms"
+                variant="outlined"
+                name={"numberBedRooms"}
+                value={numberBedRooms}
+                type='number'
+                error={!!numberBedRoomsValid && formSubmited}
+                helperText={numberBedRoomsValid}
+                required
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+              onChange={onInputChange}
+              fullWidth
+            >
+              <TextField
+                color={colorMode}
+                label="Rate"
+                variant="outlined"
+                name={"rate"}
+                value={rate}
+                type='number'
+                error={!!rateValid && formSubmited}
+                helperText={rateValid}
+                required
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+            >
+              <FormControlLabel
+                control={<Switch
+                  checked={state}
+                  onChange={onInputChange}
+                  name="state"
+                />}
+                label="state"
+                labelPlacement="end"
+              />
+            </FormControl>
+            <FormControl
+              xs={12}
+              sm={6}
+            >
+              <FormControlLabel
+                control={<Switch
+                  checked={wifi}
+                  onChange={onInputChange}
+                  name="wifi"
+                />}
+                label="wifi"
+                labelPlacement="end"
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+            >
+              <FormControlLabel
+                control={<Switch
+                  checked={pool}
+                  onChange={onInputChange}
+                  name="pool"
+                />}
+                label="pool"
+                labelPlacement="end"
+              />
+            </FormControl>
+
+            <FormControl
+              xs={12}
+              sm={6}
+            >
+              <FormControlLabel
+                control={<Switch
+                  checked={restaurant}
+                  onChange={onInputChange}
+                  name="restaurant"
+                />}
+                label="restaurant"
+                labelPlacement="end"
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+              fullWidth
+              onChange={onInputChange}
+            >
+              <TextField
+                color={colorMode}
+                label="Image URL"
+                name="imgURL"
+                value={imgURL}
+                variant="outlined"
+                error={!!imgURLValid && formSubmited}
+                helperText={imgURLValid}
+                required
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl
+              xs={12}
+              sm={6}
+              fullWidth
+              onChange={onInputChange}
+            >
+              <TextField
+                color={colorMode}
+                label="Details"
+                name="details"
+                value={details}
+                variant="outlined"
+                error={!!detailsValid && formSubmited}
+                helperText={detailsValid}
+                required
+              />
+            </FormControl>
+          </Grid>
         </Grid>
-    )
-}
+      </CardContent>
+      <CardActions>
+        <Button
+          onClick={saveGuestData}
+          variant="contained"
+          color={colorMode}
+          fullWidth
+        >
+          Save
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};

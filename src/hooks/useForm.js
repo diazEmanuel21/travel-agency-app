@@ -22,10 +22,19 @@ export const useForm = (initialForm = {}, formValidations = {}) => {
     }, [formValidation])
 
     const onInputChange = ({ target }) => {
-        const { name, value } = target;
+        const { name, value, checked } = target;
+
+        if (name === "numberBedRooms" && (parseInt(value) > 5 || parseInt(value) < 1)) return;
+        if (name === "rate" && (parseInt(value) > 5 || parseInt(value) < 1)) return;
+
+        const isSwitch =  name === ('state') || name === ('wifi') || name === ('pool') || name === ('restaurant');
+        debugger;
+
+        const resSwitch = isSwitch && checked && true;
+
         setFormState({
             ...formState,
-            [name]: value
+            [name]: isSwitch ? resSwitch : value
         });
     }
 

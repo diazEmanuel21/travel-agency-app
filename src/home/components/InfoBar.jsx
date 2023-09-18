@@ -11,7 +11,7 @@ export const InfoBar = () => {
         <Box
             sx={{
                 display: 'flex',
-                width: 77,
+                width: 50,
                 color: 'white',
                 flexDirection: 'column',
                 alignItems: 'center',

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 import { setActiveHotel } from '../../store/admin';
 /* ICONS */
 import HotelIcon from '@mui/icons-material/Hotel';

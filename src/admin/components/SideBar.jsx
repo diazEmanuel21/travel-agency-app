@@ -14,8 +14,8 @@ export const SideBar = ({handleDrawer, stateDrawer}) => {
         >
             <List sx={{ maxWidth: 360, bgcolor: 'background.paper' }}>
                 {hotels.map(hotel => (
-                    <Box>
-                        <SideBarItem key={hotel.id}  {...hotel} />
+                    <Box key={hotel.hotelID}>
+                        <SideBarItem   {...hotel} />
                         <Divider />
                     </Box>
                 ))}

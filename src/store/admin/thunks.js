@@ -11,21 +11,21 @@ export const startNewNote = () => {
         const newHotel = {
             "hotelName": "Intercontinental",
             "location": 30,
-            "numberBedRooms": 7,
+            "numberBedRooms": 1,
             "state": true,
             "rate": 2,
             "wifi": false,
             "pool": false,
             "restaurant": false,
             "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-            "details": "Establecimiento cuyo principal servicio es el hospedaje, ofreciendo a las personas cierto nivel de confort y seguridad durante sus estadías",
+            "datails": "The best rooms in the city"
         }
 
         const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
         // const setDocResp = await setDoc(newDoc, newHotel);
         await setDoc(newDoc, newHotel);
 
-        newHotel.id = newDoc.id;
+        newHotel.hotelID = newDoc.id;
 
         dispatch(addNewEmptyHotel(newHotel));
         dispatch(setActiveHotel(newHotel));

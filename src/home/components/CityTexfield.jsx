@@ -4,6 +4,7 @@ import { setDestination } from '../../store/home/homeSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { styled, lighten, darken } from '@mui/system';
+import { setInitialDestination } from '../../store/admin';
 
 const GroupHeader = styled('div')(({ theme }) => ({
     position: 'sticky',
@@ -20,7 +21,7 @@ const GroupItems = styled('ul')({
     padding: 0,
 });
 
-export const CityTexfield = () => {
+export const CityTexfield = ({ admin = false }) => {
     const dispatch = useDispatch();
     const options = locationData.map((option) => {
         const firstLetter = option.city[0].toUpperCase();
@@ -30,18 +31,21 @@ export const CityTexfield = () => {
         };
     });
 
+    const destinationSet = admin ? setInitialDestination : setDestination;
+    const labelField = admin ? 'Location' : 'Destination city';
+
     return (
         <Autocomplete
             id="locationData"
             onChange={(event, newValue) => {
-                dispatch(setDestination(newValue === null ? '' : newValue.id));
+                dispatch(destinationSet(newValue === null ? '' : newValue.id));
             }}
             options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
             groupBy={(option) => option.firstLetter}
             getOptionLabel={(option) => option.city}
             fullWidth
             sx={{ marginBottom: '0.5em' }}
-            renderInput={(params) => <TextField {...params} label="Destination city" />}
+            renderInput={(params) => <TextField {...params} label={labelField} />}
             renderGroup={(params) => (
                 <li key={params.key}>
                     <GroupHeader>{params.group}</GroupHeader>

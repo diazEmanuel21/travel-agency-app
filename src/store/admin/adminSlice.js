@@ -7,6 +7,7 @@ export const adminSlice = createSlice({
         messageSaved: '',
         hotels: [],
         active: null,
+        location: 0,
         // active: {
         //     id: 'ABC123',
         //     title: '',
@@ -55,6 +56,9 @@ export const adminSlice = createSlice({
             state.hotels = [];
             state.active = null;
         },
+        setInitialDestination: (state, action) => {
+            state.location = action.payload;
+        },
         deleteHotelById: (state, action) => {
             state.active = null;
             state.hotels = state.hotels.filter(hotel => hotel.id !== action.payload);
@@ -64,6 +68,7 @@ export const adminSlice = createSlice({
 export const {
     addNewEmptyHotel,
     clearHotelsLogout,
+    setInitialDestination,
     deleteHotelById,
     savingNewHotel,
     setActiveHotel,

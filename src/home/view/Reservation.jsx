@@ -193,7 +193,6 @@ export const Reservation = () => {
             <FormControl
               xs={12}
               sm={6}
-              value={10}
               onChange={onInputChange}
               fullWidth
             >
