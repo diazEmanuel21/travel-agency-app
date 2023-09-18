@@ -7,7 +7,6 @@ import { AuthRoutes } from "../auth/routes/AuthRoutes"
 
 export const AppRouter = () => {
     const status = useCheckAuth();
-
     if (status === 'cheking') return <CheckingAuth />
 
     return (

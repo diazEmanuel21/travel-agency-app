@@ -20,8 +20,8 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Ocean View",
                 "typeBed": "King",
-                "numberBed": 2,
-                "state": true,
+                "amountPeople": 1,
+                "state": false,
                 "roomDetails": {
                     "floorOrLevel": "Floor 2",
                     "views": "Ocean View",
@@ -54,7 +54,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Ocean View",
                 "typeBed": "King",
-                "numberBed": 2,
+                "amountPeople": 4,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 4",
@@ -74,7 +74,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "City View",
                 "typeBed": "King",
-                "numberBed": 2,
+                "amountPeople": 1,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 2",
@@ -94,7 +94,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Garden View",
                 "typeBed": "King",
-                "numberBed": 2,
+                "amountPeople": 2,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 3",
@@ -128,7 +128,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Pool View",
                 "typeBed": "King",
-                "numberBed": 2,
+                "amountPeople": 4,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 5",
@@ -147,8 +147,8 @@ export const dataHotels = [
                 "rateRoom": 3,
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "City View",
-                "typeBed": "King",
-                "numberBed": 2,
+                "typeBed": "Queen",
+                "amountPeople": 2,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 2",
@@ -165,11 +165,11 @@ export const dataHotels = [
                 "baseCost": 90000,
                 "taxes": 19,
                 "roomLocation": "Garden View",
-                "typeBed": "King",
-                "numberBed": 2,
+                "typeBed": "Queen",
+                "amountPeople": 4,
                 "rateRoom": 5,
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-                "state": "Enabled",
+                "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 1",
                     "views": "Garden View",
@@ -186,7 +186,7 @@ export const dataHotels = [
         "imgURL": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
         "hotelName": "Hotel D",
         "location": 4,
-        "state": "Enabled",
+        "state": true,
         "details": "Description of Hotel C",
         "rate": 5,
         "wifi": true,
@@ -202,7 +202,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "City View",
                 "typeBed": "Queen",
-                "numberBed": 1,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 3",
@@ -222,7 +222,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Mountain View",
                 "typeBed": "Twin",
-                "numberBed": 2,
+                "amountPeople": 2,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 2",
@@ -242,7 +242,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Garden View",
                 "typeBed": "King",
-                "numberBed": 1,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 4",
@@ -262,7 +262,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Beachfront",
                 "typeBed": "Queen",
-                "numberBed": 1,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 6",
@@ -282,7 +282,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "City View",
                 "typeBed": "Double",
-                "numberBed": 1,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 2",
@@ -302,7 +302,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Mountain View",
                 "typeBed": "King",
-                "numberBed": 1,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 4",
@@ -322,7 +322,7 @@ export const dataHotels = [
                 "imageRoomURL": "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
                 "roomLocation": "Garden View",
                 "typeBed": "Twin",
-                "numberBed": 2,
+                "amountPeople": 3,
                 "state": true,
                 "roomDetails": {
                     "floorOrLevel": "Floor 1",

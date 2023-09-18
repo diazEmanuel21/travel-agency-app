@@ -3,17 +3,23 @@ import { createSlice } from '@reduxjs/toolkit';
 export const homeSlice = createSlice({
     name: 'home',
     initialState: {
+        hotels: [],
         resHotels: [],
         hotelSelected: [],
         hotelRooms: [],
         bedRoomSelected: [],
         dataGuest: [],
         bookings: [],
-        activeStep: 0,
-        flagReserve: true,
         destination_city: '',
+        activeStep: 0,
+        showNotifyReserve: false,
+        showHotels: false,
+        enabledBtnSaveReserve: false,
     },
     reducers: {
+        getHotels: (state, action) => {
+            state.hotels = action.payload;
+        },
         setResHotels: (state, action) => {
             state.resHotels = action.payload;
         },
@@ -30,13 +36,25 @@ export const homeSlice = createSlice({
             state.dataGuest = action.payload;
         },
         setBooking: (state, action) => {
-            state.booking = action.payload;
+            state.bookings.push(action.payload);
+        },
+        updateRoomState: (state, action) => {
+            const { roomId, newState } = action.payload;
+            state.hotels = state.hotels.map((room) =>
+                room.roomID === roomId ? { ...room, state: newState } : room
+            );
+        },
+        setShowHotels: (state, action) => {
+            state.showHotels = action.payload;
+        },
+        setShowNotifyReserve: (state, action) => {
+            state.showNotifyReserve = action.payload;
         },
         setActiveStep: (state, action) => {
             state.activeStep = action.payload;
         },
-        setFlagServe: (state, action) => {
-            state.flagReserve = action.payload;
+        setEnabledBtnSaveReserve: (state, action) => {
+            state.enabledBtnSaveReserve = action.payload;
         },
         setDestination: (state, action) => {
             state.destination_city = action.payload;
@@ -44,6 +62,7 @@ export const homeSlice = createSlice({
     }
 });
 export const {
+    getHotels,
     setResHotels,
     setHotel,
     setHotelRooms,
@@ -51,6 +70,9 @@ export const {
     setDataGuest,
     setBooking,
     setDestination,
+    updateRoomState,
+    setShowHotels,
+    setShowNotifyReserve,
     setActiveStep,
-    setFlagServe,
+    setEnabledBtnSaveReserve,
 } = homeSlice.actions;

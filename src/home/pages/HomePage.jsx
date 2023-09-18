@@ -1,14 +1,28 @@
 import { useContext, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { HomeLayout } from '../layout/HomeLayout'
+import { getHotels } from '../../store/home/homeSlice'
 import { HotelComponent, LandingPage } from '../view'
-import { ColorModeContext } from '../../context'
+import { ColorModeContext, TravelAgencyContext } from '../../context'
+import { dataHotels } from '../../data/dataHotels'
 import { Box } from '@mui/material'
 
 export const HomePage = () => {
+  const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
-  const { resHotels } = useSelector(store => store.home);
+  const { setNotify } = useContext(TravelAgencyContext);
+
+  const { resHotels, showHotels, showNotifyReserve } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
+
+  useEffect(() => {
+    debugger
+    dispatch(getHotels(dataHotels));
+  }, []);
+
+  useEffect(() => {
+    if (showNotifyReserve) return setNotify('success', 'The reservation has been created successfully.');
+  }, [showNotifyReserve])
 
   useEffect(() => {
     if (resHotels.length < 1) return;
@@ -33,20 +47,24 @@ export const HomePage = () => {
       >
         <LandingPage />
       </Box>
-      <Box
-        ref={scrollTargetRef}
-        sx={{
-          display: 'flex',
-          flex: 1,
-          msOverflowX: 'hidden',
-          p: 1,
-          backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
-        }}
-      >
-        {resHotels.length > 0 && (
-          <HotelComponent data={resHotels} />
-        )}
-      </Box>
+      {
+        showHotels && (
+          <Box
+            ref={scrollTargetRef}
+            sx={{
+              display: 'flex',
+              flex: 1,
+              msOverflowX: 'hidden',
+              p: 1,
+              backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
+            }}
+          >
+            {resHotels.length > 0 && (
+              <HotelComponent />
+            )}
+          </Box>
+        )
+      }
     </HomeLayout >
   )
 }

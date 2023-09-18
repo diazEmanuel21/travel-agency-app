@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
-import { setFlagServe, setDataGuest } from '../../store/home/homeSlice';
+import { setEnabledBtnSaveReserve, setDataGuest } from '../../store/home/homeSlice';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { useForm } from '../../hooks';
 
@@ -69,7 +69,7 @@ export const Reservation = () => {
     e.preventDefault();
     setformSubmited(true);
     if (!isFormValid) return setNotify('info', 'Incorrect or empty fields, please check the form and try again.');
-    dispatch(setFlagServe(false));
+    dispatch(setEnabledBtnSaveReserve(true));
     dispatch(setDataGuest(formState));
     setNotify('success', 'Correct! You are one step away from finishing the reservation, press the save button to continue.');
   };
@@ -105,6 +105,10 @@ export const Reservation = () => {
                 error={!!name_userValid && formSubmited}
                 helperText={name_userValid}
                 required
+                inputProps={{
+                  maxLength: 40,
+                  minLength: 2,
+                }}
               />
             </FormControl>
           </Grid>

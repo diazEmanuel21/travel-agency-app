@@ -1,7 +1,7 @@
 import { forwardRef, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { setActiveStep, setBooking, setDataGuest } from '../../store/home/homeSlice';
+import { ColorModeContext } from '../../context';
+import { setActiveStep, setBedRoom, setBooking, setEnabledBtnSaveReserve, setShowHotels, setShowNotifyReserve, updateRoomState } from '../../store/home/homeSlice';
 import { Reservation, Rooms, Summary } from '.';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -42,12 +42,9 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
     const dispatch = useDispatch();
 
     const { mode } = useContext(ColorModeContext);
-    const { setNotify } = useContext(TravelAgencyContext);
-
-    const { bedRoomSelected, dataGuest, destination_city, flagReserve, activeStep = 0 } = useSelector(store => store.home);
+    const { bedRoomSelected, dataGuest, destination_city, enabledBtnSaveReserve, activeStep = 0, hotelSelected } = useSelector(store => store.home);
 
     const [openAlert, setOpen] = useState(false);
-
     const maxSteps = steeps.length;
 
     const handleOpenAlert = () => {
@@ -68,8 +65,16 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
         dispatch(setActiveStep(activeStep - 1));
     };
 
+    const cleanWizard = () => {
+        dispatch(setBedRoom([]));
+        dispatch(setActiveStep(0));
+        dispatch(setEnabledBtnSaveReserve(false));
+    }
+
     const saveReserve = () => {
+        debugger;
         const booking = {
+            id: `${hotelSelected.hotelID}${bedRoomSelected.roomID}`,
             bedrooms_id: bedRoomSelected.roomID,
             user_id: dataGuest.document_number,
             entry_date: localStorage.getItem('entry_date'),
@@ -78,15 +83,20 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
             destination_city,
             price_booking: localStorage.getItem('price_booking'),
         };
-        // setNotify('succes', 'Reservation made correctly.');
-        debugger;
+        dispatch(setBooking(booking));
+        /* Change state room */
+        dispatch(updateRoomState({ newState: false, roomId: booking.bedrooms_id }));
         /* Close dialog */
         handleClose(false);
         /* Close alert */
         handleCloseAlert(false);
-        dispatch(setBooking(booking));
+        /* Clean Wizard */
+        cleanWizard();
+        /* Close hotels */
+        setShowHotels(false);
+        /* Show notify */
+        setShowNotifyReserve(true);
     };
-
 
     return (
         <>
@@ -177,7 +187,7 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                             <Button
                                 variant="contained"
                                 onClick={activeStep === (maxSteps - 1) ? handleOpenAlert : handleNext}
-                                disabled={activeStep === (maxSteps - 1) ? flagReserve : bedRoomSelected.length < 1}
+                                disabled={activeStep === (maxSteps - 1) ? !enabledBtnSaveReserve : bedRoomSelected.length < 1}
                                 color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                             >
                                 {activeStep === (maxSteps - 1) ? 'Save' : 'Next'}

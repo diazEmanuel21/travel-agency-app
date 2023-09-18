@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
 import { BedRoomsSteeper } from './BedRoomsSteeper';
-import { setHotel, setHotelRooms } from '../../store/home/homeSlice';
+import { setActiveStep, setBedRoom, setEnabledBtnSaveReserve, setHotel, setHotelRooms } from '../../store/home/homeSlice';
 import { locationData } from '../../data';
 import {
     Badge,
@@ -12,7 +12,7 @@ import {
     CardMedia,
     Typography,
     Rating,
-    Button
+    Button, Tooltip
 } from '@mui/material';
 /* ICONS */
 import WifiIcon from '@mui/icons-material/Wifi';
@@ -21,14 +21,24 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import RoomIcon from '@mui/icons-material/Room';
 
-export const HotelComponent = ({ data }) => {
+export const HotelComponent = () => {
     const dispatch = useDispatch();
-    const { resHotels } = useSelector(store => store.home);
+    const { resHotels, hotelSelected: existingHotel } = useSelector(store => store.home);
     const { mode } = useContext(ColorModeContext);
 
     const [open, setOpen] = useState(false);
 
     const handleOpenBedRooms = (hotelRooms, hotelID) => {
+        const hotelInReservationProcess = existingHotel?.hotelID;
+
+        if (hotelInReservationProcess !== undefined) {
+            if (hotelInReservationProcess !== hotelID) {
+                dispatch(setBedRoom([]));
+                dispatch(setActiveStep(0));
+                dispatch(setEnabledBtnSaveReserve(false));
+            }
+        };
+
         setOpen(true);
         const hotelSelected = resHotels.filter((hotel) => hotel.hotelID === hotelID)[0];
         dispatch(setHotel(hotelSelected));
@@ -39,6 +49,12 @@ export const HotelComponent = ({ data }) => {
         setOpen(false);
     };
 
+    const sortedHotels = resHotels.slice().sort((a, b) => {
+        const roomsInTrueStateA = a.rooms.filter((room) => room.state === true).length;
+        const roomsInTrueStateB = b.rooms.filter((room) => room.state === true).length;
+        return roomsInTrueStateB - roomsInTrueStateA;
+    });
+
     return (
         <Box
             sx={{
@@ -48,8 +64,10 @@ export const HotelComponent = ({ data }) => {
                 width: '100%',
             }}
         >
-            {data.map((hotel) => {
+            {sortedHotels.map((hotel) => {
                 const city = locationData.filter((city) => city.id === hotel.location)[0];
+                const roomsInTrueState = hotel.rooms.filter((room) => room.state === true);
+                const cantRoomsInTrueState = roomsInTrueState.length;
 
                 return (
                     <Box
@@ -118,16 +136,19 @@ export const HotelComponent = ({ data }) => {
                                                 {hotel.pool && (<PoolIcon />)}
                                                 {hotel.restaurant && (<RestaurantMenuIcon />)}
 
-                                                <Badge
-                                                    badgeContent={hotel.rooms.length}
-                                                    color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                                                >
-                                                    <LocalHotelIcon color="action" />
-                                                </Badge>
+                                                <Tooltip title="Amount rooms">
+                                                    <Badge
+                                                        badgeContent={cantRoomsInTrueState}
+                                                        color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                                                    >
+                                                        <LocalHotelIcon color="action" />
+                                                    </Badge>
+                                                </Tooltip>
                                             </Box>
                                         </Box>
                                         <Button
                                             fullWidth
+                                            disabled={cantRoomsInTrueState < 1}
                                             variant="contained"
                                             onClick={() => handleOpenBedRooms(hotel.rooms, hotel.hotelID)}
                                             color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
@@ -137,8 +158,9 @@ export const HotelComponent = ({ data }) => {
                                     </CardContent>
                                 </Box>
                             </Card >
-                        )}
-                    </Box>
+                        )
+                        }
+                    </Box >
                 )
             })}
 
