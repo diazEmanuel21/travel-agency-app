@@ -1,8 +1,8 @@
-import { Box, Divider, List, SwipeableDrawer } from '@mui/material';
+import { List, SwipeableDrawer } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { SideBarItem } from './SideBarItem';
 
-export const SideBar = ({handleDrawer, stateDrawer}) => {
+export const SideBar = ({ handleDrawer, stateDrawer }) => {
     const { hotels } = useSelector(state => state.admin);
 
     return (
@@ -14,10 +14,7 @@ export const SideBar = ({handleDrawer, stateDrawer}) => {
         >
             <List sx={{ maxWidth: 360, bgcolor: 'background.paper' }}>
                 {hotels.map(hotel => (
-                    <Box key={hotel.hotelID}>
-                        <SideBarItem   {...hotel} />
-                        <Divider />
-                    </Box>
+                    <SideBarItem key={hotel.id}  {...hotel} />
                 ))}
             </List>
         </SwipeableDrawer>

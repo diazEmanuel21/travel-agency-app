@@ -16,7 +16,6 @@ export const HomePage = () => {
   const scrollTargetRef = useRef(null);
 
   useEffect(() => {
-    debugger
     dispatch(getHotels(dataHotels));
   }, []);
 

@@ -1,7 +1,7 @@
 import { collection, getDocs } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../firebase/config';
 
-export const loadNotes = async (uid = '') => {
+export const loadHotels = async (uid = '') => {
     if (!uid) throw new Error('LoadNotes => El UID del usuario no existe');
 
     const collectionRef = collection(FirebaseDB, `${uid}/admin/hotels`);

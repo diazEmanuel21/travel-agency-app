@@ -1,39 +1,21 @@
-import { useContext, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../hooks';
-import { setEnabledBtnSaveReserve, setDataGuest } from '../../store/home/homeSlice';
+import { setActiveHotel, startDeletingHotel, startSaveHotel } from '../../store/admin';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { CityTexfield } from '../../home/components/CityTexfield';
-import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button, Switch } from '@mui/material';
 
-const fields = {
-  hotelName: 'Intercontinental', //string  
-  location: 30, //number  
-  numberBedRooms: 1, //number  
-  rate: 1, //number  
-  state: true, //boolean  
-  wifi: false, //boolean  
-  pool: false, //boolean  
-  restaurant: false, //boolean  
-  imgURL: 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80', //string  
-  details: 'The best rooms in the city',//string
-};
-
-const formValidations = {
-  hotelName: [(value) => value.length >= 1, 'Field Required'],
-  numberBedRooms: [(value) => value.length >= 1, 'Field Required'],
-  rate: [(value) => value.length >= 1, 'Field Required'],
-  imgURL: [(value) => value.length >= 1, 'Field Required'],
-  details: [(value) => value.length >= 1, 'Field Required'],
-};
+import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Box, CardActions, Button, Switch } from '@mui/material';
 
 export const NoteView = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
+  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
+
   const { setNotify } = useContext(TravelAgencyContext);
+  const { active: noteActive, messageSaved, isSaving } = useSelector(state => state.admin);
 
   const {
-    /* Fields */
     hotelName,
     numberBedRooms,
     rate,
@@ -46,23 +28,17 @@ export const NoteView = () => {
     /* Validations */
     onInputChange,
     formState,
-    isFormValid,
-    /* HelperText */
-    hotelNameValid,
-    numberBedRoomsValid,
-    rateValid,
-    imgURLValid,
-    detailsValid,
-  } = useForm(fields, formValidations);
+  } = useForm(noteActive);
 
-  const [formSubmited, setformSubmited] = useState(false);
+  useEffect(() => {
+    if (messageSaved !== '') return setNotify('success', 'Hotel updated correctly.');
+  }, [messageSaved])
 
-  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
-
-  const saveGuestData = (e) => {
-
+  const saveHotel = (e) => {
+    e.preventDefault();
+    dispatch(setActiveHotel(formState));
+    dispatch(startSaveHotel());
   };
-
 
   return (
     <Card>
@@ -92,8 +68,6 @@ export const NoteView = () => {
                 name="hotelName"
                 value={hotelName}
                 variant="outlined"
-                error={!!hotelNameValid && formSubmited}
-                helperText={hotelNameValid}
                 required
                 inputProps={{
                   maxLength: 40,
@@ -104,7 +78,7 @@ export const NoteView = () => {
           </Grid>
 
           <Grid item>
-            {/* <CityTexfield admin /> */}
+            <CityTexfield admin />
           </Grid>
 
           <Grid item>
@@ -121,8 +95,6 @@ export const NoteView = () => {
                 name={"numberBedRooms"}
                 value={numberBedRooms}
                 type='number'
-                error={!!numberBedRoomsValid && formSubmited}
-                helperText={numberBedRoomsValid}
                 required
               />
             </FormControl>
@@ -142,8 +114,6 @@ export const NoteView = () => {
                 name={"rate"}
                 value={rate}
                 type='number'
-                error={!!rateValid && formSubmited}
-                helperText={rateValid}
                 required
               />
             </FormControl>
@@ -225,8 +195,6 @@ export const NoteView = () => {
                 name="imgURL"
                 value={imgURL}
                 variant="outlined"
-                error={!!imgURLValid && formSubmited}
-                helperText={imgURLValid}
                 required
               />
             </FormControl>
@@ -245,8 +213,6 @@ export const NoteView = () => {
                 name="details"
                 value={details}
                 variant="outlined"
-                error={!!detailsValid && formSubmited}
-                helperText={detailsValid}
                 required
               />
             </FormControl>
@@ -255,7 +221,8 @@ export const NoteView = () => {
       </CardContent>
       <CardActions>
         <Button
-          onClick={saveGuestData}
+          onClick={saveHotel}
+          disabled={isSaving}
           variant="contained"
           color={colorMode}
           fullWidth

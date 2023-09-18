@@ -28,11 +28,11 @@ export const HotelComponent = () => {
 
     const [open, setOpen] = useState(false);
 
-    const handleOpenBedRooms = (hotelRooms, hotelID) => {
-        const hotelInReservationProcess = existingHotel?.hotelID;
+    const handleOpenBedRooms = (hotelRooms, id) => {
+        const hotelInReservationProcess = existingHotel?.id;
 
         if (hotelInReservationProcess !== undefined) {
-            if (hotelInReservationProcess !== hotelID) {
+            if (hotelInReservationProcess !== id) {
                 dispatch(setBedRoom([]));
                 dispatch(setActiveStep(0));
                 dispatch(setEnabledBtnSaveReserve(false));
@@ -40,7 +40,7 @@ export const HotelComponent = () => {
         };
 
         setOpen(true);
-        const hotelSelected = resHotels.filter((hotel) => hotel.hotelID === hotelID)[0];
+        const hotelSelected = resHotels.filter((hotel) => hotel.id === id)[0];
         dispatch(setHotel(hotelSelected));
         dispatch(setHotelRooms(hotelRooms));
     };
@@ -71,7 +71,7 @@ export const HotelComponent = () => {
 
                 return (
                     <Box
-                        key={hotel.hotelID}
+                        key={hotel.id}
                     >
                         {hotel.rooms.length > 0 && hotel.state && (
                             <Card
@@ -150,7 +150,7 @@ export const HotelComponent = () => {
                                             fullWidth
                                             disabled={cantRoomsInTrueState < 1}
                                             variant="contained"
-                                            onClick={() => handleOpenBedRooms(hotel.rooms, hotel.hotelID)}
+                                            onClick={() => handleOpenBedRooms(hotel.rooms, hotel.id)}
                                             color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                                         >
                                             Book Now!

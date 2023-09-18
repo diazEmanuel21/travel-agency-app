@@ -74,7 +74,7 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
     const saveReserve = () => {
         debugger;
         const booking = {
-            id: `${hotelSelected.hotelID}${bedRoomSelected.roomID}`,
+            id: `${hotelSelected.id}${bedRoomSelected.roomID}`,
             bedrooms_id: bedRoomSelected.roomID,
             user_id: dataGuest.document_number,
             entry_date: localStorage.getItem('entry_date'),

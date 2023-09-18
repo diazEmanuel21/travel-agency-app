@@ -1,9 +1,9 @@
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { addNewEmptyHotel, setActiveHotel, savingNewHotel, setHotels, setSaving, updateHotel, setPhotosToActiveHotel, deleteHotelById } from './';
-import { fileUpload, loadNotes } from '../../helpers';
+import { fileUpload, loadHotels } from '../../helpers';
 
-export const startNewNote = () => {
+export const startNewHotel = () => {
     return async (dispatch, getState) => {
         dispatch(savingNewHotel());
         const { uid } = getState().auth;
@@ -18,26 +18,26 @@ export const startNewNote = () => {
             "pool": false,
             "restaurant": false,
             "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-            "datails": "The best rooms in the city"
+            "details": "The best rooms in the city"
         }
 
         const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
         // const setDocResp = await setDoc(newDoc, newHotel);
         await setDoc(newDoc, newHotel);
 
-        newHotel.hotelID = newDoc.id;
+        newHotel.id = newDoc.id;
 
         dispatch(addNewEmptyHotel(newHotel));
         dispatch(setActiveHotel(newHotel));
     }
 }
 
-export const startLoadingNotes = () => {
+export const startLoadingHotels = () => {
     return async (dispatch, getState) => {
         const { uid } = getState().auth;
         if (!uid) throw new Error('Thunks => El UID del usuario no existe');
 
-        const respNotes = await loadNotes(uid);
+        const respNotes = await loadHotels(uid);
 
         if (respNotes === 0) throw new Error('Thunks => No existen notas');
 
@@ -45,21 +45,21 @@ export const startLoadingNotes = () => {
     }
 }
 
-export const startSaveNote = () => {
+export const startSaveHotel = () => {
     return async (dispatch, getState) => {
         dispatch(setSaving());
 
         const { uid } = getState().auth;
-        const { active: noteActive } = getState().admin;
+        const { active: hotelActive } = getState().admin;
 
-        const noteToFireStore = { ...noteActive };
+        const noteToFireStore = { ...hotelActive };
         delete noteToFireStore.id;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${noteActive.id}`)
+        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`)
 
         await setDoc(docRef, noteToFireStore, { merge: true });
 
-        dispatch(updateHotel(noteActive));
+        dispatch(updateHotel(hotelActive));
     }
 }
 
@@ -77,14 +77,14 @@ export const startUploadingFiles = (files = []) => {
     }
 }
 
-export const startDeletingNote = () => {
+export const startDeletingHotel = () => {
     return async (dispatch, getState) => {
         const { uid } = getState().auth;
-        const { active: noteActive } = getState().admin;
+        const { active: hotelActive } = getState().admin;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${noteActive.id}`);
+        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`);
         await deleteDoc(docRef);
 
-        dispatch(deleteHotelById(noteActive.id));
+        dispatch(deleteHotelById(hotelActive.id));
     }
 }

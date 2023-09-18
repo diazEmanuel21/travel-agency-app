@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
-import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
-import { setActiveHotel } from '../../store/admin';
+import { Divider, IconButton, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { setActiveHotel, startDeletingHotel } from '../../store/admin';
 /* ICONS */
-import HotelIcon from '@mui/icons-material/Hotel';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const SideBarItem = ({
     id,
@@ -35,16 +35,23 @@ export const SideBarItem = ({
         }));
     }
 
+    const deleteItem = () => {
+        dispatch(startDeletingHotel());
+    }
+
     return (
-        <ListItem>
-            <ListItemButton onClick={handleActiveNote}>
-                <ListItemAvatar>
-                    <Avatar>
-                        <HotelIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={hotelName} secondary={details} />
-            </ListItemButton>
-        </ListItem>
+        <>
+            <ListItem
+                secondaryAction={
+                    <IconButton edge="end" aria-label="delete" color='error' onClick={deleteItem}>
+                        <DeleteIcon />
+                    </IconButton>
+                }>
+                <ListItemButton onClick={handleActiveNote}>
+                    <ListItemText primary={hotelName} secondary={details} />
+                </ListItemButton>
+            </ListItem>
+            <Divider />
+        </>
     )
 }

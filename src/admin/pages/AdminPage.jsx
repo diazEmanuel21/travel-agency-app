@@ -2,7 +2,7 @@ import { AdminLayout } from "../layout/AdminLayout"
 import { NoteView, NothingSelectedView } from "../view"
 import { AddOutlined } from "@mui/icons-material"
 import { useDispatch, useSelector } from "react-redux"
-import { startNewNote } from "../../store/admin/thunks"
+import { startNewHotel } from "../../store/admin/thunks"
 import { Fab } from "@mui/material"
 
 export const AdminPage = () => {
@@ -10,8 +10,9 @@ export const AdminPage = () => {
   const { isSaving, active: noteActive } = useSelector(state => state.admin)
 
   const onClickNewNote = () => {
-    dispatch(startNewNote())
+    dispatch(startNewHotel())
   }
+  
   return (
     <AdminLayout>
       {!!noteActive ? <NoteView /> : <NothingSelectedView />}

@@ -1,6 +1,6 @@
 export const dataHotels = [
     {
-        "hotelID": 1,
+        "id": 1,
         "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
         "hotelName": "Hotel A",
         "location": 30,
@@ -34,7 +34,7 @@ export const dataHotels = [
         ]
     },
     {
-        "hotelID": 2,
+        "id": 2,
         "imgURL": 'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
         "hotelName": "Hotel B",
         "location": 30,
@@ -108,7 +108,7 @@ export const dataHotels = [
         ]
     },
     {
-        "hotelID": 3,
+        "id": 3,
         "imgURL": 'https://images.unsplash.com/photo-1578681041175-9717c16b0d66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1460&q=80',
         "hotelName": "Hotel C",
         "location": 4,
@@ -182,7 +182,7 @@ export const dataHotels = [
         ]
     },
     {
-        "hotelID": 4,
+        "id": 4,
         "imgURL": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
         "hotelName": "Hotel D",
         "location": 4,

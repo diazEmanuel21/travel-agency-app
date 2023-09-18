@@ -8,13 +8,6 @@ export const adminSlice = createSlice({
         hotels: [],
         active: null,
         location: 0,
-        // active: {
-        //     id: 'ABC123',
-        //     title: '',
-        //     body: '',
-        //     date: 123456,
-        //     imageUrls: [],
-        // }
     },
     reducers: {
         savingNewHotel: (state) => {

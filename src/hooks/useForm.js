@@ -28,8 +28,6 @@ export const useForm = (initialForm = {}, formValidations = {}) => {
         if (name === "rate" && (parseInt(value) > 5 || parseInt(value) < 1)) return;
 
         const isSwitch =  name === ('state') || name === ('wifi') || name === ('pool') || name === ('restaurant');
-        debugger;
-
         const resSwitch = isSwitch && checked && true;
 
         setFormState({
