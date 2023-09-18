@@ -4,7 +4,7 @@ import { Navbar, SideBar } from "../components"
 
 const drawerWidth = 240;
 
-export const JournalLayout = ({ children }) => {
+export const AdminLayout = ({ children }) => {
     return (
         <Box 
         className='animate__animated animate__fadeIn animate__faster'

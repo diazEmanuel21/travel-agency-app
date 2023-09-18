@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 // import 'sweetalert2/dist/sweetalert2.css';
 
 import { useForm } from '../../hooks/useForm';
-import { setActiveNote, startDeletingNote, startSaveNote, startUploadingFiles } from '../../store/journal';
+import { setActiveNote, startDeletingNote, startSaveNote, startUploadingFiles } from '../../store/admin';
 import { ImageGallery } from '../components/';
 
 export const NoteView = () => {
     const dispatch = useDispatch();
-    const { active: noteActive, messageSaved, isSaving } = useSelector(state => state.journal);
+    const { active: noteActive, messageSaved, isSaving } = useSelector(state => state.admin);
     const { body, title, date, onInputChange, formState } = useForm(noteActive);
 
     const dateString = useMemo(() => {

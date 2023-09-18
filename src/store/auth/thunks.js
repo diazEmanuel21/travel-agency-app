@@ -1,5 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { loginWithEmailPassword, logoutFirebase, registerUserWhitEmailPassword, signInWithGoogle } from "../../firebase/providers";
-import { clearNotesLogout } from "../journal/journalSlice";
+import { clearNotesLogout } from "../admin/adminSlice";
 import { chekingCredentials, login, logout } from "./";
 
 export const chekingAuthentication = (email, password) => {
@@ -35,6 +36,10 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 
         if (!result.ok) return dispatch(logout(result));
         dispatch(login(result));
+        useNavigate(`/admin`,
+            {
+                replace: true,
+            });
     }
 }
 

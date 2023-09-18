@@ -14,7 +14,7 @@ export const startNewNote = () => {
             date: new Date().getTime(),
         }
 
-        const newDoc = doc(collection(FirebaseDB, `${uid}/journal/notes`));
+        const newDoc = doc(collection(FirebaseDB, `${uid}/admin/notes`));
         // const setDocResp = await setDoc(newDoc, newNote);
         await setDoc(newDoc, newNote);
 
@@ -43,12 +43,12 @@ export const startSaveNote = () => {
         dispatch(setSaving());
 
         const { uid } = getState().auth;
-        const { active: noteActive } = getState().journal;
+        const { active: noteActive } = getState().admin;
 
         const noteToFireStore = { ...noteActive };
         delete noteToFireStore.id;
 
-        const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`)
+        const docRef = doc(FirebaseDB, `${uid}/admin/notes/${noteActive.id}`)
 
         await setDoc(docRef, noteToFireStore, { merge: true });
 
@@ -73,9 +73,9 @@ export const startUploadingFiles = (files = []) => {
 export const startDeletingNote = () => {
     return async (dispatch, getState) => {
         const { uid } = getState().auth;
-        const { active: noteActive } = getState().journal;
+        const { active: noteActive } = getState().admin;
 
-        const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
+        const docRef = doc(FirebaseDB, `${uid}/admin/notes/${noteActive.id}`);
         await deleteDoc(docRef);
 
         dispatch(deleteNoteById(noteActive.id));

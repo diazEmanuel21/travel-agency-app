@@ -2,7 +2,6 @@ import { LogoutOutlined, MenuOutlined } from '@mui/icons-material'
 import { AppBar, Toolbar, IconButton, Grid, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { startLogout } from '../../store/auth';
-import { SwitchColorMood } from '../../components/SwitchColorMood';
 
 export const Navbar = ({ drawerWidth = 240 }) => {
 
@@ -29,10 +28,8 @@ export const Navbar = ({ drawerWidth = 240 }) => {
                     <MenuOutlined />
                 </IconButton>
                 
-                <SwitchColorMood />
-
                 <Grid container direction='row' justifyContent='space-between' alignItems='center'>
-                    <Typography variant='h6' noWrap component='div'>TravelAgency</Typography>
+                    <Typography variant='h6' noWrap component='div'>Diamond agency</Typography>
                     <IconButton color='secondary'
                         onClick={onLogout}
                     >

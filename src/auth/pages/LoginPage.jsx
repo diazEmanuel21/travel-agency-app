@@ -1,113 +1,97 @@
-import { Link as RouterLink } from "react-router-dom";
-import { useMemo } from "react";
-import { Google } from '@mui/icons-material'
-import { Grid, Typography, TextField, Button, Link, Alert } from '@mui/material'
-import { AuthLayout } from "../layout/AuthLayout";
-import { useForm } from "../../hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth";
-
-const formData = {
-    email: '',
-    password: '',
-}
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Card, CardActions, CardContent, Button } from '@mui/material';
+import { Login } from './Login';
+import { configApp } from '../../JS';
+import { TravelAgencyContext } from '../../context';
 
 export const LoginPage = () => {
-    const dispatch = useDispatch();
-    const { status, errorMessage } = useSelector(state => state.auth);
+    const { setNotify } = React.useContext(TravelAgencyContext);
+    const [showLogin, setShowLogin] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [value, setValue] = React.useState('');
 
-    const { email, password, onInputChange } = useForm(formData);
-
-    const isAuthenticateding = useMemo(() => status === 'cheking', [status]);
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        //Val => ok form
-        /* dispatch(chekingAuthentication(email, password)); */
-        dispatch(startLoginWithEmailPassword({ email, password }));
-
+    const handlePassword = ({ target }) => {
+        setValue(target.value);
     }
 
-    const onGoogleSignIn = () => {
-        dispatch(startGoogleSignIn());
+    const verifyPassword = () => {
+        if (value !== configApp.passwordAdmin) return setNotify('error', 'Incorrect password');
+        setShowLogin(true);
     }
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
 
     return (
-        <AuthLayout title="Login">
-            <form onSubmit={onSubmit}
-                className='animate__animated animate__fadeIn animate__faster'
-            >
-                <Grid container>
-                    <Grid item xs={12} sx={{ mt: 2 }}>
-                        <TextField
-                            label="Email"
-                            type="email"
-                            placeholder="email@google.com"
-                            fullWidth
-                            name="email"
-                            value={email}
-                            onChange={onInputChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sx={{ mt: 2 }}>
-                        <TextField
-                            label="Password"
-                            type="password"
-                            placeholder="password"
-                            fullWidth
-                            name="password"
-                            value={password}
-                            onChange={onInputChange}
-                        />
-                    </Grid>
-
-                    <Grid
-                        container
-                        spacing={2}
-                        sx={{ mb: 2, mt: 1 }}
-                    >
-                        <Grid item xs={12} sm={6}>
-                            <Button
-                                disabled={isAuthenticateding}
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth>
-                                Login
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Button
-                                disabled={isAuthenticateding}
-                                onClick={onGoogleSignIn}
-                                variant="contained"
-                                color="primary"
-                                fullWidth>
-                                <Google />
-                                <Typography sx={{ ml: 1 }}>Google</Typography>
-                            </Button>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            display={!!errorMessage ? '' : 'none'}
-                        >
-                            <Alert severity="error">{errorMessage}</Alert>
-                        </Grid>
-
-                    </Grid>
-
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="end"
-                    >
-                        <Link component={RouterLink} color='inherit' to="/auth/register">Crear una cuenta</Link>
-                    </Grid>
-
-                </Grid>
-            </form>
-        </AuthLayout>
+        <>
+            {
+                showLogin
+                    ? (<Login />)
+                    : (
+                        < Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            width: '100vw',
+                            backgroundImage: `url(../../password.svg)`,
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                        }}>
+                            <Card sx={{ minWidth: 275 }}>
+                                <CardContent>
+                                    <FormControl
+                                        sx={{ m: 1, width: '25ch' }}
+                                        variant="outlined"
+                                    >
+                                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                        <OutlinedInput
+                                            onChange={handlePassword}
+                                            value={value}
+                                            id="outlined-adornment-password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
+                                            label="Password"
+                                        />
+                                    </FormControl>
+                                </CardContent>
+                                <CardActions>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        color="inherit"
+                                        onClick={verifyPassword}
+                                    >
+                                        send
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Box >
+                    )
+            }
+        </>
     )
 }
