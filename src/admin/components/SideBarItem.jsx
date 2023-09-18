@@ -1,38 +1,49 @@
-import { TurnedInNot } from '@mui/icons-material';
-import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveNote } from '../../store/admin';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import { setActiveHotel } from '../../store/admin';
+/* ICONS */
+import HotelIcon from '@mui/icons-material/Hotel';
 
-export const SideBarItem = ({ title, body, id, date, imageUrl = [] }) => {
+export const SideBarItem = ({
+    id,
+    imgURL,
+    wifi,
+    rate,
+    numberBedRooms,
+    restaurant,
+    pool,
+    location,
+    details,
+    state,
+    hotelName,
+}) => {
     const dispatch = useDispatch();
 
     const handleActiveNote = () => {
-        dispatch(setActiveNote({
-            title,
-            body,
+        dispatch(setActiveHotel({
             id,
-            date,
-            imageUrl
+            imgURL,
+            wifi,
+            rate,
+            restaurant,
+            numberBedRooms,
+            pool,
+            location,
+            details,
+            state,
+            hotelName,
         }));
     }
 
-    const newTitle = useMemo(() => {
-        return title.length > 15
-            ? title.substring(0, 15) + '...'
-            : title;
-    }, [title]);
-
     return (
-        <ListItem disablePadding>
+        <ListItem>
             <ListItemButton onClick={handleActiveNote}>
-                <ListItemIcon>
-                    <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                    <ListItemText primary={newTitle} />
-                    <ListItemText secondary={body} />
-                </Grid>
+                <ListItemAvatar>
+                    <Avatar>
+                        <HotelIcon />
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={hotelName} secondary={details} />
             </ListItemButton>
         </ListItem>
     )

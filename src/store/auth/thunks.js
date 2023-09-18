@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { loginWithEmailPassword, logoutFirebase, registerUserWhitEmailPassword, signInWithGoogle } from "../../firebase/providers";
-import { clearNotesLogout } from "../admin/adminSlice";
+import { clearHotelsLogout } from "../admin/adminSlice";
 import { chekingCredentials, login, logout } from "./";
 
 export const chekingAuthentication = (email, password) => {
@@ -47,7 +47,7 @@ export const startLogout = () => {
     return async (dispatch) => {
         await logoutFirebase();
 
-        dispatch(clearNotesLogout());
+        dispatch(clearHotelsLogout());
         dispatch(logout({ errorMessage: '' }));
     }
 }

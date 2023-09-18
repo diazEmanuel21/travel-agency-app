@@ -1,27 +1,34 @@
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
-import { addNewEmptyNote, setActiveNote, savingNewNote, setNotes, setSaving, updateNote, setPhotosToActiveNote, deleteNoteById } from './';
+import { addNewEmptyHotel, setActiveHotel, savingNewHotel, setHotels, setSaving, updateHotel, setPhotosToActiveHotel, deleteHotelById } from './';
 import { fileUpload, loadNotes } from '../../helpers';
 
 export const startNewNote = () => {
     return async (dispatch, getState) => {
-        dispatch(savingNewNote());
+        dispatch(savingNewHotel());
         const { uid } = getState().auth;
 
-        const newNote = {
-            title: '',
-            body: ' ',
-            date: new Date().getTime(),
+        const newHotel = {
+            "hotelName": "Intercontinental",
+            "location": 30,
+            "numberBedRooms": 7,
+            "state": true,
+            "rate": 2,
+            "wifi": false,
+            "pool": false,
+            "restaurant": false,
+            "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+            "details": "Establecimiento cuyo principal servicio es el hospedaje, ofreciendo a las personas cierto nivel de confort y seguridad durante sus estadías",
         }
 
-        const newDoc = doc(collection(FirebaseDB, `${uid}/admin/notes`));
-        // const setDocResp = await setDoc(newDoc, newNote);
-        await setDoc(newDoc, newNote);
+        const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
+        // const setDocResp = await setDoc(newDoc, newHotel);
+        await setDoc(newDoc, newHotel);
 
-        newNote.id = newDoc.id;
+        newHotel.id = newDoc.id;
 
-        dispatch(addNewEmptyNote(newNote));
-        dispatch(setActiveNote(newNote));
+        dispatch(addNewEmptyHotel(newHotel));
+        dispatch(setActiveHotel(newHotel));
     }
 }
 
@@ -34,7 +41,7 @@ export const startLoadingNotes = () => {
 
         if (respNotes === 0) throw new Error('Thunks => No existen notas');
 
-        dispatch(setNotes(respNotes));
+        dispatch(setHotels(respNotes));
     }
 }
 
@@ -48,11 +55,11 @@ export const startSaveNote = () => {
         const noteToFireStore = { ...noteActive };
         delete noteToFireStore.id;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/notes/${noteActive.id}`)
+        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${noteActive.id}`)
 
         await setDoc(docRef, noteToFireStore, { merge: true });
 
-        dispatch(updateNote(noteActive));
+        dispatch(updateHotel(noteActive));
     }
 }
 
@@ -66,7 +73,7 @@ export const startUploadingFiles = (files = []) => {
         }
 
         const photosUrls = await Promise.all(fileUploadPromises);
-        dispatch(setPhotosToActiveNote(photosUrls));
+        dispatch(setPhotosToActiveHotel(photosUrls));
     }
 }
 
@@ -75,9 +82,9 @@ export const startDeletingNote = () => {
         const { uid } = getState().auth;
         const { active: noteActive } = getState().admin;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/notes/${noteActive.id}`);
+        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${noteActive.id}`);
         await deleteDoc(docRef);
 
-        dispatch(deleteNoteById(noteActive.id));
+        dispatch(deleteHotelById(noteActive.id));
     }
 }

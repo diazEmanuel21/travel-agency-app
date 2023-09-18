@@ -1,18 +1,22 @@
-import { Toolbar } from "@mui/material";
-import { Box } from "@mui/system"
+import { useState } from "react";
 import { Navbar, SideBar } from "../components"
-
-const drawerWidth = 240;
+import { Toolbar, Box } from "@mui/material";
 
 export const AdminLayout = ({ children }) => {
+    const [state, setState] = useState(false);
+
+    const handleDrawer = value => {
+        setState(value)
+    }
+
     return (
         <Box 
         className='animate__animated animate__fadeIn animate__faster'
         sx={{ display: 'flex' }}>
 
-            <Navbar drawerWidth={drawerWidth} />
+            <Navbar handleDrawer={handleDrawer} />
 
-            <SideBar drawerWidth={drawerWidth} />
+            <SideBar handleDrawer={handleDrawer}  stateDrawer={state}/>
             <Box
                 component='main'
                 sx={{ flex: 1, p: 3 }}
@@ -20,8 +24,6 @@ export const AdminLayout = ({ children }) => {
                 <Toolbar/>
                 {children}
             </Box>
-
-
         </Box>
     )
 }

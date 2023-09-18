@@ -1,38 +1,25 @@
-import { Box, Divider, Drawer, List, Toolbar, Typography } from '@mui/material';
+import { Box, Divider, List, SwipeableDrawer } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { SideBarItem } from './SideBarItem';
 
-export const SideBar = ({ drawerWidth = 240 }) => {
-    const { displayName } = useSelector(state => state.auth);
-    const { notes } = useSelector(state => state.admin);
+export const SideBar = ({handleDrawer, stateDrawer}) => {
+    const { hotels } = useSelector(state => state.admin);
 
     return (
-        <Box
-            component='nav'
-            sx={{ width: { sm: drawerWidth, flexShrink: { sm: 0 } } }}
+        <SwipeableDrawer
+            anchor={'left'}
+            open={stateDrawer}
+            onClose={() => handleDrawer(false)}
+            onOpen={() => handleDrawer(true)}
         >
-            <Drawer
-                variant="permanent"//temporary
-                open
-                sx={{
-                    display: { xs: 'block' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
-                }}
-            >
-                <Toolbar>
-                    <Typography variant="h6" noWrap component='div'>{displayName}</Typography>
-                </Toolbar>
-
-                <Divider />
-
-                <List>
-                    {notes.map(note => (
-                        <SideBarItem key={note.id}  {...note} />
-                    ))}
-                </List>
-
-            </Drawer>
-
-        </Box>
+            <List sx={{ maxWidth: 360, bgcolor: 'background.paper' }}>
+                {hotels.map(hotel => (
+                    <Box>
+                        <SideBarItem key={hotel.id}  {...hotel} />
+                        <Divider />
+                    </Box>
+                ))}
+            </List>
+        </SwipeableDrawer>
     )
 }

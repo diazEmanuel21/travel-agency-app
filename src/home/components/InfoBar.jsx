@@ -38,7 +38,7 @@ export const InfoBar = () => {
                         <InstagramIcon />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Diamong Agency" placement='right'>
+                <Tooltip title="Diamond Agency" placement='right'>
                     <IconButton color='error'>
                         <YouTubeIcon />
                     </IconButton>
