@@ -2,7 +2,7 @@ export const dataHotels = [
     {
         "id": 1,
         "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-        "hotelName": "Hotel A",
+        "hotelName": "Passarela Hotel",
         "location": 30,
         "state": true,
         "details": "Description of Hotel A",
@@ -36,7 +36,7 @@ export const dataHotels = [
     {
         "id": 2,
         "imgURL": 'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-        "hotelName": "Hotel B",
+        "hotelName": "Queen Hotel",
         "location": 30,
         "state": true,
         "details": "Description of Hotel B",
@@ -110,7 +110,7 @@ export const dataHotels = [
     {
         "id": 3,
         "imgURL": 'https://images.unsplash.com/photo-1578681041175-9717c16b0d66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1460&q=80',
-        "hotelName": "Hotel C",
+        "hotelName": "Hotel El Bosque",
         "location": 4,
         "state": true,
         "details": "Description of Hotel C",
@@ -184,7 +184,7 @@ export const dataHotels = [
     {
         "id": 4,
         "imgURL": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-        "hotelName": "Hotel D",
+        "hotelName": "Candel Resort",
         "location": 4,
         "state": true,
         "details": "Description of Hotel C",

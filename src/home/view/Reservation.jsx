@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
-import { setEnabledBtnSaveReserve, setDataGuest } from '../../store/home/homeSlice';
+import { setEnabledBtnSaveReserve, setDataGuest, setBooking, getHotels } from '../../store/home/homeSlice';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { useForm } from '../../hooks';
 
@@ -33,6 +33,10 @@ export const Reservation = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
+  const { hotels, enabledBtnSaveReserve, bedRoomSelected, dataGuest, destination_city, hotelSelected } = useSelector(store => store.home);
+  const [formSubmited, setformSubmited] = useState(false);
+
+  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
   const {
     /* Fields */
@@ -61,17 +65,54 @@ export const Reservation = () => {
     phone_contactValid,
   } = useForm(fields, formValidations);
 
-  const [formSubmited, setformSubmited] = useState(false);
 
-  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
+  useEffect(() => {
+    dispatch(setDataGuest(formState));
+  }, [formState])
+
+  const updateRoomState = (roomId) => {
+    const updatedHotels = hotels.map((hotel) => {
+      const updatedRooms = hotel.rooms.map((room) => {
+        if (room.roomID === roomId) {
+          // Si el roomID es igual a 101, cambia el state a false
+          return {
+            ...room,
+            state: false,
+          };
+        } else {
+          return room;
+        }
+      });
+
+      return {
+        ...hotel,
+        rooms: updatedRooms,
+      };
+    });
+
+    dispatch(getHotels(updatedHotels));
+  }
 
   const saveGuestData = (e) => {
     e.preventDefault();
     setformSubmited(true);
     if (!isFormValid) return setNotify('info', 'Incorrect or empty fields, please check the form and try again.');
+    const booking = {
+      id: `${hotelSelected.id}${bedRoomSelected.roomID}`,
+      bedrooms_id: bedRoomSelected.roomID,
+      user_id: dataGuest.document_number,
+      entry_date: localStorage.getItem('entry_date'),
+      amount_people: localStorage.getItem('amount_people'),
+      departure_date: localStorage.getItem('departure_date'),
+      destination_city,
+      price_booking: localStorage.getItem('price_booking'),
+    };
+    dispatch(setBooking(booking));
+
     dispatch(setEnabledBtnSaveReserve(true));
-    dispatch(setDataGuest(formState));
-    setNotify('success', 'Correct! You are one step away from finishing the reservation, press the save button to continue.');
+    setNotify('success', 'Correct! You are one step away from finishing the reservation.');
+
+    updateRoomState(booking.bedrooms_id);
   };
 
   return (
@@ -288,6 +329,7 @@ export const Reservation = () => {
       </CardContent>
       <CardActions>
         <Button
+          disabled={enabledBtnSaveReserve}
           onClick={saveGuestData}
           variant="contained"
           color={colorMode}

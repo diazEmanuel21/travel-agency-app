@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../hooks';
-import { setActiveHotel, startDeletingHotel, startSaveHotel } from '../../store/admin';
+import { setActiveHotel, startSaveHotel } from '../../store/admin';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { CityTexfield } from '../../home/components/CityTexfield';
 

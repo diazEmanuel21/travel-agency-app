@@ -5,14 +5,14 @@ import { getHotels } from '../../store/home/homeSlice'
 import { HotelComponent, LandingPage } from '../view'
 import { ColorModeContext, TravelAgencyContext } from '../../context'
 import { dataHotels } from '../../data/dataHotels'
-import { Box } from '@mui/material'
+import { Backdrop, Box, CircularProgress } from '@mui/material'
 
 export const HomePage = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
 
-  const { resHotels, showHotels, showNotifyReserve } = useSelector(store => store.home);
+  const { resHotels, showHotels, showNotifyReserve, showBackdrop } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
 
   useEffect(() => {
@@ -64,6 +64,12 @@ export const HomePage = () => {
           </Box>
         )
       }
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={showBackdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </HomeLayout >
   )
 }
