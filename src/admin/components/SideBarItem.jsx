@@ -43,7 +43,7 @@ export const SideBarItem = ({
         <>
             <ListItem
                 secondaryAction={
-                    <IconButton edge="end" aria-label="delete" color='error' onClick={deleteItem}>
+                    <IconButton edge="end" aria-label="delete" color='secondary' onClick={deleteItem}>
                         <DeleteIcon />
                     </IconButton>
                 }>
