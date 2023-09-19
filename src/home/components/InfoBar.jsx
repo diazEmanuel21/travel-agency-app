@@ -5,8 +5,9 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
 
-export const InfoBar = () => {
+export const InfoBar = ({handleDrawer}) => {
     return (
         <Box
             sx={{
@@ -43,6 +44,11 @@ export const InfoBar = () => {
                         <YouTubeIcon />
                     </IconButton>
                 </Tooltip>
+   {/*              <Tooltip title="My reservations" placement='right'>
+                    <IconButton onClick={handleDrawer(true)} color='secondary'>
+                        <PlaylistAddCheckCircleIcon />
+                    </IconButton>
+                </Tooltip> */}
             </Box>
             <Box sx={{
                 display: 'flex',

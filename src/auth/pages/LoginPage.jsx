@@ -1,22 +1,28 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Card, CardActions, CardContent, Button } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { TravelAgencyContext } from '../../context';
 import { Login } from './Login';
 import { configApp } from '../../JS';
-import { TravelAgencyContext } from '../../context';
+import {
+    Card, CardActions, CardContent, Button, AppBar, Toolbar, Box,
+    IconButton,
+    OutlinedInput,
+    InputLabel,
+    InputAdornment,
+    FormControl,
+    Link, Typography
+} from '@mui/material';
+/* ICONS */
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { HomeRounded } from '@mui/icons-material';
+
 
 export const LoginPage = () => {
-    const { setNotify } = React.useContext(TravelAgencyContext);
-    const [showLogin, setShowLogin] = React.useState(false);
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [value, setValue] = React.useState('');
+    const { setNotify } = useContext(TravelAgencyContext);
+    const [showLogin, setShowLogin] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [value, setValue] = useState('');
 
     const handlePassword = ({ target }) => {
         setValue(target.value);
@@ -39,17 +45,26 @@ export const LoginPage = () => {
             {
                 showLogin
                     ? (<Login />)
-                    : (
+                    : (<>
+                        <AppBar position="sticky" color="primary">
+                            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="button" color="inherit">Admin</Typography>
+                                <Button variant="contained" color="secondary">
+                                    <HomeRounded />
+                                    <Link component={RouterLink} color='inherit' to="/home">Home</Link>
+                                </Button>
+                            </Toolbar>
+                        </AppBar>
                         < Box sx={{
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            height: '100vh',
-                            width: '100vw',
+                            height: '90vh',
                             backgroundImage: `url(../../password.svg)`,
                             backgroundSize: 'contain',
                             backgroundRepeat: 'no-repeat',
                         }}>
+
                             <Card sx={{ minWidth: 275 }}>
                                 <CardContent>
                                     <FormControl
@@ -82,7 +97,7 @@ export const LoginPage = () => {
                                     <Button
                                         fullWidth
                                         variant="contained"
-                                        color="inherit"
+                                        color="primary"
                                         onClick={verifyPassword}
                                     >
                                         send
@@ -90,6 +105,7 @@ export const LoginPage = () => {
                                 </CardActions>
                             </Card>
                         </Box >
+                    </>
                     )
             }
         </>

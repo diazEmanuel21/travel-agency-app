@@ -1,102 +1,138 @@
+import React, { useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
 import { ColorModeContext } from '../context';
-import { useCheckAuth } from '../hooks';
-
 import {
     AppBar,
     Box,
     Toolbar,
     Typography,
-    Container,
     Button,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    IconButton,
     Tooltip
 } from '@mui/material';
-
+/* ICONS */
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import LoginIcon from '@mui/icons-material/Login';
 import DiamondIcon from '@mui/icons-material/Diamond';
 
-export const ResponsiveAppBar = () => {
+const settings = ['Login', 'Reserves', 'Favorites'];
+
+export const ResponsiveAppBar = ({ handleDrawer }) => {
     const navigate = useNavigate();
-    const status = useCheckAuth();
-
     const { mode } = useContext(ColorModeContext);
+    const { status } = useSelector(store => store.auth);
 
-    const handleCloseNavMenu = () => {
-        const route = status === 'authenticated' ? 'admin' : 'auth';
-        navigate(`/${route}`,
-            {
-                replace: true,
-            });
+    const [anchorElUser, setAnchorElUser] = useState(null);
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const showOption = (option) => {
+        setAnchorElUser(null);
+        if (option === 'Login') {
+            const route = status === 'authenticated' ? 'admin' : 'auth';
+            navigate(`/${route}`);
+            return;
+        };
+        if (option === 'Reserves') return handleDrawer(true);
+        if (option === 'Favorites') return;
     };
 
     return (
-        <AppBar
-            position="static"
-            sx={{ bgcolor: `${mode === 'dark' ? '#000' : '#001e3c'}` }} >
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    {/* <DiamondIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+        <AppBar position="static" sx={{ bgcolor: `${mode === 'dark' ? '#000' : '#001e3c'}` }} >
+            <Toolbar disableGutters sx={{ justifyContent: 'space-between', paddingLeft: '14px' }}>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'start',
+                    flex: 1,
+                    alignItems: 'center',
+                }}>
+                    <DiamondIcon sx={{ mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
-                        component="a"
-                        href="/"
                         sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
                             fontFamily: 'monospace',
                             fontWeight: 700,
-                            letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
                         }}
                     >
                         Diamond Agency
                     </Typography>
+                </Box>
 
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        Diamond A.
-                    </Typography>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                    {settings.map((page) => (
+                        <Button
+                            key={page}
+                            color="inherit"
+                            onClick={() => showOption(page)}
+                            sx={{ my: 2 }}
+                        >
+                            {page}
+                        </Button>
+                    ))}
+                </Box>
 
-                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'end' }}>
+                <Box sx={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'end',
+                }}>
+                    <Tooltip title="Open settings" placement='left'>
                         <Box sx={{
                             display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            maxWidth: '92px',
-                            height: 69,
-                            flex: 1,
-                            bgcolor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`
+                            padding: '8px',
+                            bgcolor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`,
+                            overflow: 'hidden'
                         }}>
-                            <Tooltip title="Discover the world to suit you!">
-                                <Button
-                                    onClick={handleCloseNavMenu}
-                                    variant='contained'
-                                    color={`${mode === 'dark' ? 'primary' : 'secondary'}`}
-                                >
-                                    <DiamondIcon />
-                                </Button>
-                            </Tooltip>
-
+                            <IconButton
+                                size='large'
+                                color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                                onClick={handleOpenUserMenu}
+                            >
+                                <LoginIcon />
+                            </IconButton>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={showOption}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem key={setting} onClick={() => showOption(setting)}>
+                                        <ListItemIcon>
+                                            {setting === 'Login' && (<LoginIcon fontSize="small" />)}
+                                            {setting === 'Reserves' && (<EventAvailableIcon fontSize="small" />)}
+                                            {setting === 'Favorites' && (<FavoriteIcon fontSize="small" />)}
+                                        </ListItemIcon>
+                                        <Typography variant="inherit" noWrap>
+                                            {setting}
+                                        </Typography>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
                         </Box>
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar >
+                    </Tooltip>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
-};
+}
