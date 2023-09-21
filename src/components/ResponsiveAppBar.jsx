@@ -23,7 +23,7 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
 
-export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, module: module_call }) => {
+export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
     const navigate = useNavigate();
     const { mode } = useContext(ColorModeContext);
     const { status, rol, photoURL } = useSelector(store => store.auth);
@@ -38,7 +38,7 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, mo
 
     const showOption = (option) => {
         setAnchorElUser(null);
-        if (option === 'Account') return alert('Account box');
+        if (option === 'Account') return handleDrawerAccount(true);
 
         if (option === 'Login') {
             const route = status === 'authenticated' ? 'admin' : 'auth';

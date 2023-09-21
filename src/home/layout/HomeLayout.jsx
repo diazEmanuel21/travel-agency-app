@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { ResponsiveAppBar } from "../../components";
-import { DrawerFavorite, DrawerReservations, InfoBar } from "../components";
+import { DrawerAccount, DrawerFavorite, DrawerReservations, InfoBar } from "../components";
 import { Backdrop, Box, CircularProgress, Divider } from "@mui/material";
 
 export const HomeLayout = ({ children, module: module_call }) => {
     const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
     const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
+    const [stateDrawerAccount, setStateDrawerAccount] = useState(false);
 
     const handleDrawerReserve = (value) => {
         setStateDrawerReserve(value);
@@ -13,10 +14,18 @@ export const HomeLayout = ({ children, module: module_call }) => {
     const handleDrawerFavorite = (value) => {
         setStateDrawerFavorite(value);
     };
+    const handleDrawerAccount = (value) => {
+        setStateDrawerAccount(value);
+    };
 
     return (
         <Box sx={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column' }}>
-            <ResponsiveAppBar handleDrawerReserve={handleDrawerReserve} handleDrawerFavorite={handleDrawerFavorite} module={module_call}/>
+            <ResponsiveAppBar
+                handleDrawerReserve={handleDrawerReserve}
+                handleDrawerFavorite={handleDrawerFavorite}
+                handleDrawerAccount={handleDrawerAccount}
+                module={module_call}
+            />
             <Box sx={{
                 display: 'flex',
                 flex: '1',
@@ -38,6 +47,7 @@ export const HomeLayout = ({ children, module: module_call }) => {
             </Box>
             <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
             <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
+            <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />
             {/*        
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
