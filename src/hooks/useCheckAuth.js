@@ -1,4 +1,4 @@
-import { getDoc, doc, collection } from "firebase/firestore/lite"; // Importa las funciones necesarias para trabajar con Firestore
+import { getDoc, doc, collection } from "firebase/firestore/lite";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,18 +16,41 @@ export const useCheckAuth = () => {
 
             const { uid, email, displayName, photoURL } = user;
 
-            // Aquí recuperamos el rol del usuario desde Firestore
+            // Aquí recuperamos el rol y otras propiedades del usuario desde Firestore
             const userDocRef = doc(collection(FirebaseDB, 'users'), uid);
             const userDocSnapshot = await getDoc(userDocRef);
-            const userData = userDocSnapshot.data();
+            const userData = userDocSnapshot.data() || {};
 
-            // Agregamos el rol al objeto user
-            const rol = userData?.rol || "user";
+            // Extraer las propiedades adicionales del usuario y proporcionar valores por defecto si están ausentes
+            const {
+                rol = 'user',
+                birthdate = null,
+                gender = null,
+                type_document = null,
+                document_number = null,
+                phone = null,
+                name_contact = null,
+                phone_contact = null,
+            } = userData;
 
-            dispatch(login({ uid, email, displayName, photoURL, rol }));
+            // Agregar todas las propiedades al objeto user
+            dispatch(login({
+                uid,
+                email,
+                displayName,
+                photoURL,
+                rol,
+                birthdate,
+                gender,
+                type_document,
+                document_number,
+                phone,
+                name_contact,
+                phone_contact,
+            }));
             dispatch(startLoadingHotels());
         });
-    }, [])
+    }, []);
 
     return status;
-}
+};

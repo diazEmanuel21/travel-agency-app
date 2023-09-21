@@ -26,25 +26,30 @@ export const HomeLayout = ({ children, module: module_call }) => {
                 handleDrawerAccount={handleDrawerAccount}
                 module={module_call}
             />
-            <Box sx={{
-                display: 'flex',
-                flex: '1',
-                flexDirection: 'row',
-                height: '89vh',
-                maxHeight: '89vh'
-            }}>
-                <InfoBar />
-                <Divider orientation="vertical" flexItem />
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    overflowX: 'hidden'
-                }
-                }>
-                    {children}
-                </Box>
-            </Box>
+            {
+                module_call !== 'admin-manager' && (
+                    <Box sx={{
+                        display: 'flex',
+                        flex: '1',
+                        flexDirection: 'row',
+                        height: '89vh',
+                        maxHeight: '89vh'
+                    }}>
+                        <InfoBar />
+                        <Divider orientation="vertical" flexItem />
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flex: 1,
+                            overflowX: 'hidden'
+                        }
+                        }>
+                            {children}
+                        </Box>
+                    </Box>
+                )
+            }
+
             <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
             <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
             <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />

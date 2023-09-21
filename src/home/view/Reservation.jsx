@@ -1,123 +1,61 @@
-import { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
-import { setEnabledBtnSaveReserve, setDataGuest, setBooking, getHotels } from '../../store/home/homeSlice';
+import { useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { useForm } from '../../hooks';
+import { updateUserData } from '../../store/home/thunks';
+import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
 
-const fields = {
-  name_user: '',
-  birthdate: '',
-  gender: '',
-  type_document: 0,
-  document_number: '',
-  email: '',
-  phone: '',
-  name_contact: '',
-  phone_contact: '',
-};
-
-const formValidations = {
-  name_user: [(value) => value.length >= 1, 'Field Required'],
-  birthdate: [(value) => value.length >= 1, 'Field Required'],
-  // gender: [(value) => value === '', 'Field Required'],
-  // type_document: [(value) => value.length >= 1, 'Field Required'],
-  document_number: [(value) => value.length >= 1, 'Field Required'],
-  email: [(value) => value.includes('@'), 'El correo debe de tener un @'],
-  phone: [(value) => value.length >= 1, 'Field Required'],
-  name_contact: [(value) => value.length >= 1, 'Field Required'],
-  phone_contact: [(value) => value.length >= 1, 'Field Required'],
-};
-
-export const Reservation = () => {
+export const Reservation = ({ fields }) => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
-  const { hotels, enabledBtnSaveReserve, bedRoomSelected, dataGuest, destination_city, hotelSelected } = useSelector(store => store.home);
+  const { displayName, email, uid } = fields;
   const [formSubmited, setformSubmited] = useState(false);
 
   const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
+  const formValidations = {
+    document_number: [(value) => value.length >= 1, 'Field Required'],
+    phone: [(value) => value.length >= 1, 'Field Required'],
+    name_contact: [(value) => value.length >= 1, 'Field Required'],
+    phone_contact: [(value) => value.length >= 1, 'Field Required'],
+  };
+
   const {
-    /* Fields */
-    name_user,
     birthdate,
     gender,
     type_document,
     document_number,
-    email,
     phone,
     name_contact,
     phone_contact,
-    /* Validations */
     onInputChange,
-    formState,
     isFormValid,
-    /* HelperText */
-    name_userValid,
-    birthdateValid,
-    // genderValid,
-    // type_documentValid,
     document_numberValid,
-    emailValid,
     phoneValid,
     name_contactValid,
     phone_contactValid,
+    formState,
   } = useForm(fields, formValidations);
 
 
-  useEffect(() => {
-    dispatch(setDataGuest(formState));
-  }, [formState])
+  const handleUpdateUserData = async (uid, formData) => {
+    const result = await dispatch(updateUserData(uid, formData));
+    if (result.ok) {
+      // La actualización se realizó con éxito
+      setNotify('success', result.message);
+    } else {
+      // Hubo un error en la actualización
+      setNotify('error', result.errorMessage);
+    }
+  };
 
-  const updateRoomState = (roomId) => {
-    const updatedHotels = hotels.map((hotel) => {
-      const updatedRooms = hotel.rooms.map((room) => {
-        if (room.id === roomId) {
-          // Si el id es igual a 101, cambia el state a false
-          return {
-            ...room,
-            state: false,
-          };
-        } else {
-          return room;
-        }
-      });
-
-      return {
-        ...hotel,
-        rooms: updatedRooms,
-      };
-    });
-
-    dispatch(getHotels(updatedHotels));
-  }
-
-  const saveGuestData = (e) => {
+  const updateInfoUser = (e) => {
     e.preventDefault();
     setformSubmited(true);
-    if (!isFormValid) return setNotify('info', 'Incorrect or empty fields, please check the form and try again.');
-    const booking = {
-      id: `${hotelSelected.id}${bedRoomSelected.id}`,
-      bedrooms_id: bedRoomSelected.id,
-      hotel_id: hotelSelected.id,
-      hotel_name: hotelSelected.hotelName,
-      user_id: dataGuest.document_number,
-      entry_date: localStorage.getItem('entry_date'),
-      amount_people: localStorage.getItem('amount_people'),
-      departure_date: localStorage.getItem('departure_date'),
-      price_booking: localStorage.getItem('price_booking'),
-      stay_days: localStorage.getItem('stay_days'),
-      destination_city,
-    };
-
-    dispatch(setBooking(booking));
-
-    dispatch(setEnabledBtnSaveReserve(true));
-    setNotify('success', 'Correct! You are one step away from finishing the reservation.');
-
-    updateRoomState(booking.bedrooms_id);
-  };
+    if (!isFormValid) return setNotify('error', 'Incorrect or empty fields, please validate again.');
+    handleUpdateUserData(uid, formState);
+  }
 
   return (
     <Card>
@@ -129,7 +67,7 @@ export const Reservation = () => {
         alignItems: 'center',
       }}>
         <Typography variant="button" p={1}>
-          Guest information
+          Account information
         </Typography>
       </Box>
       <CardContent>
@@ -144,15 +82,27 @@ export const Reservation = () => {
               <TextField
                 color={colorMode}
                 label="Name"
-                name="name_user"
-                value={name_user}
+                value={displayName}
                 variant="outlined"
-                error={!!name_userValid && formSubmited}
-                helperText={name_userValid}
                 required
                 inputProps={{
-                  maxLength: 40,
-                  minLength: 2,
+                  readOnly: true
+                }}
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid item>
+            <FormControl xs={12} sm={6} onChange={onInputChange} fullWidth>
+              <TextField
+                color={colorMode}
+                variant="outlined"
+                label="Email"
+                type="email"
+                value={email}
+                required
+                inputProps={{
+                  readOnly: true
                 }}
               />
             </FormControl>
@@ -172,8 +122,6 @@ export const Reservation = () => {
                 name="birthdate"
                 value={birthdate}
                 onChange={onInputChange}
-                error={!!birthdateValid && formSubmited}
-                helperText={birthdateValid}
                 required
                 InputLabelProps={{
                   shrink: true,
@@ -186,8 +134,6 @@ export const Reservation = () => {
             <FormControl
               xs={12} sm={6}
               fullWidth
-              // error={!!genderValid && formSubmited}
-              // helperText={genderValid}
               value={gender}
               required
             >
@@ -216,8 +162,6 @@ export const Reservation = () => {
               sm={6}
               fullWidth
               required
-            // error={!!type_documentValid && formSubmited}
-            // helperText={type_documentValid}
             >
               <InputLabel color={colorMode} >Type of Document</InputLabel>
               <Select
@@ -227,9 +171,9 @@ export const Reservation = () => {
                 onChange={onInputChange}
                 label="Type of Document"
               >
-                <MenuItem value={0}>C.C</MenuItem>
-                <MenuItem value={1}>Passport</MenuItem>
-                <MenuItem value={2}>C.E</MenuItem>
+                <MenuItem value={'C.C'}>C.C</MenuItem>
+                <MenuItem value={'Passport'}>Passport</MenuItem>
+                <MenuItem value={'C.E'}>C.E</MenuItem>
               </Select>
             </FormControl >
           </Grid>
@@ -259,23 +203,8 @@ export const Reservation = () => {
             <FormControl xs={12} sm={6} onChange={onInputChange} fullWidth>
               <TextField
                 color={colorMode}
-                variant="outlined"
-                label="Email"
-                name="email"
-                type="email"
-                value={email}
-                error={!!emailValid && formSubmited}
-                helperText={emailValid}
-                required
-              />
-            </FormControl>
-          </Grid>
-
-          <Grid item>
-            <FormControl xs={12} sm={6} onChange={onInputChange} fullWidth>
-              <TextField
-                color={colorMode}
                 label="Phone"
+                type="number"
                 variant="outlined"
                 required
                 name="phone"
@@ -333,13 +262,12 @@ export const Reservation = () => {
       </CardContent>
       <CardActions>
         <Button
-          disabled={enabledBtnSaveReserve}
-          onClick={saveGuestData}
+          onClick={updateInfoUser}
           variant="contained"
           color={colorMode}
           fullWidth
         >
-          Reserve
+          Save
         </Button>
       </CardActions>
     </Card>

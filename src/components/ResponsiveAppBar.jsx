@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { startLogout } from '../store/auth';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeContext } from '../context';
 import {
@@ -16,33 +17,45 @@ import {
     Avatar
 } from '@mui/material';
 /* ICONS */
+import LoginIcon from '@mui/icons-material/Login';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import LoginIcon from '@mui/icons-material/Login';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
+import { LogoutOutlined, MenuOutlined } from '@mui/icons-material'
 
 export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { mode } = useContext(ColorModeContext);
     const { status, rol, photoURL } = useSelector(store => store.auth);
     const [anchorElUser, setAnchorElUser] = useState(null);
 
-    const settingsAuth = status === 'authenticated' ? ['Account', 'Reserves', 'Favorites'] : ['Login', 'Reserves', 'Favorites'];
-    const settings = rol === 'admin' ? ['Login'] : settingsAuth;
+    const settingsAuth = status === 'authenticated' ? ['Logout', 'Account', 'Reserves', 'Favorites'] : ['Login'];
+    const settings = rol === 'admin' ? ['Logout', 'Hotel manager'] : settingsAuth;
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
 
+    const onLogout = () => {
+        dispatch(startLogout());
+    }
+
     const showOption = (option) => {
         setAnchorElUser(null);
         if (option === 'Account') return handleDrawerAccount(true);
 
+        if (option === 'Logout') return onLogout();
+
+        if (option === 'Hotel manager') {
+            navigate(`/admin`);
+            return;
+        };
+
         if (option === 'Login') {
-            const route = status === 'authenticated' ? 'admin' : 'auth';
-            navigate(`/${route}`);
+            navigate(`/auth`);
             return;
         };
         if (option === 'Reserves') return handleDrawerReserve(true);
@@ -130,9 +143,11 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, ha
                                                 <MenuItem key={setting} onClick={() => showOption(setting)}>
                                                     <ListItemIcon>
                                                         {setting === 'Account' && (<AccountCircleIcon fontSize="small" />)}
+                                                        {setting === 'Hotel manager' && (<AccountCircleIcon fontSize="small" />)}
                                                         {setting === 'Login' && (<LoginIcon fontSize="small" />)}
                                                         {setting === 'Reserves' && (<EventAvailableIcon fontSize="small" />)}
                                                         {setting === 'Favorites' && (<FavoriteIcon fontSize="small" />)}
+                                                        {setting === 'Logout' && (<LogoutOutlined fontSize="small" />)}
                                                     </ListItemIcon>
                                                     <Typography variant="inherit" noWrap>
                                                         {setting}
@@ -163,6 +178,28 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, ha
                                 href='/'
                             >
                                 <HomeIcon />
+                            </IconButton>
+                        </Box>
+                    )
+                }
+
+                {
+                    module_call === 'admin-manager' && (
+                        <Box sx={{
+                            display: 'flex',
+                            flex: 1,
+                            justifyContent: 'end',
+                            pr: 1,
+                        }}>
+                            <IconButton
+                                sx={{
+                                    backgroundColor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`, 
+                                    color: '#fff'
+                                }}
+                                size='large'
+                                // onClick={}
+                            >
+                                <MenuOutlined />
                             </IconButton>
                         </Box>
                     )

@@ -53,7 +53,7 @@ export const signInWithGoogle = async () => {
     }
 }
 
-export const registerUserWhitEmailPassword = async ({ email, password, displayName }) => {
+export const registerUserWhitEmailPassword = async ({ email, password, displayName, birthdate, gender, type_document, document_number, phone, name_contact, phone_contact }) => {
     try {
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
         const { uid, photoURL } = resp.user;
@@ -64,6 +64,13 @@ export const registerUserWhitEmailPassword = async ({ email, password, displayNa
             email,
             rol: 'user',
             displayName,
+            birthdate: null, // Añadir birthdate
+            gender: null, // Añadir gender
+            type_document: null, // Añadir type_document
+            document_number: null, // Añadir document_number
+            phone: null, // Añadir phone
+            name_contact: null, // Añadir name_contact
+            phone_contact: null, // Añadir phone_contact
         }
 
         // Crea una referencia a la colección 'users' en Firestore y luego a un documento con el UID como nombre
@@ -76,7 +83,14 @@ export const registerUserWhitEmailPassword = async ({ email, password, displayNa
             photoURL,
             email,
             rol: 'user',
-            displayName
+            displayName,
+            birthdate: null, // Añadir birthdate
+            gender: null, // Añadir gender
+            type_document: null, // Añadir type_document
+            document_number: null, // Añadir document_number
+            phone: null, // Añadir phone
+            name_contact: null, // Añadir name_contact
+            phone_contact: null, // Añadir phone_contact
         }
     } catch (error) {
         return { ok: false, errorMessage: error.message }
@@ -89,13 +103,22 @@ export const loginWithEmailPassword = async ({ email, password }) => {
         const result = await signInWithEmailAndPassword(FirebaseAuth, email, password);
         const { displayName, photoURL, uid } = result.user;
 
-        // Aquí recuperamos el rol del usuario desde Firestore
+        // Aquí recuperamos el rol y otras propiedades del usuario desde Firestore
         const userDocRef = doc(collection(FirebaseDB, 'users'), uid);
         const userDocSnapshot = await getDoc(userDocRef);
-        const userData = userDocSnapshot.data();
+        const userData = userDocSnapshot.data() || {};
 
-        // Agregamos el rol al objeto user
-        const rol = userData?.rol || "user";
+        // Extraer las propiedades adicionales del usuario y proporcionar valores por defecto si están ausentes
+        const {
+            rol = "user",
+            birthdate = null,
+            gender = null,
+            type_document = null,
+            document_number = null,
+            phone = null,
+            name_contact = null,
+            phone_contact = null,
+        } = userData;
 
         return {
             ok: true,
@@ -103,7 +126,14 @@ export const loginWithEmailPassword = async ({ email, password }) => {
             email,
             rol,
             photoURL,
-            uid
+            uid,
+            birthdate, // Añadir birthdate
+            gender, // Añadir gender
+            type_document, // Añadir type_document
+            document_number, // Añadir document_number
+            phone, // Añadir phone
+            name_contact, // Añadir name_contact
+            phone_contact, // Añadir phone_contact
         }
     } catch (error) {
         return {
@@ -112,6 +142,7 @@ export const loginWithEmailPassword = async ({ email, password }) => {
         }
     }
 }
+
 
 export const logoutFirebase = async () => {
     return await FirebaseAuth.signOut();

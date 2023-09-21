@@ -24,10 +24,15 @@ export const useForm = (initialForm = {}, formValidations = {}) => {
     const onInputChange = ({ target }) => {
         const { name, value, checked } = target;
 
+        /* HOTEL */
         if (name === "numberBedRooms" && (parseInt(value) > 5 || parseInt(value) < 1)) return;
         if (name === "rate" && (parseInt(value) > 5 || parseInt(value) < 1)) return;
+        /* USER */
+        if (name === "phone_contact" && (value.length > 10 || parseInt(value) < 1)) return;
+        if (name === "phone" && (value.length > 10 || parseInt(value) < 1)) return;
+        if (name === "document_number" && (value.length > 10 || parseInt(value) < 1)) return;
 
-        const isSwitch =  name === ('state') || name === ('wifi') || name === ('pool') || name === ('restaurant');
+        const isSwitch = name === ('state') || name === ('wifi') || name === ('pool') || name === ('restaurant');
         const resSwitch = isSwitch && checked && true;
 
         setFormState({

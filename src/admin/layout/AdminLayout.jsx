@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Navbar, SideBar } from "../components"
 import { TravelAgencyContext } from "../../context";
 import { Toolbar, Box } from "@mui/material";
+import { HomeLayout } from "../../home/layout/HomeLayout";
 
 export const AdminLayout = ({ children }) => {
     const { hotels } = useSelector(state => state.admin);
@@ -16,20 +17,23 @@ export const AdminLayout = ({ children }) => {
     }
 
     return (
-        <Box
-            className='animate__animated animate__fadeIn animate__faster'
-            sx={{ display: 'flex' }}>
-
-            <Navbar handleDrawer={handleDrawer} />
-
-            <SideBar handleDrawer={handleDrawer} stateDrawer={state} />
-            <Box
-                component='main'
-                sx={{ flex: 1, p: 3 }}
-            >
-                <Toolbar />
-                {children}
-            </Box>
-        </Box>
+        <HomeLayout module={'admin-manager'}>
+            {children}
+        </HomeLayout>
+        /*    <Box
+               className='animate__animated animate__fadeIn animate__faster'
+               sx={{ display: 'flex' }}>
+   
+               <Navbar handleDrawer={handleDrawer} />
+   
+               <SideBar handleDrawer={handleDrawer} stateDrawer={state} />
+               <Box
+                   component='main'
+                   sx={{ flex: 1, p: 3 }}
+               >
+                   <Toolbar />
+                   {children}
+               </Box>
+           </Box> */
     )
 }
