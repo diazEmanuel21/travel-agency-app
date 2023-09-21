@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { ResponsiveAppBar } from "../../components";
-import { DrawerReservations, InfoBar } from "../components";
+import { DrawerFavorite, DrawerReservations, InfoBar } from "../components";
 import { Backdrop, Box, CircularProgress, Divider } from "@mui/material";
 
-export const HomeLayout = ({ children }) => {
-    const [state, setDrawerState] = useState(false);
+export const HomeLayout = ({ children, module: module_call }) => {
+    const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
+    const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
 
-    const handleDrawer = (value) => {
-        setDrawerState(value);
+    const handleDrawerReserve = (value) => {
+        setStateDrawerReserve(value);
+    };
+    const handleDrawerFavorite = (value) => {
+        setStateDrawerFavorite(value);
     };
 
     return (
         <Box sx={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column' }}>
-            <ResponsiveAppBar handleDrawer={handleDrawer} />
+            <ResponsiveAppBar handleDrawerReserve={handleDrawerReserve} handleDrawerFavorite={handleDrawerFavorite} module={module_call}/>
             <Box sx={{
                 display: 'flex',
                 flex: '1',
@@ -32,7 +36,8 @@ export const HomeLayout = ({ children }) => {
                     {children}
                 </Box>
             </Box>
-            <DrawerReservations stateDrawer={state} handleDrawer={handleDrawer} />
+            <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
+            <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
             {/*        
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

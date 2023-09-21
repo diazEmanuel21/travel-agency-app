@@ -1,10 +1,11 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { startLogout } from '../../store/auth';
 import { AppBar, Toolbar, IconButton, Grid, Typography } from '@mui/material'
 /* ICONS */
 import { LogoutOutlined, MenuOutlined } from '@mui/icons-material'
 
 export const Navbar = ({handleDrawer}) => {
+    const { status } = useSelector(store => store.auth);
     const dispatch = useDispatch();
 
     const onLogout = () => {

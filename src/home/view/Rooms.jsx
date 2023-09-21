@@ -21,7 +21,7 @@ export const Rooms = () => {
           <Grid container sx={{ justifyContent: 'center' }}>
             {hotelRooms.map((bedRoom, index) => ( 
               <BedRoomsCard
-                key={bedRoom.roomID}
+                key={bedRoom.id}
                 data={bedRoom}
                 index={index}
               />

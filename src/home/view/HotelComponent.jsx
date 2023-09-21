@@ -168,6 +168,6 @@ export const HotelComponent = () => {
                 open={open}
                 handleClose={handleCloseBedRooms}
             />
-S        </Box >
+        </Box >
     );
 }

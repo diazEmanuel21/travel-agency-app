@@ -2,7 +2,7 @@ import { forwardRef, useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
-import { setActiveStep, setBedRoom } from '../../store/home/homeSlice';
+import { setActiveStep, setBedRoom, setFavorite } from '../../store/home/homeSlice';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -48,7 +48,7 @@ const ContentIcons = forwardRef(function contentIcons(props, ref) {
 
 const tableRoomQuality = ['Poor ', 'Fair', 'Good', 'Excellent', 'Very Good'];
 
-export const BedRoomsCard = ({ data, index }) => {
+export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     const dispatch = useDispatch();
 
     const stay_days = parseInt(localStorage.getItem('stay_days'));
@@ -86,6 +86,13 @@ export const BedRoomsCard = ({ data, index }) => {
     const setRoomSelected = () => {
         dispatch(setBedRoom(data))
         dispatch(setActiveStep(activeStep + 1));
+        if(favorite) {
+            handleDrawer(false);
+        }
+    };
+
+    const setItemFavorite = () => {
+        dispatch(setFavorite([data]));
     };
 
     return (
@@ -101,7 +108,7 @@ export const BedRoomsCard = ({ data, index }) => {
                                     </Avatar>
                                 }
                                 action={
-                                    <IconButton color="error" aria-label="add to favorites">
+                                    <IconButton disabled={favorite} onClick={setItemFavorite} color="error" aria-label="add to favorites">
                                         <FavoriteIcon />
                                     </IconButton>
                                 }

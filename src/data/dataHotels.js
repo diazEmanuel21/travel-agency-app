@@ -12,7 +12,8 @@ export const dataHotels = [
         "restaurant": false,
         "rooms": [
             {
-                "roomID": 101,
+                "id": 101,
+                "hotelID": 1,
                 "roomType": "Double Room",
                 "baseCost": 150000,
                 "taxes": 19,
@@ -46,7 +47,8 @@ export const dataHotels = [
         "restaurant": true,
         "rooms": [
             {
-                "roomID": 201,
+                "id": 201,
+                "hotelID": 2,
                 "roomType": "Family Suite",
                 "baseCost": 300000,
                 "taxes": 19,
@@ -66,7 +68,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 202,
+                "id": 202,
+                "hotelID": 2,
                 "roomType": "Double Room",
                 "baseCost": 180000,
                 "taxes": 19,
@@ -86,7 +89,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 203,
+                "id": 203,
+                "hotelID": 2,
                 "roomType": "Single Room",
                 "baseCost": 120000,
                 "taxes": 19,
@@ -120,7 +124,8 @@ export const dataHotels = [
         "restaurant": true,
         "rooms": [
             {
-                "roomID": 301,
+                "id": 301,
+                "hotelID": 3,
                 "roomType": "Executive Suite",
                 "baseCost": 280000,
                 "taxes": 19,
@@ -140,7 +145,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 302,
+                "id": 302,
+                "hotelID": 3,
                 "roomType": "Double Room",
                 "baseCost": 170000,
                 "taxes": 19,
@@ -160,7 +166,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 303,
+                "id": 303,
+                "hotelID": 3,
                 "roomType": "Single Room",
                 "baseCost": 90000,
                 "taxes": 19,
@@ -194,7 +201,8 @@ export const dataHotels = [
         "restaurant": true,
         "rooms": [
             {
-                "roomID": 402,
+                "id": 402,
+                "hotelID": 4,
                 "roomType": "Deluxe Double Room",
                 "baseCost": 220000,
                 "taxes": 19,
@@ -214,7 +222,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 403,
+                "id": 403,
+                "hotelID": 4,
                 "roomType": "Standard Room",
                 "baseCost": 180000,
                 "taxes": 19,
@@ -234,7 +243,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 404,
+                "id": 404,
+                "hotelID": 4,
                 "roomType": "Family Suite",
                 "baseCost": 350000,
                 "taxes": 19,
@@ -254,7 +264,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 405,
+                "id": 405,
+                "hotelID": 4,
                 "roomType": "Honeymoon Suite",
                 "baseCost": 400000,
                 "taxes": 19,
@@ -274,7 +285,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 406,
+                "id": 406,
+                "hotelID": 4,
                 "roomType": "Standard Double Room",
                 "baseCost": 200000,
                 "taxes": 19,
@@ -294,7 +306,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 407,
+                "id": 407,
+                "hotelID": 4,
                 "roomType": "Junior Suite",
                 "baseCost": 280000,
                 "taxes": 19,
@@ -314,7 +327,8 @@ export const dataHotels = [
                 }
             },
             {
-                "roomID": 408,
+                "id": 408,
+                "hotelID": 4,
                 "roomType": "Economy Room",
                 "baseCost": 150000,
                 "taxes": 19,

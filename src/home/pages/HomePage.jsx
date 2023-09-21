@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HomeLayout } from '../layout/HomeLayout';
 import { getHotels } from '../../store/home/homeSlice';
@@ -36,7 +36,7 @@ export const HomePage = () => {
   };
 
   return (
-    <HomeLayout>
+    <HomeLayout module='home'>
       <Box
         sx={{
           display: 'flex',

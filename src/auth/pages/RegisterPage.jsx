@@ -1,10 +1,13 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Grid, Typography, TextField, Button, Link, Alert } from '@mui/material'
+import {
+  Grid, TextField, Button, Link, Alert
+} from '@mui/material'
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { startCreatingUserWhitEmailPassword } from "../../store/auth";
+import { ColorModeContext } from "../../context";
 
 const initState = {
   email: '',
@@ -23,10 +26,13 @@ export const RegisterPage = () => {
   const [formSubmited, setformSubmited] = useState(false);
   const { status, errorMessage } = useSelector(state => state.auth);
   const isChekinAuthentication = useMemo(() => status === 'cheking', [status]);
+  const { mode } = useContext(ColorModeContext);
 
   const {
     onInputChange, formState, displayName, email, password,
     isFormValid, displayNameValid, emailValid, passwordValid } = useForm(initState, formValidations);
+
+  const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
 
   const onSubmit = (e) => {
@@ -46,6 +52,7 @@ export const RegisterPage = () => {
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              color={colorMode}
               label="Name"
               type="text"
               placeholder="Emanuel Diaz"
@@ -59,6 +66,7 @@ export const RegisterPage = () => {
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              color={colorMode}
               label="Email"
               type="email"
               placeholder="email@google.com"
@@ -72,6 +80,7 @@ export const RegisterPage = () => {
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              color={colorMode}
               label="Password"
               type="password"
               placeholder="password"
@@ -112,10 +121,9 @@ export const RegisterPage = () => {
           <Grid
             container
             direction="row"
-            justifyContent="end"
+            justifyContent="center"
           >
-            <Typography sx={{ mr: 1 }} color="initial">¿Ya tienes cuenta?</Typography>
-            <Link component={RouterLink} color='inherit' to="/auth/login">Ingresar</Link>
+            <Link component={RouterLink} color='inherit' to="/auth/login">Do you already have an account?</Link>
           </Grid>
 
         </Grid>

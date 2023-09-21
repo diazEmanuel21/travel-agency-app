@@ -1,30 +1,36 @@
-import { Grid, Typography } from '@mui/material'
-import React from 'react'
+import { useContext } from 'react'
+import { ColorModeContext } from '../../context'
+import { HomeLayout } from '../../home/layout/HomeLayout';
+import { Card, CardContent, Grid } from '@mui/material'
 
-export const AuthLayout = ({ children, title = '' }) => {
+export const AuthLayout = ({ children }) => {
+    const { mode } = useContext(ColorModeContext);
+
     return (
-        <>
+        <HomeLayout module='login'>
             <Grid
                 container
                 spacing={0}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
-                sx={{ minHeight: '100vh', padding: 4 }}
+                sx={{
+                    minHeight: '89vh',
+                    padding: 1,
+                    backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
+                }}
             >
                 <Grid
                     item
-                    className='box-shadown'
-                    xs={3}
-                    sx={{ width: { md: 450 }, padding: 3, borderRadius: 2 }}
-
+                    sx={{ padding: 1, }}
                 >
-                    <Typography variant="h5" sx={{ mb: 1 }}>{title}</Typography>
-
-                    {children}
-
+                    <Card sx={{ maxWidth: 275 }}>
+                        <CardContent>
+                            {children}
+                        </CardContent>
+                    </Card>
                 </Grid>
             </Grid>
-        </>
+        </HomeLayout>
     )
 }

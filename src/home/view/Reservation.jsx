@@ -73,8 +73,8 @@ export const Reservation = () => {
   const updateRoomState = (roomId) => {
     const updatedHotels = hotels.map((hotel) => {
       const updatedRooms = hotel.rooms.map((room) => {
-        if (room.roomID === roomId) {
-          // Si el roomID es igual a 101, cambia el state a false
+        if (room.id === roomId) {
+          // Si el id es igual a 101, cambia el state a false
           return {
             ...room,
             state: false,
@@ -98,15 +98,19 @@ export const Reservation = () => {
     setformSubmited(true);
     if (!isFormValid) return setNotify('info', 'Incorrect or empty fields, please check the form and try again.');
     const booking = {
-      id: `${hotelSelected.id}${bedRoomSelected.roomID}`,
-      bedrooms_id: bedRoomSelected.roomID,
+      id: `${hotelSelected.id}${bedRoomSelected.id}`,
+      bedrooms_id: bedRoomSelected.id,
+      hotel_id: hotelSelected.id,
+      hotel_name: hotelSelected.hotelName,
       user_id: dataGuest.document_number,
       entry_date: localStorage.getItem('entry_date'),
       amount_people: localStorage.getItem('amount_people'),
       departure_date: localStorage.getItem('departure_date'),
-      destination_city,
       price_booking: localStorage.getItem('price_booking'),
+      stay_days: localStorage.getItem('stay_days'),
+      destination_city,
     };
+
     dispatch(setBooking(booking));
 
     dispatch(setEnabledBtnSaveReserve(true));

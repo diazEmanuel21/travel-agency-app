@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { loginWithEmailPassword, logoutFirebase, registerUserWhitEmailPassword, signInWithGoogle } from "../../firebase/providers";
 import { clearHotelsLogout } from "../admin/adminSlice";
 import { chekingCredentials, login, logout } from "./";
@@ -14,7 +13,6 @@ export const startGoogleSignIn = () => {
         dispatch(chekingCredentials());
         const result = await signInWithGoogle();
         if (!result.ok) return dispatch(logout(result.errorMessage));
-
         dispatch(login(result));
     }
 }
@@ -22,10 +20,11 @@ export const startGoogleSignIn = () => {
 export const startCreatingUserWhitEmailPassword = ({ email, password, displayName }) => {
     return async (dispatch) => {
         dispatch(chekingCredentials());
-        const { ok, uid, photoURL, errorMessage } = await registerUserWhitEmailPassword({ email, password, displayName });
+        const { ok, rol, uid, photoURL, errorMessage } = await registerUserWhitEmailPassword({ email, password, displayName });
 
         if (!ok) return dispatch(logout({ errorMessage }));
-        dispatch(login({ uid, displayName, email, photoURL }));
+        /* crea coleccion */
+        dispatch(login({ uid, rol, displayName, email, photoURL }));
     }
 }
 
@@ -36,10 +35,6 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 
         if (!result.ok) return dispatch(logout(result));
         dispatch(login(result));
-        useNavigate(`/admin`,
-            {
-                replace: true,
-            });
     }
 }
 

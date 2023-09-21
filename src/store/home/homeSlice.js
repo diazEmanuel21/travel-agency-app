@@ -12,6 +12,7 @@ export const homeSlice = createSlice({
         bookings: [],
         destination_city: '',
         activeStep: 0,
+        favorite: [],
         showNotifyReserve: false,
         showHotels: false,
         enabledBtnSaveReserve: false,
@@ -39,21 +40,23 @@ export const homeSlice = createSlice({
         setBooking: (state, action) => {
             state.bookings.push(action.payload);
         },
-   
-        setShowHotels: (state, action) => {
-            state.showHotels = action.payload;
-        },
-        setShowNotifyReserve: (state, action) => {
-            state.showNotifyReserve = action.payload;
+        setDestination: (state, action) => {
+            state.destination_city = action.payload;
         },
         setActiveStep: (state, action) => {
             state.activeStep = action.payload;
         },
+        setFavorite: (state, action) => {
+            state.favorite = action.payload;
+        },
+        setShowNotifyReserve: (state, action) => {
+            state.showNotifyReserve = action.payload;
+        },
+        setShowHotels: (state, action) => {
+            state.showHotels = action.payload;
+        },
         setEnabledBtnSaveReserve: (state, action) => {
             state.enabledBtnSaveReserve = action.payload;
-        },
-        setDestination: (state, action) => {
-            state.destination_city = action.payload;
         },
         setShowBackdrop: (state, action) => {
             state.showBackdrop = action.payload;
@@ -72,6 +75,7 @@ export const {
     setShowHotels,
     setShowNotifyReserve,
     setActiveStep,
+    setFavorite,
     setEnabledBtnSaveReserve,
     setShowBackdrop
 } = homeSlice.actions;
