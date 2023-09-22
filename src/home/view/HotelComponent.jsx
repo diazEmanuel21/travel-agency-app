@@ -12,7 +12,7 @@ import {
     CardMedia,
     Typography,
     Rating,
-    Button, Tooltip
+    Button, Tooltip, Grid
 } from '@mui/material';
 /* ICONS */
 import WifiIcon from '@mui/icons-material/Wifi';
@@ -56,14 +56,7 @@ export const HotelComponent = () => {
     });
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-                width: '100%',
-            }}
-        >
+        <Grid item>
             {sortedHotels.map((hotel) => {
                 const city = locationData.filter((city) => city.id === hotel.location)[0];
                 const roomsInTrueState = hotel.rooms.filter((room) => room.state === true);
@@ -168,6 +161,6 @@ export const HotelComponent = () => {
                 open={open}
                 handleClose={handleCloseBedRooms}
             />
-        </Box >
+        </Grid >
     );
 }

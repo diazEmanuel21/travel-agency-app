@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip } from '@mui/material'
+import { Box, IconButton, SwipeableDrawer, Toolbar, Tooltip } from '@mui/material'
 import { SwitchColorMood } from '../../components'
 /* Icons */
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -7,23 +7,19 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
 
-export const InfoBar = ({handleDrawer}) => {
+export const InfoBar = () => {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                width: 50,
-                color: 'white',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}>
-            <Box sx={{
-                display: 'flex',
-                flex: '1',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-            }}>
+        <>
+            <Toolbar />
+            <Box
+                sx={{
+                    display: 'flex',
+                    flex: 1,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-around'
+                }}
+            >
                 <Tooltip title="aweasome D.A." placement='right'>
                     <IconButton color='secondary'>
                         <FacebookIcon />
@@ -44,12 +40,8 @@ export const InfoBar = ({handleDrawer}) => {
                         <YouTubeIcon />
                     </IconButton>
                 </Tooltip>
-   {/*              <Tooltip title="My reservations" placement='right'>
-                    <IconButton onClick={handleDrawer(true)} color='secondary'>
-                        <PlaylistAddCheckCircleIcon />
-                    </IconButton>
-                </Tooltip> */}
             </Box>
+
             <Box sx={{
                 display: 'flex',
                 flex: '1',
@@ -57,7 +49,8 @@ export const InfoBar = ({handleDrawer}) => {
             }}>
                 <SwitchColorMood />
             </Box>
-        </Box>
-
+        </>
     )
 }
+
+

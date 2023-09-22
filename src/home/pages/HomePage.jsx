@@ -5,7 +5,7 @@ import { getHotels } from '../../store/home/homeSlice';
 import { HotelComponent, LandingPage } from '../view';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { dataHotels } from '../../data/dataHotels';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -37,30 +37,47 @@ export const HomePage = () => {
 
   return (
     <HomeLayout module='home'>
-      <Box
+      <Grid
+        container
         sx={{
           display: 'flex',
-          minHeight: '89vh'
+          flex: 1,
+          padding: '',
+          padding: { xs: 1, md: '8px 8px 8px 82px' },
+          minHeight: '89vh',
+          msOverflowX: 'hidden',
+          backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
+
+
+          alignItems: 'end',
+          backgroundImage: `url(../../Bg-Agency-${mode === 'dark' ? 'Secondary' : 'Primary'}.svg)`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
         }}
       >
         <LandingPage />
-      </Box>
+      </Grid>
       {
         showHotels && (
-          <Box
+          <Grid
+            container
             ref={scrollTargetRef}
             sx={{
               display: 'flex',
               flex: 1,
+              padding: { xs: 1, md: '8px 8px 8px 82px' },
+              minHeight: '89vh',
               msOverflowX: 'hidden',
-              p: 1,
               backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
+
+              justifyContent: 'space-between',
+              flexDirection: 'column',
             }}
           >
             {resHotels.length > 0 && (
               <HotelComponent />
             )}
-          </Box>
+          </Grid>
         )
       }
     </HomeLayout >

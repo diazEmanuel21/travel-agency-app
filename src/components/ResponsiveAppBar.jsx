@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { startLogout } from '../store/auth';
 import { useNavigate } from 'react-router-dom';
@@ -14,26 +14,50 @@ import {
     ListItemIcon,
     IconButton,
     Tooltip,
-    Avatar
+    Avatar,
+    Divider
 } from '@mui/material';
 /* ICONS */
+import DiamondIcon from '@mui/icons-material/Diamond';
+import { LogoutOutlined } from '@mui/icons-material'
 import LoginIcon from '@mui/icons-material/Login';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import HotelIcon from '@mui/icons-material/Hotel';
+import NightShelterIcon from '@mui/icons-material/NightShelter';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import DiamondIcon from '@mui/icons-material/Diamond';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
-import { LogoutOutlined, MenuOutlined } from '@mui/icons-material'
+import { SwitchColorMood } from './SwitchColorMood';
 
-export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
+export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { mode } = useContext(ColorModeContext);
     const { status, rol, photoURL } = useSelector(store => store.auth);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [settings, setSettings] = useState(['Login']);
 
-    const settingsAuth = status === 'authenticated' ? ['Logout', 'Account', 'Reserves', 'Favorites'] : ['Login'];
-    const settings = rol === 'admin' ? ['Logout', 'Hotel manager'] : settingsAuth;
+
+    useEffect(() => {
+        if (status !== 'authenticated') {
+            setSettings(['Login']);
+        };
+
+        if (rol === 'user') {
+            setSettings(['Account', 'Reserves', 'Favorites', 'Logout']);
+        };
+
+        if (rol === 'admin') {
+            let local_setting = ['Home', 'Hotel manager', 'Reserves', , 'Hotels', 'Rooms', 'Logout'];
+            setSettings(local_setting);
+        };
+
+        if (module_call === 'login') {
+            setSettings(['Home']);
+        };
+    }, [status, rol, module_call]);
+
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -45,9 +69,18 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, ha
 
     const showOption = (option) => {
         setAnchorElUser(null);
+        if (option === 'Home') {
+            navigate(`/home`);
+            return;
+        };
+
         if (option === 'Account') return handleDrawerAccount(true);
 
         if (option === 'Logout') return onLogout();
+
+        if (option === 'Hotels') return handleDrawerManager();
+
+        if (option === 'Rooms') return null;
 
         if (option === 'Hotel manager') {
             navigate(`/admin`);
@@ -63,7 +96,13 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, ha
     };
 
     return (
-        <AppBar position="static" sx={{ bgcolor: `${mode === 'dark' ? '#000' : '#001e3c'}` }} >
+        <AppBar
+            position="sticky"
+            sx={{
+                bgcolor: `${mode === 'dark' ? '#000' : '#001e3c'}`,
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+        >
             <Toolbar disableGutters sx={{ justifyContent: 'space-between', paddingLeft: '14px' }}>
                 <Box sx={{
                     display: 'flex',
@@ -87,124 +126,86 @@ export const ResponsiveAppBar = ({ handleDrawerReserve, handleDrawerFavorite, ha
                         Diamond Agency
                     </Typography>
                 </Box>
-                {
-                    module_call === 'home' && (
-                        <>
-                            <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-                                {settings.map((page) => (
-                                    <Button
-                                        key={page}
-                                        color="inherit"
-                                        onClick={() => showOption(page)}
-                                        sx={{ my: 2 }}
-                                    >
-                                        {page}
-                                    </Button>
+
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                    {settings.map((page) => (
+                        <Button
+                            key={page}
+                            color="inherit"
+                            onClick={() => showOption(page)}
+                            sx={{ my: 2 }}
+                        >
+                            {page}
+                        </Button>
+                    ))}
+                </Box>
+
+                <Box sx={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'end',
+                }}>
+                    <Tooltip title="Open settings" placement='left'>
+                        <Box sx={{
+                            display: 'flex',
+                            overflow: 'hidden'
+                        }}>
+                            <IconButton
+                                size='large'
+                                onClick={handleOpenUserMenu}
+                            >
+                                <Avatar
+                                    sx={{
+                                        bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}`
+                                    }}
+                                    alt="avatar-app-bar" src={photoURL} />
+                            </IconButton>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={showOption}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem key={setting} onClick={() => showOption(setting)}>
+                                        <ListItemIcon>
+                                            {setting === 'Home' && (<HomeIcon fontSize="small" />)}
+                                            {setting === 'Account' && (<AccountCircleIcon fontSize="small" />)}
+                                            {setting === 'Hotel manager' && (<AdminPanelSettingsIcon fontSize="small" />)}
+                                            {setting === 'Hotels' && (<HotelIcon fontSize="small" />)}
+                                            {setting === 'Rooms' && (<NightShelterIcon fontSize="small" />)}
+                                            {setting === 'Login' && (<LoginIcon fontSize="small" />)}
+                                            {setting === 'Reserves' && (<EventAvailableIcon fontSize="small" />)}
+                                            {setting === 'Favorites' && (<FavoriteIcon fontSize="small" />)}
+                                            {setting === 'Logout' && (<LogoutOutlined fontSize="small" />)}
+                                        </ListItemIcon>
+                                        <Typography variant="inherit" noWrap>
+                                            {setting}
+                                        </Typography>
+                                    </MenuItem>
                                 ))}
-                            </Box>
-
-                            <Box sx={{
-                                display: 'flex',
-                                flex: 1,
-                                justifyContent: 'end',
-                            }}>
-                                <Tooltip title="Open settings" placement='left'>
-                                    <Box sx={{
-                                        display: 'flex',
-                                        overflow: 'hidden'
-                                    }}>
-                                        <IconButton
-                                            size='large'
-                                            onClick={handleOpenUserMenu}
-                                        >
-                                            <Avatar
-                                                sx={{
-                                                    bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}`
-                                                }}
-                                                alt="avatar-app-bar" src={photoURL} />
-                                        </IconButton>
-                                        <Menu
-                                            sx={{ mt: '45px' }}
-                                            id="menu-appbar"
-                                            anchorEl={anchorElUser}
-                                            anchorOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            keepMounted
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            open={Boolean(anchorElUser)}
-                                            onClose={showOption}
-                                        >
-                                            {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={() => showOption(setting)}>
-                                                    <ListItemIcon>
-                                                        {setting === 'Account' && (<AccountCircleIcon fontSize="small" />)}
-                                                        {setting === 'Hotel manager' && (<AccountCircleIcon fontSize="small" />)}
-                                                        {setting === 'Login' && (<LoginIcon fontSize="small" />)}
-                                                        {setting === 'Reserves' && (<EventAvailableIcon fontSize="small" />)}
-                                                        {setting === 'Favorites' && (<FavoriteIcon fontSize="small" />)}
-                                                        {setting === 'Logout' && (<LogoutOutlined fontSize="small" />)}
-                                                    </ListItemIcon>
-                                                    <Typography variant="inherit" noWrap>
-                                                        {setting}
-                                                    </Typography>
-                                                </MenuItem>
-                                            ))}
-                                        </Menu>
-                                    </Box>
-                                </Tooltip>
-                            </Box>
-                        </>
-                    )
-                }
-
-                {
-                    module_call === 'login' && (
-                        <Box sx={{
-                            display: 'flex',
-                            flex: 1,
-                            justifyContent: 'end',
-                            pr: 1,
-                        }}>
-                            <IconButton
-                                sx={{
-                                    backgroundColor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`,
-                                }}
-                                size='large'
-                                href='/'
-                            >
-                                <HomeIcon />
-                            </IconButton>
+                                <>
+                                    <Divider />
+                                    <MenuItem sx={{ display: { xs: 'flex', md: ' none' }, justifyContent: 'center' }}>
+                                        <ListItemIcon>
+                                            <SwitchColorMood />
+                                        </ListItemIcon>
+                                    </MenuItem>
+                                </>
+                            </Menu>
                         </Box>
-                    )
-                }
-
-                {
-                    module_call === 'admin-manager' && (
-                        <Box sx={{
-                            display: 'flex',
-                            flex: 1,
-                            justifyContent: 'end',
-                            pr: 1,
-                        }}>
-                            <IconButton
-                                sx={{
-                                    backgroundColor: `${mode === 'dark' ? 'primary.main' : 'secondary.main'}`, 
-                                    color: '#fff'
-                                }}
-                                size='large'
-                                // onClick={}
-                            >
-                                <MenuOutlined />
-                            </IconButton>
-                        </Box>
-                    )
-                }
-
+                    </Tooltip>
+                </Box>
             </Toolbar>
         </AppBar>
     );

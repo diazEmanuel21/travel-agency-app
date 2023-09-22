@@ -2,7 +2,7 @@ import { List, SwipeableDrawer } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { SideBarItem } from './SideBarItem';
 
-export const SideBar = ({ handleDrawer, stateDrawer }) => {
+export const DrawerManager = ({ handleDrawer, stateDrawer }) => {
     const { hotels } = useSelector(state => state.admin);
 
     return (
