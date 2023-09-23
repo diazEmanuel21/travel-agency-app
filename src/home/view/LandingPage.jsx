@@ -29,7 +29,6 @@ export const LandingPage = () => {
 
 
     const searchHotels = () => {
-        debugger;
         const amount_people = parseInt(localStorage.getItem('amount_people'));
         const filterHotel = hotels.filter((hotel) => hotel.location === destination_city);
         if (filterHotel.length < 1) return setNotify('info', 'No results found for that date range.');

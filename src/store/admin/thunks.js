@@ -2,27 +2,30 @@ import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { addNewEmptyHotel, setActiveHotel, savingNewHotel, setHotels, setSaving, updateHotel, setPhotosToActiveHotel, deleteHotelById } from './';
 import { fileUpload, loadHotels } from '../../helpers';
+import { getHotels } from '../home/homeSlice';
 
 export const startNewHotel = () => {
     return async (dispatch, getState) => {
         dispatch(savingNewHotel());
-        const { uid } = getState().auth;
+        // const { uid } = getState().auth;
 
         const newHotel = {
-            "hotelName": "Intercontinental",
-            "location": 30,
-            "numberBedRooms": 1,
+            // "id": "TZln44mBSPaUeitisiC5",
+            "hotelName": "Cali pachanguero",
+            "imgURL": "https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80",
+            "wifi": false,
+            "restaurant": false,
+            "pool": false,
             "state": true,
             "rate": 2,
-            "wifi": false,
-            "pool": false,
-            "restaurant": false,
-            "imgURL": 'https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-            "details": "The best rooms in the city"
-        }
+            "location": 30,
+            "numberBedRooms": 3,
+            "details": "The best rooms in the city",
+            "rooms": []
+        };
 
         try {
-            const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
+            const newDoc = doc(collection(FirebaseDB, 'hotels'));
             await setDoc(newDoc, newHotel);
 
             newHotel.id = newDoc.id;
@@ -40,17 +43,18 @@ export const startNewHotel = () => {
 
 export const startLoadingHotels = () => {
     return async (dispatch, getState) => {
-        const { uid } = getState().auth;
-        if (!uid) throw new Error('Thunks => El UID del usuario no existe');
+        // const { uid } = getState().auth;
+        // if (!uid) throw new Error('Thunks => El UID del usuario no existe');
 
         try {
-            const respHotels = await loadHotels(uid);
+            const respHotels = await loadHotels();
 
             if (respHotels === 0) {
                 return { ok: false, errorMessage: 'There are no hotels' };
             }
 
             dispatch(setHotels(respHotels));
+            dispatch(getHotels(respHotels));
 
             return { ok: true, message: 'Hotels loaded successfully' };
         } catch (error) {
@@ -64,7 +68,7 @@ export const startSaveHotel = () => {
     return async (dispatch, getState) => {
         dispatch(setSaving());
 
-        const { uid } = getState().auth;
+        // const { uid } = getState().auth;
         const { active: hotelActive } = getState().admin;
 
         // Copiar el objeto hotelActive y eliminar su propiedad 'id'
@@ -72,7 +76,7 @@ export const startSaveHotel = () => {
         delete noteToFireStore.id;
 
         // Obtener una referencia al documento en Firestore
-        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`);
+        const docRef = doc(FirebaseDB, `hotels/${hotelActive.id}`);
 
         try {
             // Guardar el objeto en Firestore utilizando merge: true para actualizar sin reemplazar
@@ -111,10 +115,10 @@ export const startUploadingFiles = (files = []) => {
 
 export const startDeletingHotel = (id) => {
     return async (dispatch, getState) => {
-        const { uid } = getState().auth;
+        // const { uid } = getState().auth;
 
         try {
-            const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${id}`);
+            const docRef = doc(FirebaseDB, `hotels/${id}`);
             await deleteDoc(docRef);
 
             dispatch(deleteHotelById(id));

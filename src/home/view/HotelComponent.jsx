@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext } from '../../context';
+import { useNavigate } from 'react-router-dom';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { BedRoomsSteeper } from './BedRoomsSteeper';
 import { setActiveStep, setBedRoom, setEnabledBtnSaveReserve, setHotel, setHotelRooms } from '../../store/home/homeSlice';
 import { locationData } from '../../data';
@@ -23,12 +24,20 @@ import RoomIcon from '@mui/icons-material/Room';
 
 export const HotelComponent = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { setNotify } = useContext(TravelAgencyContext);
     const { resHotels, hotelSelected: existingHotel } = useSelector(store => store.home);
+    const { status, rol } = useSelector(state => state.auth);
     const { mode } = useContext(ColorModeContext);
 
     const [open, setOpen] = useState(false);
 
     const handleOpenBedRooms = (hotelRooms, id) => {
+        if (status !== "authenticated") {
+            setNotify('info', 'To make a reservation you must log-in.');
+            navigate(`/auth`);
+        };
+        if (rol === "admin") return setNotify('info', 'You cannot make reservations if you are an administrator.');
         const hotelInReservationProcess = existingHotel?.id;
 
         if (hotelInReservationProcess !== undefined) {

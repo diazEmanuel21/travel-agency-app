@@ -2,7 +2,7 @@ import { forwardRef, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
 import { setActiveStep, setBedRoom, setDestination, setEnabledBtnSaveReserve, setShowHotels, setShowNotifyReserve } from '../../store/home/homeSlice';
-import { Reservation, Rooms, Summary } from '.';
+import { Rooms, Summary } from '.';
 import { useTheme } from '@mui/material/styles';
 import {
     AppBar, Box, Dialog, DialogContent,
@@ -145,10 +145,6 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                                 />
                             )}
                             {index === 1 && (
-                                <Reservation
-                                />
-                            )}
-                            {index === 2 && (
                                 <Summary
                                 />
                             )}

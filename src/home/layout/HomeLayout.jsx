@@ -7,8 +7,9 @@ import { Backdrop, Box, CircularProgress, CssBaseline, Drawer } from "@mui/mater
 
 export const HomeLayout = ({ children, module: module_call }) => {
     const { hotels } = useSelector(state => state.admin);
-    const { setNotify } = useContext(TravelAgencyContext);
+    const { status } = useSelector(state => state.auth);
     const { showBackdrop } = useSelector(store => store.home);
+    const { setNotify } = useContext(TravelAgencyContext);
 
     const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
     const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
@@ -51,9 +52,15 @@ export const HomeLayout = ({ children, module: module_call }) => {
                 </Box>
             </>
 
-            <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
-            <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
-            <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />
+            {
+                status === 'authenticated' && (
+                    <>
+                        <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
+                        <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
+                        <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />
+                    </>
+                )
+            }
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

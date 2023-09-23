@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HomeLayout } from '../layout/HomeLayout';
-import { getHotels } from '../../store/home/homeSlice';
+import { getHotels, setShowBackdrop } from '../../store/home/homeSlice';
 import { HotelComponent, LandingPage } from '../view';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { dataHotels } from '../../data/dataHotels';
+import { startLoadingHotels } from '../../store/admin';
 import { Grid } from '@mui/material';
 
 export const HomePage = () => {
@@ -14,8 +14,20 @@ export const HomePage = () => {
   const { resHotels, showHotels, showNotifyReserve } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
 
+  const handleLoadingHotel = async () => {
+    dispatch(setShowBackdrop(true));
+    const result = await dispatch(startLoadingHotels());
+    if (result.ok) {
+      dispatch(setShowBackdrop(false));
+      setNotify('success', result.message);
+    } else {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', result.errorMessage);
+    }
+  };
+
   useEffect(() => {
-    dispatch(getHotels(dataHotels));
+    handleLoadingHotel();
   }, []);
 
   useEffect(() => {
@@ -23,7 +35,7 @@ export const HomePage = () => {
   }, [showNotifyReserve])
 
   useEffect(() => {
-    if (resHotels.length < 1) return;
+    if (resHotels.length < 0) return;
     scrollToElement();
   }, [resHotels]);
 
