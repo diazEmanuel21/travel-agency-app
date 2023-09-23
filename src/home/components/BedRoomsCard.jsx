@@ -58,7 +58,7 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
 
     const [expanded, setExpanded] = useState(-1);
 
-    const qualityRoom = tableRoomQuality[data.rateRoom - 1];
+    const qualityRoom = tableRoomQuality[data.rate_room - 1];
     const isExpanded = expanded === index;
 
     /* taxes */
@@ -69,7 +69,7 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
         currency: 'COP'
     });
     /* Night */
-    const priceRoom = data.baseCost;
+    const priceRoom = data.base_cost;
     const priceNight = copPrice.format(priceRoom);
     /* Total */
     const nightPrice = priceRoom * stay_days;
@@ -112,13 +112,13 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
                                         <FavoriteIcon />
                                     </IconButton>
                                 }
-                                title={data.roomType}
-                                subheader={`${data.rateRoom}/5 ${qualityRoom}`}
+                                title={data.type_bedroom}
+                                subheader={`${data.rate_room}/5 ${qualityRoom}`}
                             />
                             <CardMedia
                                 component="img"
                                 height="194"
-                                image={data.imageRoomURL}
+                                image={data.image_room_URL}
                                 alt="Paella dish"
                             />
                             <CardContent
@@ -129,15 +129,15 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
                             >
                                 <ContentIcons>
                                     <PeopleAltIcon sx={{ mr: 1 }} />
-                                    <Typography fontSize={14}>{`Capacity for ${data.amountPeople}`}</Typography>
+                                    <Typography fontSize={14}>{`Capacity for ${data.amount_people}`}</Typography>
                                 </ContentIcons>
                                 <ContentIcons>
                                     <HotelIcon sx={{ mr: 1 }} />
-                                    <Typography fontSize={14}>{`Type bed ${data.typeBed}`}</Typography>
+                                    <Typography fontSize={14}>{`Type bed ${data.type_bedroom}`}</Typography>
                                 </ContentIcons>
                                 <ContentIcons>
                                     <FmdGoodIcon sx={{ mr: 1 }} />
-                                    <Typography fontSize={14}>{data.roomLocation}</Typography>
+                                    <Typography fontSize={14}>{data.room_location}</Typography>
                                 </ContentIcons>
                             </CardContent>
                             <CardActions disableSpacing>

@@ -36,21 +36,29 @@ export const startNewHotel = () => {
             return { ok: false, errorMessage: "Failed to add hotel" };
         }
     }
-}
-
+};
 
 export const startLoadingHotels = () => {
     return async (dispatch, getState) => {
         const { uid } = getState().auth;
         if (!uid) throw new Error('Thunks => El UID del usuario no existe');
 
-        const respNotes = await loadHotels(uid);
+        try {
+            const respHotels = await loadHotels(uid);
 
-        if (respNotes === 0) throw new Error('Thunks => No existen notas');
+            if (respHotels === 0) {
+                return { ok: false, errorMessage: 'There are no hotels' };
+            }
 
-        dispatch(setHotels(respNotes));
+            dispatch(setHotels(respHotels));
+
+            return { ok: true, message: 'Hotels loaded successfully' };
+        } catch (error) {
+            console.error('Error loading hotels:', error);
+            return { ok: false, errorMessage: 'Failed to load hotels' };
+        }
     }
-}
+};
 
 export const startSaveHotel = () => {
     return async (dispatch, getState) => {
@@ -59,16 +67,33 @@ export const startSaveHotel = () => {
         const { uid } = getState().auth;
         const { active: hotelActive } = getState().admin;
 
+        // Copiar el objeto hotelActive y eliminar su propiedad 'id'
         const noteToFireStore = { ...hotelActive };
         delete noteToFireStore.id;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`)
+        // Obtener una referencia al documento en Firestore
+        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`);
 
-        await setDoc(docRef, noteToFireStore, { merge: true });
+        try {
+            // Guardar el objeto en Firestore utilizando merge: true para actualizar sin reemplazar
+            await setDoc(docRef, noteToFireStore, { merge: true });
 
-        dispatch(updateHotel(hotelActive));
+            // Despachar una acción para actualizar el hotel en el estado de la tienda
+            dispatch(updateHotel(hotelActive));
+
+            // Devolver un objeto indicando éxito
+            return { ok: true, message: 'Saved successfully' };
+        } catch (error) {
+            // Manejar cualquier error que pueda ocurrir durante el proceso de guardado
+            console.error("Error al guardar el hotel:", error);
+
+            // Devolver un objeto indicando error y un mensaje personalizado
+            return { ok: false, errorMessage: 'Error al guardar el hotel' };
+        }
     }
-}
+};
+
+
 
 export const startUploadingFiles = (files = []) => {
     return async (dispatch, getState) => {
@@ -82,7 +107,7 @@ export const startUploadingFiles = (files = []) => {
         const photosUrls = await Promise.all(fileUploadPromises);
         dispatch(setPhotosToActiveHotel(photosUrls));
     }
-}
+};
 
 export const startDeletingHotel = (id) => {
     return async (dispatch, getState) => {
@@ -100,4 +125,4 @@ export const startDeletingHotel = (id) => {
             return { ok: false, errorMessage: "Failed to delete hotel" };
         }
     }
-}
+};

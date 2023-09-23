@@ -78,8 +78,7 @@ export const OptionsList = ({ hotel }) => {
             dispatch(setShowBackdrop(false));
             setNotify('error', result.errorMessage);
         }
-    }
-
+    };
     const handleAction = (action) => {
         setAnchorEl(null);
         if (active !== null) return setNotify('info', 'An action is in process, please finish it to be able to perform a new action.')

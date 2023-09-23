@@ -7,6 +7,7 @@ export const adminSlice = createSlice({
         messageSaved: '',
         hotels: [],
         active: null,
+        activeRoom: [],
         location: 0,
     },
     reducers: {
@@ -23,6 +24,21 @@ export const adminSlice = createSlice({
         },
         setHotels: (state, action) => {
             state.hotels = action.payload;
+        },
+        setActiveRoom: (state, action) => {
+            const newItem = action.payload;
+            const existingItemIndex = state.activeRoom.findIndex(item => item.id === newItem.id);
+
+            if (existingItemIndex !== -1) {
+                // Si el elemento ya existe, actualiza los datos
+                state.activeRoom[existingItemIndex] = newItem;
+            } else {
+                // Si el elemento no existe, agrégalo al arreglo
+                state.activeRoom.push(newItem);
+            }
+        },
+        cleanActiveRoom: (state) => {
+            state.activeRoom = [];
         },
         setSaving: (state, action) => {
             state.isSaving = true;
@@ -66,6 +82,8 @@ export const {
     savingNewHotel,
     setActiveHotel,
     setHotels,
+    setActiveRoom,
+    cleanActiveRoom,
     setPhotosToActiveHotel,
     setSaving,
     updateHotel,

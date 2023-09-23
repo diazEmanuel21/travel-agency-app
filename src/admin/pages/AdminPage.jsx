@@ -17,6 +17,8 @@ export const AdminPage = () => {
   const { setNotify } = useContext(TravelAgencyContext);
   const { active, hotels } = useSelector(state => state.admin);
 
+  console.log({hotels});
+
   const [open, setOpen] = useState(false);
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
 

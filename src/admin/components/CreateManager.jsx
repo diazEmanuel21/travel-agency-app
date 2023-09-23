@@ -1,15 +1,16 @@
-import { forwardRef, useContext, useState } from 'react';
+import { forwardRef, useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext } from '../../context';
-import { setActiveStep } from '../../store/home/homeSlice';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { setActiveStep, setShowBackdrop } from '../../store/home/homeSlice';
+import { cleanActiveRoom, setActiveHotel, startSaveHotel } from '../../store/admin';
 import { useAlert } from '../../hooks/useAlert'
 import { HotelView, BedRoomsView } from '../view';
+import { useTheme } from '@mui/material/styles';
 import {
     AppBar, Box, Dialog, DialogContent,
     DialogActions, IconButton, Slide, Tab,
     Tabs, Toolbar, MobileStepper, Button,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 /* ICONS */
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -42,10 +43,13 @@ export const CreateManager = ({ open, handleClose }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
+    const { setNotify } = useContext(TravelAgencyContext);
     const { mode } = useContext(ColorModeContext);
-    const { activeStep = 0, } = useSelector(store => store.home);
 
-    const maxSteps = steeps.length;
+    const { active, activeRoom } = useSelector(store => store.admin);
+    const { activeStep = 0 } = useSelector(store => store.home);
+
+    const [rooms, setRooms] = useState([]);
 
     const { DialogComponent, handleState: handelAlert } = useAlert({
         title: 'Creation of new hotel',
@@ -54,6 +58,21 @@ export const CreateManager = ({ open, handleClose }) => {
             saveReserve()
         },
     });
+
+    const maxSteps = steeps.length;
+
+    useEffect(() => {
+        generateArrayRooms();
+        if (activeRoom.length === 0) return;
+        dispatch(cleanActiveRoom());
+    }, [active?.numberBedRooms]);
+
+    const generateArrayRooms = () => {
+        const newRoomsArray = Array.from({ length: parseInt(active?.numberBedRooms) }, (_, index) => ({
+            id: index,
+        }));
+        setRooms(newRoomsArray);
+    };
 
     const handleNext = () => {
         if (activeStep < steeps) return;
@@ -65,18 +84,38 @@ export const CreateManager = ({ open, handleClose }) => {
         dispatch(setActiveStep(activeStep - 1));
     };
 
-    const cleanWizard = () => {
-        dispatch(setActiveStep(0));
-        handleClose();
-    }
+    const handleSaveHotel = async () => {
+        dispatch(setShowBackdrop(true));
+        const result = await dispatch(startSaveHotel());
+        if (result.ok) {
+            dispatch(setShowBackdrop(false));
+            setNotify('success', result.message);
+            /* Clean */
+            dispatch(setActiveStep(0));
+            dispatch(setActiveHotel(null))
+            dispatch(cleanActiveRoom());
+            handleClose();
+
+        } else {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', result.errorMessage);
+        }
+    };
 
     const saveReserve = () => {
-        alert('call save hotels');
-        // dispatch(startNewHotel())
-        cleanWizard();
+        const numBedrooms = parseInt(active?.numberBedRooms);
+        if (!Number.isNaN(numBedrooms) && numBedrooms === activeRoom.length) {
+            let hotel = { ...active };
+            hotel.rooms = activeRoom;
+            dispatch(setActiveHotel(hotel));
+            handleSaveHotel();
+        } else {
+            setNotify('error', 'Check the stored rooms, it seems there are still some to be stored.');
+        }
     };
 
     const openAlert = () => {
+        if (activeRoom.length === 0) return setNotify("error", "You haven't saved any rooms yet.");
         handelAlert(true)
     };
 
@@ -140,9 +179,7 @@ export const CreateManager = ({ open, handleClose }) => {
                                 <HotelView />
                             )}
                             {index === 1 && (
-                                <>
-                                    <BedRoomsView />
-                                </>
+                                <BedRoomsView steps={rooms} />
                             )}
                         </TabPanel>
                     ))}

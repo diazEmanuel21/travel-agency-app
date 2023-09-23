@@ -1,14 +1,30 @@
+import { useContext, useEffect } from "react";
 import { getDoc, doc, collection } from "firebase/firestore/lite";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FirebaseAuth, FirebaseDB } from "../firebase/config";
 import { login, logout } from "../store/auth";
 import { startLoadingHotels } from "../store/admin";
+import { setShowBackdrop } from "../store/home/homeSlice";
+import { TravelAgencyContext } from "../context";
 
 export const useCheckAuth = () => {
-    const { status } = useSelector(state => state.auth);
     const dispatch = useDispatch();
+    const { status } = useSelector(state => state.auth);
+    const { setNotify } = useContext(TravelAgencyContext);
+
+
+    const handleLoadingHotel = async () => {
+        dispatch(setShowBackdrop(true));
+        const result = await dispatch(startLoadingHotels());
+        if (result.ok) {
+            dispatch(setShowBackdrop(false));
+            setNotify('success', result.message);
+        } else {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', result.errorMessage);
+        }
+    };
 
     useEffect(() => {
         onAuthStateChanged(FirebaseAuth, async (user) => {
@@ -48,7 +64,7 @@ export const useCheckAuth = () => {
                 name_contact,
                 phone_contact,
             }));
-            dispatch(startLoadingHotels());
+            handleLoadingHotel()
         });
     }, []);
 

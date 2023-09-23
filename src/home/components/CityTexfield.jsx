@@ -5,16 +5,18 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { styled, lighten, darken } from '@mui/system';
 import { setInitialDestination } from '../../store/admin';
+import { useContext } from 'react';
+import { ColorModeContext } from '../../context';
 
 const GroupHeader = styled('div')(({ theme }) => ({
     position: 'sticky',
     top: '-8px',
     padding: '4px 10px',
-    color: theme.palette.primary.main,
+    color: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.secondary.main,
     backgroundColor:
         theme.palette.mode === 'light'
             ? lighten(theme.palette.primary.light, 0.85)
-            : darken(theme.palette.primary.main, 0.8),
+            : darken(theme.palette.secondary.main, 0.8),
 }));
 
 const GroupItems = styled('ul')({
@@ -23,6 +25,7 @@ const GroupItems = styled('ul')({
 
 export const CityTexfield = ({ admin = false }) => {
     const dispatch = useDispatch();
+    const { mode } = useContext(ColorModeContext);
     const options = locationData.map((option) => {
         const firstLetter = option.city[0].toUpperCase();
         return {
@@ -45,7 +48,7 @@ export const CityTexfield = ({ admin = false }) => {
             getOptionLabel={(option) => option.city}
             fullWidth
             sx={{ marginBottom: '0.5em' }}
-            renderInput={(params) => <TextField {...params} label={labelField} />}
+            renderInput={(params) => <TextField color={`${mode === 'dark' ? 'secondary' : 'primary'}`} {...params} label={labelField} />}
             renderGroup={(params) => (
                 <li key={params.key}>
                     <GroupHeader>{params.group}</GroupHeader>

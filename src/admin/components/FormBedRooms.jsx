@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { ColorModeContext } from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { setActiveRoom } from '../../store/admin';
+import { v4 as uuidv4 } from 'uuid';
 import {
     FormControl,
     TextField,
@@ -12,7 +15,10 @@ import {
 } from '@mui/material';
 
 export const FormBedRooms = () => {
+    const dispatch = useDispatch();
     const { mode } = useContext(ColorModeContext);
+    const { setNotify } = useContext(TravelAgencyContext);
+    const { active } = useSelector(store => store.admin);
     const [formData, setFormData] = useState({
         type_bedroom: 'Double Room',
         base_cost: 1000,
@@ -43,8 +49,55 @@ export const FormBedRooms = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí puedes manejar los datos del formulario, por ejemplo, enviarlos al servidor.
-        console.log(formData);
+        const newItem = { ...formData, id: uuidv4() }; // Agregar un ID único
+        const {
+            floor_level,
+            views,
+            orientation,
+            distance_to_amenities,
+            accessibility,
+            noise
+        } = newItem;
+
+        const {
+            type_bedroom,
+            base_cost,
+            taxes,
+            rate_room,
+            image_room_URL,
+            room_location,
+            type_bed,
+            amount_people,
+            state,
+            id,
+        } = newItem;
+
+        const roomDetails = {
+            floor_level,
+            views,
+            orientation,
+            distance_to_amenities,
+            accessibility,
+            noise,
+        };
+
+        const room = {
+            hotel_id: active.id,
+            type_bedroom,
+            base_cost,
+            taxes,
+            rate_room,
+            image_room_URL,
+            room_location,
+            type_bed,
+            amount_people,
+            state,
+            id,
+            roomDetails: roomDetails,
+        };
+
+        dispatch(setActiveRoom(room));
+        setNotify('success', 'Add room correctly.')
     };
 
     return (

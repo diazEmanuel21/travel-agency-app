@@ -19,7 +19,7 @@ export const LandingPage = () => {
 
     const filterHotelsByRoomCapacity = (hotels, minPersons) => {
         return hotels.reduce((filteredHotels, hotel) => {
-            const filteredRooms = hotel.rooms.filter((room) => room.amountPeople >= minPersons);
+            const filteredRooms = hotel.rooms.filter((room) => room.amount_people >= minPersons);
             if (filteredRooms.length > 0) {
                 filteredHotels.push({ ...hotel, rooms: filteredRooms });
             }
@@ -29,6 +29,7 @@ export const LandingPage = () => {
 
 
     const searchHotels = () => {
+        debugger;
         const amount_people = parseInt(localStorage.getItem('amount_people'));
         const filterHotel = hotels.filter((hotel) => hotel.location === destination_city);
         if (filterHotel.length < 1) return setNotify('info', 'No results found for that date range.');

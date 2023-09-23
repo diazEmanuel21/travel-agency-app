@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../hooks';
-import { setActiveHotel, startSaveHotel } from '../../store/admin';
+import { setActiveHotel } from '../../store/admin';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { CityTexfield } from '../../home/components/CityTexfield';
 
@@ -10,10 +10,10 @@ import { Card, CardContent, Typography, TextField, Grid, FormControl, FormContro
 export const HotelView = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
+  const { setNotify } = useContext(TravelAgencyContext);
   const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
-  const { setNotify } = useContext(TravelAgencyContext);
-  const { active: hotelActive, messageSaved, isSaving } = useSelector(state => state.admin);
+  const { active: hotelActive, isSaving } = useSelector(state => state.admin);
 
   const {
     hotelName,
@@ -25,19 +25,18 @@ export const HotelView = () => {
     restaurant,
     imgURL,
     details,
-    /* Validations */
     onInputChange,
     formState,
   } = useForm(hotelActive);
 
-  useEffect(() => {
-    if (messageSaved !== '') return setNotify('success', 'Hotel updated correctly.');
-  }, [messageSaved])
+/*   useEffect(() => {
+    setNotify('info', 'Remember to click "Save changes" to save your changes.')
+  }, []) */
 
   const saveHotel = (e) => {
     e.preventDefault();
     dispatch(setActiveHotel(formState));
-    dispatch(startSaveHotel());
+    setNotify('success', 'Hotel updated correctly.')
   };
 
   return (
@@ -232,7 +231,7 @@ export const HotelView = () => {
           color={colorMode}
           fullWidth
         >
-          Save
+          Save changes
         </Button>
       </CardActions>
     </Card>
