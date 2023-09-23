@@ -1,23 +1,40 @@
 import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { ColorModeContext } from "../../context";
+import { ColorModeContext, TravelAgencyContext } from "../../context";
 import { HomeLayout } from "../../home/layout/HomeLayout";
 import { NothingSelectedView } from "../view"
-import { CreateManager } from "../components";
+import { CreateManager, ListHotels } from "../components";
+import { setShowBackdrop } from "../../store/home/homeSlice";
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
+import { startNewHotel } from "../../store/admin";
 
 export const AdminPage = () => {
+  const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
-  const { isSaving } = useSelector(state => state.admin);
+  const { setNotify } = useContext(TravelAgencyContext);
+  const { active, hotels } = useSelector(state => state.admin);
 
   const [open, setOpen] = useState(false);
-
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
 
-  const handleState = value => {
-    setOpen(value);
+  const handleCreateHotel = async () => {
+    dispatch(setShowBackdrop(true));
+    const result = await dispatch(startNewHotel());
+    if (result.ok) {
+      dispatch(setShowBackdrop(false));
+      setNotify('success', result.message);
+      setOpen(true);
+    } else {
+      dispatch(setShowBackdrop(false));
+      setOpen(false);
+      setNotify('error', result.errorMessage);
+    }
+  };
+
+  const handelCloseDialog = () => {
+    setOpen(false);
   };
 
   return (
@@ -34,14 +51,12 @@ export const AdminPage = () => {
           flexDirection: 'column',
         }}
       >
-        <NothingSelectedView />
-        {/* {!!hotelActive ? <HotelView /> : <NothingSelectedView />} */}
-        {/* <HotelView/> */}
+        {hotels.length > 1 ? <ListHotels/> : <NothingSelectedView />}
         <Tooltip title="Create a new Hotel">
           <Fab
             color={colorMode}
-            onClick={() => handleState(true)}
-            disabled={isSaving}
+            onClick={handleCreateHotel}
+            disabled={active !== null}
             sx={{
               position: 'fixed',
               right: 50,
@@ -54,7 +69,7 @@ export const AdminPage = () => {
       </Grid>
       <CreateManager
         open={open}
-        handleState={handleState}
+        handleClose={handelCloseDialog}
       />
     </HomeLayout>
   )

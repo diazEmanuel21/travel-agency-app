@@ -21,16 +21,23 @@ export const startNewHotel = () => {
             "details": "The best rooms in the city"
         }
 
-        const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
-        // const setDocResp = await setDoc(newDoc, newHotel);
-        await setDoc(newDoc, newHotel);
+        try {
+            const newDoc = doc(collection(FirebaseDB, `${uid}/admin/hotels`));
+            await setDoc(newDoc, newHotel);
 
-        newHotel.id = newDoc.id;
+            newHotel.id = newDoc.id;
 
-        dispatch(addNewEmptyHotel(newHotel));
-        dispatch(setActiveHotel(newHotel));
+            dispatch(addNewEmptyHotel(newHotel));
+            dispatch(setActiveHotel(newHotel));
+
+            return { ok: true, message: "Hotel added successfully" };
+        } catch (error) {
+            console.error("Error adding hotel:", error);
+            return { ok: false, errorMessage: "Failed to add hotel" };
+        }
     }
 }
+
 
 export const startLoadingHotels = () => {
     return async (dispatch, getState) => {

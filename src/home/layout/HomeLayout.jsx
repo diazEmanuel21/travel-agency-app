@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { ResponsiveAppBar } from "../../components";
 import { DrawerAccount, DrawerFavorite, DrawerReservations, InfoBar } from "../components";
-import { DrawerManager } from "../../admin/components";
 import { TravelAgencyContext } from "../../context";
 import { Backdrop, Box, CircularProgress, CssBaseline, Drawer } from "@mui/material";
 
@@ -11,7 +10,6 @@ export const HomeLayout = ({ children, module: module_call }) => {
     const { setNotify } = useContext(TravelAgencyContext);
     const { showBackdrop } = useSelector(store => store.home);
 
-    const [stateDrawerManager, setStateDrawerManager] = useState(false);
     const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
     const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
     const [stateDrawerAccount, setStateDrawerAccount] = useState(false);
@@ -25,10 +23,6 @@ export const HomeLayout = ({ children, module: module_call }) => {
     const handleDrawerAccount = (value) => {
         setStateDrawerAccount(value);
     };
-    const handleDrawerManager = value => {
-        if (hotels.length < 1) return setNotify('info', 'There are no registered hotels yet.')
-        setStateDrawerManager(value)
-    };
 
     return (
         <Box sx={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -37,7 +31,6 @@ export const HomeLayout = ({ children, module: module_call }) => {
                 handleDrawerReserve={handleDrawerReserve}
                 handleDrawerFavorite={handleDrawerFavorite}
                 handleDrawerAccount={handleDrawerAccount}
-                handleDrawerManager={handleDrawerManager}
                 module={module_call}
             />
 
@@ -58,7 +51,6 @@ export const HomeLayout = ({ children, module: module_call }) => {
                 </Box>
             </>
 
-            <DrawerManager stateDrawer={stateDrawerManager} handleDrawer={setStateDrawerManager} />
             <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
             <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
             <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />

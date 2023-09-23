@@ -22,7 +22,6 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import { LogoutOutlined } from '@mui/icons-material'
 import LoginIcon from '@mui/icons-material/Login';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import HotelIcon from '@mui/icons-material/Hotel';
 import NightShelterIcon from '@mui/icons-material/NightShelter';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -30,7 +29,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
 import { SwitchColorMood } from './SwitchColorMood';
 
-export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
+export const ResponsiveAppBar = ({handleDrawerReserve, handleDrawerFavorite, handleDrawerAccount, module: module_call }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { mode } = useContext(ColorModeContext);
@@ -49,7 +48,7 @@ export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, han
         };
 
         if (rol === 'admin') {
-            let local_setting = ['Home', 'Hotel manager', 'Reserves', 'Hotels', 'Rooms', 'Logout'];
+            let local_setting = ['Home', 'Hotel manager', 'Reserves', 'Rooms', 'Logout'];
             setSettings(local_setting);
         };
 
@@ -77,8 +76,6 @@ export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, han
         if (option === 'Account') return handleDrawerAccount(true);
 
         if (option === 'Logout') return onLogout();
-
-        if (option === 'Hotels') return handleDrawerManager();
 
         if (option === 'Rooms') return null;
 
@@ -182,7 +179,6 @@ export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, han
                                             {setting === 'Home' && (<HomeIcon fontSize="small" />)}
                                             {setting === 'Account' && (<AccountCircleIcon fontSize="small" />)}
                                             {setting === 'Hotel manager' && (<AdminPanelSettingsIcon fontSize="small" />)}
-                                            {setting === 'Hotels' && (<HotelIcon fontSize="small" />)}
                                             {setting === 'Rooms' && (<NightShelterIcon fontSize="small" />)}
                                             {setting === 'Login' && (<LoginIcon fontSize="small" />)}
                                             {setting === 'Reserves' && (<EventAvailableIcon fontSize="small" />)}

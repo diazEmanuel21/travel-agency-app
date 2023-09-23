@@ -2,7 +2,8 @@ import { forwardRef, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
 import { setActiveStep } from '../../store/home/homeSlice';
-import { useAlert } from '../../hooks/useAlert';
+import { useAlert } from '../../hooks/useAlert'
+import { HotelView, BedRoomsView } from '../view';
 import {
     AppBar, Box, Dialog, DialogContent,
     DialogActions, IconButton, Slide, Tab,
@@ -37,7 +38,7 @@ const TabPanel = ({ children, value, active }) => {
 
 const steeps = ['Hotel', 'Rooms'];
 
-export const CreateManager = ({ open, handleState: handleDialog }) => {
+export const CreateManager = ({ open, handleClose }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
@@ -66,7 +67,7 @@ export const CreateManager = ({ open, handleState: handleDialog }) => {
 
     const cleanWizard = () => {
         dispatch(setActiveStep(0));
-        handleDialog(false);
+        handleClose();
     }
 
     const saveReserve = () => {
@@ -84,13 +85,13 @@ export const CreateManager = ({ open, handleState: handleDialog }) => {
             <Dialog
                 fullScreen
                 open={open}
-                onClose={() => handleDialog(false)}
+                onClose={handleClose}
                 TransitionComponent={Transition}
             >
                 <AppBar position="static" sx={{ bgcolor: `${mode === 'dark' ? '#12151C' : '#001e3c'}` }} >
                     <Toolbar>
                         <IconButton
-                            onClick={() => handleDialog(false)}
+                            onClick={handleClose}
                             size="large"
                             edge="start"
                             color="inherit"
@@ -136,13 +137,11 @@ export const CreateManager = ({ open, handleState: handleDialog }) => {
                             active={activeStep}
                         >
                             {index === 0 && (
-                                <>
-                                    <p>Crate rooms</p>
-                                </>
+                                <HotelView />
                             )}
                             {index === 1 && (
                                 <>
-                                    <p>Crate hotel</p>
+                                    <BedRoomsView />
                                 </>
                             )}
                         </TabPanel>

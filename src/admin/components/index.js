@@ -1,5 +1,3 @@
 export * from './CreateManager';
 export * from './ImageGallery';
-export * from './DrawerManager';
-export * from './SideBarItem';
-export * from '../../components/SwitchColorMood';
+export * from './ListHotels';
