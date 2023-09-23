@@ -5,13 +5,13 @@ import { getHotels } from '../../store/home/homeSlice';
 import { HotelComponent, LandingPage } from '../view';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { dataHotels } from '../../data/dataHotels';
-import { Box, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
-  const { resHotels, showHotels, showNotifyReserve, showBackdrop } = useSelector(store => store.home);
+  const { resHotels, showHotels, showNotifyReserve } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
 
   useEffect(() => {
@@ -42,13 +42,10 @@ export const HomePage = () => {
         sx={{
           display: 'flex',
           flex: 1,
-          padding: '',
           padding: { xs: 1, md: '8px 8px 8px 82px' },
           minHeight: '89vh',
           msOverflowX: 'hidden',
           backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
-
-
           alignItems: 'end',
           backgroundImage: `url(../../Bg-Agency-${mode === 'dark' ? 'Secondary' : 'Primary'}.svg)`,
           backgroundSize: 'contain',

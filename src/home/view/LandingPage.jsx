@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ColorModeContext, TravelAgencyContext } from '../../context'
 import { setDestination, setResHotels, setShowHotels } from '../../store/home/homeSlice'
-import { Card, CardContent, Grid, Button, Box } from '@mui/material'
+import { Card, CardContent, Grid, Button } from '@mui/material'
 import { CityTexfield, CounterClients, FilterComponent } from '../components'
 
 export const LandingPage = () => {

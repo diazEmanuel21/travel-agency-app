@@ -7,13 +7,13 @@ import { CityTexfield } from '../../home/components/CityTexfield';
 
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Box, CardActions, Button, Switch } from '@mui/material';
 
-export const NoteView = () => {
+export const HotelView = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
   const { setNotify } = useContext(TravelAgencyContext);
-  const { active: noteActive, messageSaved, isSaving } = useSelector(state => state.admin);
+  const { active: hotelActive, messageSaved, isSaving } = useSelector(state => state.admin);
 
   const {
     hotelName,
@@ -28,7 +28,7 @@ export const NoteView = () => {
     /* Validations */
     onInputChange,
     formState,
-  } = useForm(noteActive);
+  } = useForm(hotelActive);
 
   useEffect(() => {
     if (messageSaved !== '') return setNotify('success', 'Hotel updated correctly.');

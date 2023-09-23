@@ -1,3 +1,4 @@
+export * from './CreateManager';
 export * from './ImageGallery';
 export * from './DrawerManager';
 export * from './SideBarItem';

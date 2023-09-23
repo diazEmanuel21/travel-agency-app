@@ -1,11 +1,10 @@
-import { Box, IconButton, SwipeableDrawer, Toolbar, Tooltip } from '@mui/material'
+import { Box, IconButton, Toolbar, Tooltip } from '@mui/material'
 import { SwitchColorMood } from '../../components'
 /* Icons */
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
 
 export const InfoBar = () => {
     return (

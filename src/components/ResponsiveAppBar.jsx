@@ -49,7 +49,7 @@ export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, han
         };
 
         if (rol === 'admin') {
-            let local_setting = ['Home', 'Hotel manager', 'Reserves', , 'Hotels', 'Rooms', 'Logout'];
+            let local_setting = ['Home', 'Hotel manager', 'Reserves', 'Hotels', 'Rooms', 'Logout'];
             setSettings(local_setting);
         };
 
@@ -194,14 +194,10 @@ export const ResponsiveAppBar = ({ handleDrawerManager, handleDrawerReserve, han
                                         </Typography>
                                     </MenuItem>
                                 ))}
-                                <>
-                                    <Divider />
-                                    <MenuItem sx={{ display: { xs: 'flex', md: ' none' }, justifyContent: 'center' }}>
-                                        <ListItemIcon>
-                                            <SwitchColorMood />
-                                        </ListItemIcon>
-                                    </MenuItem>
-                                </>
+                                <Divider />
+                                <MenuItem sx={{ display: { xs: 'flex', md: ' none' }, justifyContent: 'center' }}>
+                                    <SwitchColorMood />
+                                </MenuItem>
                             </Menu>
                         </Box>
                     </Tooltip>

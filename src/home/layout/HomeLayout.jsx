@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { ResponsiveAppBar } from "../../components";
 import { DrawerAccount, DrawerFavorite, DrawerReservations, InfoBar } from "../components";
 import { DrawerManager } from "../../admin/components";
 import { TravelAgencyContext } from "../../context";
-import { Backdrop, Box, CircularProgress, CssBaseline, Drawer, Toolbar } from "@mui/material";
+import { Backdrop, Box, CircularProgress, CssBaseline, Drawer } from "@mui/material";
 
 export const HomeLayout = ({ children, module: module_call }) => {
     const { hotels } = useSelector(state => state.admin);
     const { setNotify } = useContext(TravelAgencyContext);
+    const { showBackdrop } = useSelector(store => store.home);
+
     const [stateDrawerManager, setStateDrawerManager] = useState(false);
     const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
     const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
@@ -60,13 +62,13 @@ export const HomeLayout = ({ children, module: module_call }) => {
             <DrawerReservations stateDrawer={stateDrawerReserve} handleDrawer={handleDrawerReserve} />
             <DrawerFavorite stateDrawer={stateDrawerFavorite} handleDrawer={handleDrawerFavorite} />
             <DrawerAccount stateDrawer={stateDrawerAccount} handleDrawer={handleDrawerAccount} />
-            {/*        
+
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={showBackdrop}
             >
                 <CircularProgress color="inherit" />
-            </Backdrop> */}
+            </Backdrop>
         </Box>
     )
 }
