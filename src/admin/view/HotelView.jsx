@@ -43,7 +43,7 @@ export const HotelView = () => {
   return (
     <Card>
       <Box sx={{
-        bgcolor: `${mode === 'dark' ? '#12151C' : '#001e3c'}`,
+        bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}`,
         color: "#FFF",
         display: 'flex',
         justifyContent: 'center',
@@ -126,9 +126,11 @@ export const HotelView = () => {
             >
               <FormControlLabel
                 control={<Switch
+                  color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                   checked={state}
                   onChange={onInputChange}
                   name="state"
+
                 />}
                 label="state"
                 labelPlacement="end"
@@ -140,6 +142,7 @@ export const HotelView = () => {
             >
               <FormControlLabel
                 control={<Switch
+                  color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                   checked={wifi}
                   onChange={onInputChange}
                   name="wifi"
@@ -157,6 +160,7 @@ export const HotelView = () => {
             >
               <FormControlLabel
                 control={<Switch
+                  color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                   checked={pool}
                   onChange={onInputChange}
                   name="pool"
@@ -172,6 +176,7 @@ export const HotelView = () => {
             >
               <FormControlLabel
                 control={<Switch
+                  color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
                   checked={restaurant}
                   onChange={onInputChange}
                   name="restaurant"

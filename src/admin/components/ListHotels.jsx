@@ -1,39 +1,27 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setActiveHotel, startDeletingHotel } from "../../store/admin";
-import { Divider, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-/* ICONS */
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useSelector } from "react-redux";
+import { ListItemComponent } from "./ListItemComponent";
+import { Card, CardContent, Grid, List, ListSubheader, Paper } from "@mui/material";
+
 
 export const ListHotels = () => {
-    const dispatch = useDispatch();
     const { hotels } = useSelector(state => state.admin);
 
-    const handleActiveNote = () => {
-        dispatch(setActiveHotel({ ...hotels }));
-    };
-
-    const deleteItem = () => {
-        dispatch(startDeletingHotel());
-    };
-
     return (
-        <List sx={{ bgcolor: 'background.paper' }}>
-            {hotels.map(hotel => (
-                <>
-                    <ListItem
-                        key={hotel.id}
-                        secondaryAction={
-                            <IconButton edge="end" aria-label="delete" color='secondary' onClick={deleteItem}>
-                                <DeleteIcon />
-                            </IconButton>
-                        }>
-                        <ListItemButton onClick={handleActiveNote}>
-                            <ListItemText primary={hotel.hotelName} secondary={hotel.details} />
-                        </ListItemButton>
-                    </ListItem>
-                    <Divider />
-                </>
-            ))}
-        </List>
+        <Paper elevation={3} sx={{p: 1, width: '100%'}}>
+            <List
+                sx={{ width: '100%' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                        Hotel list
+                    </ListSubheader>
+                }
+            >
+                {hotels.map(hotel => (
+                    <ListItemComponent key={hotel.id} hotel={hotel} />
+                ))}
+            </List>
+        </Paper>
     )
 }

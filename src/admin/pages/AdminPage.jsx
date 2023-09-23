@@ -5,10 +5,11 @@ import { HomeLayout } from "../../home/layout/HomeLayout";
 import { NothingSelectedView } from "../view"
 import { CreateManager, ListHotels } from "../components";
 import { setShowBackdrop } from "../../store/home/homeSlice";
+import { startNewHotel } from "../../store/admin";
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
-import { startNewHotel } from "../../store/admin";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export const AdminPage = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,8 @@ export const AdminPage = () => {
   const [open, setOpen] = useState(false);
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
 
-  const handleCreateHotel = async () => {
+  const handleCreateHotel = async (handleThunk) => {
+    if (!handleThunk) return setOpen(true);
     dispatch(setShowBackdrop(true));
     const result = await dispatch(startNewHotel());
     if (result.ok) {
@@ -51,19 +53,18 @@ export const AdminPage = () => {
           flexDirection: 'column',
         }}
       >
-        {hotels.length > 1 ? <ListHotels/> : <NothingSelectedView />}
-        <Tooltip title="Create a new Hotel">
+        {hotels.length > 0 ? <ListHotels /> : <NothingSelectedView />}
+        <Tooltip title={`${active !== null ? 'Resume action' : 'Create a new Hotel'}`}>
           <Fab
             color={colorMode}
-            onClick={handleCreateHotel}
-            disabled={active !== null}
+            onClick={() => handleCreateHotel(active === null && true)}
             sx={{
               position: 'fixed',
               right: 50,
               bottom: 50
             }}
           >
-            <AddOutlined />
+            {active !== null ? <PlayArrowIcon /> : <AddOutlined />}
           </Fab >
         </Tooltip>
       </Grid>

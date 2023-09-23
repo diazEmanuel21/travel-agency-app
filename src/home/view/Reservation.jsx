@@ -60,7 +60,7 @@ export const Reservation = ({ fields }) => {
   return (
     <Card>
       <Box sx={{
-        bgcolor: `${mode === 'dark' ? '#12151C' : '#001e3c'}`,
+        bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}`,
         color: "#FFF",
         display: 'flex',
         justifyContent: 'center',

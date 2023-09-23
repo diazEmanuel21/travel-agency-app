@@ -84,14 +84,20 @@ export const startUploadingFiles = (files = []) => {
     }
 }
 
-export const startDeletingHotel = () => {
+export const startDeletingHotel = (id) => {
     return async (dispatch, getState) => {
         const { uid } = getState().auth;
-        const { active: hotelActive } = getState().admin;
 
-        const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${hotelActive.id}`);
-        await deleteDoc(docRef);
+        try {
+            const docRef = doc(FirebaseDB, `${uid}/admin/hotels/${id}`);
+            await deleteDoc(docRef);
 
-        dispatch(deleteHotelById(hotelActive.id));
+            dispatch(deleteHotelById(id));
+
+            return { ok: true, message: "Hotel deleted successfully" };
+        } catch (error) {
+            console.error("Error deleting hotel:", error);
+            return { ok: false, errorMessage: "Failed to delete hotel" };
+        }
     }
 }
