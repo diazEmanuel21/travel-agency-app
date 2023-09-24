@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HomeLayout } from '../layout/HomeLayout';
-import { getHotels, setShowBackdrop } from '../../store/home/homeSlice';
+import { setShowBackdrop } from '../../store/home/homeSlice';
 import { HotelComponent, LandingPage } from '../view';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { startLoadingHotels } from '../../store/admin';
@@ -11,7 +11,7 @@ export const HomePage = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
-  const { resHotels, showHotels, showNotifyReserve } = useSelector(store => store.home);
+  const { resHotels } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
 
   const handleLoadingHotel = async () => {
@@ -29,10 +29,6 @@ export const HomePage = () => {
   useEffect(() => {
     handleLoadingHotel();
   }, []);
-
-  useEffect(() => {
-    if (showNotifyReserve) return setNotify('success', 'The reservation has been created successfully.');
-  }, [showNotifyReserve])
 
   useEffect(() => {
     if (resHotels.length < 1) return;

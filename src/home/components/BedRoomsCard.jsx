@@ -3,7 +3,8 @@ import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { addRoomToFavorites } from '../../store/user/thunks';
-import { setActiveStep, setBedRoom, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
+import { setActiveStep, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
+import { createBooking } from '../../store/home/thunks';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -53,8 +54,18 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     const dispatch = useDispatch();
     const { setNotify } = useContext(TravelAgencyContext);
     const { mode } = useContext(ColorModeContext);
-    const { uid } = useSelector(store => store.auth);
-    const { activeStep } = useSelector(store => store.home);
+    const {
+        uid,
+        birthdate,
+        gender,
+        type_document,
+        document_number,
+        phone,
+        name_contact,
+        phone_contact
+    } = useSelector(store => store.auth);
+
+    const { activeStep, hotelSelected } = useSelector(store => store.home);
 
     const [expanded, setExpanded] = useState(-1);
 
@@ -85,10 +96,55 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     };
 
     const setRoomSelected = () => {
-        dispatch(setBedRoom(data))
-        dispatch(setActiveStep(activeStep + 1));
         if (favorite) {
             handleDrawer(false);
+            return;
+        };
+
+        const dataUser = {
+            birthdate,
+            gender,
+            type_document,
+            document_number,
+            phone,
+            name_contact,
+            phone_contact
+        };
+
+        const nullKeysString = validateDataUser(dataUser);
+
+        if (nullKeysString.length > 0) {
+            setNotify('info', `Complete your information in the ACCOUNT option. ${nullKeysString}.`, 10000);
+            return;
+        };
+
+        const booking = {
+            bedrooms_id: data.id,
+            hotel_id: hotelSelected.id,
+            hotel_name: hotelSelected.hotelName,
+            user_id: uid,
+            entry_date: localStorage.getItem('entry_date'),
+            amount_people: localStorage.getItem('amount_people'),
+            departure_date: localStorage.getItem('departure_date'),
+            price_booking: localStorage.getItem('price_booking'),
+            stay_days: localStorage.getItem('stay_days'),
+            destination_city: hotelSelected.location,
+        };
+
+        createNewBooking(booking);
+  
+    };
+
+    const createNewBooking = async (bookingData) => {
+        dispatch(setShowBackdrop(true));
+        const result = await dispatch(createBooking(bookingData));
+        if (result.ok) {
+            dispatch(setShowBackdrop(false));
+            dispatch(setActiveStep(activeStep + 1));
+            setNotify('success', result.message);
+        } else {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', result.errorMessage);
         }
     };
 
@@ -102,6 +158,11 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
             dispatch(setShowBackdrop(false));
             setNotify('error', result.errorMessage);
         }
+    };
+
+    const validateDataUser = (obj) => {
+        const nullKeys = Object.keys(obj).filter(key => obj[key] === null);
+        return nullKeys.join(', ');
     };
 
     const setItemFavorite = () => {

@@ -7,14 +7,10 @@ export const homeSlice = createSlice({
         resHotels: [],
         hotelSelected: [],
         hotelRooms: [],
-        bedRoomSelected: [],
-        dataGuest: [],
         bookings: [],
         destination_city: '',
         activeStep: 0,
         favorite: [],
-        showNotifyReserve: false,
-        enabledBtnSaveReserve: false,
         showBackdrop: false,
     },
     reducers: {
@@ -30,12 +26,6 @@ export const homeSlice = createSlice({
         setHotelRooms: (state, action) => {
             state.hotelRooms = action.payload;
         },
-        setBedRoom: (state, action) => {
-            state.bedRoomSelected = action.payload;
-        },
-        setDataGuest: (state, action) => {
-            state.dataGuest = action.payload;
-        },
         setBooking: (state, action) => {
             state.bookings.push(action.payload);
         },
@@ -48,12 +38,6 @@ export const homeSlice = createSlice({
         setFavorite: (state, action) => {
             state.favorite = action.payload;
         },
-        setShowNotifyReserve: (state, action) => {
-            state.showNotifyReserve = action.payload;
-        },
-        setEnabledBtnSaveReserve: (state, action) => {
-            state.enabledBtnSaveReserve = action.payload;
-        },
         setShowBackdrop: (state, action) => {
             state.showBackdrop = action.payload;
         },
@@ -64,13 +48,9 @@ export const {
     setResHotels,
     setHotel,
     setHotelRooms,
-    setBedRoom,
-    setDataGuest,
     setBooking,
     setDestination,
-    setShowNotifyReserve,
     setActiveStep,
     setFavorite,
-    setEnabledBtnSaveReserve,
     setShowBackdrop
 } = homeSlice.actions;

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { BedRoomsSteeper } from './BedRoomsSteeper';
-import { setActiveStep, setBedRoom, setEnabledBtnSaveReserve, setHotel, setHotelRooms, setShowBackdrop } from '../../store/home/homeSlice';
+import { setActiveStep, setHotel, setHotelRooms } from '../../store/home/homeSlice';
 import { locationData } from '../../data';
 import {
     Badge,
@@ -21,7 +21,6 @@ import PoolIcon from '@mui/icons-material/Pool';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import RoomIcon from '@mui/icons-material/Room';
-import { useEffect } from 'react';
 
 export const HotelComponent = () => {
     const dispatch = useDispatch();
@@ -52,9 +51,7 @@ export const HotelComponent = () => {
 
         if (hotelInReservationProcess !== undefined) {
             if (hotelInReservationProcess !== id) {
-                dispatch(setBedRoom([]));
                 dispatch(setActiveStep(0));
-                dispatch(setEnabledBtnSaveReserve(false));
             }
         };
 

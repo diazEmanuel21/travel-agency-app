@@ -1,14 +1,23 @@
 import { useContext, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { useForm } from '../../hooks';
 import { updateUserData } from '../../store/home/thunks';
 import { setShowBackdrop } from '../../store/home/homeSlice';
+import { login } from '../../store/auth';
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
 
-export const Reservation = ({ fields }) => {
+export const AccountComponent = ({ fields, handleDrawer }) => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
+  const {
+    status,
+    rol,
+    photoURL,
+    bookings,
+    favorites,
+  } = useSelector(store => store.auth);
+
   const { setNotify } = useContext(TravelAgencyContext);
   const { displayName, email, uid } = fields;
   const [formSubmited, setformSubmited] = useState(false);
@@ -39,11 +48,19 @@ export const Reservation = ({ fields }) => {
     formState,
   } = useForm(fields, formValidations);
 
+  const updateInfoUser = (e) => {
+    e.preventDefault();
+    setformSubmited(true);
+    if (!isFormValid) return setNotify('error', 'Incorrect or empty fields, please validate again.');
+    handleUpdateUserData(uid, formState);
+  }
 
   const handleUpdateUserData = async (uid, formData) => {
     dispatch(setShowBackdrop(true));
     const result = await dispatch(updateUserData(uid, formData));
     if (result.ok) {
+      updateAuthUser();
+      handleDrawer(false);
       dispatch(setShowBackdrop(false));
       setNotify('success', result.message);
     } else {
@@ -52,12 +69,17 @@ export const Reservation = ({ fields }) => {
     }
   };
 
-  const updateInfoUser = (e) => {
-    e.preventDefault();
-    setformSubmited(true);
-    if (!isFormValid) return setNotify('error', 'Incorrect or empty fields, please validate again.');
-    handleUpdateUserData(uid, formState);
+  const updateAuthUser = () => {
+    let form_user = formState;
+    form_user.status = status;
+    form_user.rol = rol;
+    form_user.photoURL = photoURL;
+    form_user.bookings = bookings;
+    form_user.favorites = favorites;
+
+    dispatch(login(form_user));
   }
+
 
   return (
     <Card>

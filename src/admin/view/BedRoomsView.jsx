@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { setActiveStep, setShowBackdrop } from '../../store/home/homeSlice';
@@ -103,7 +103,7 @@ export const BedRoomsView = ({ steps = [{ id: 0 }], handleClose }) => {
               <Paper square elevation={3} sx={{ p: 3 }}>
                 <Typography>All steps completed - you&apos;re finished</Typography>
                 <Button
-                  sx={{m: 1}}
+                  sx={{ m: 1 }}
                   color={colorMode}
                   variant="contained"
                   onClick={openAlert}

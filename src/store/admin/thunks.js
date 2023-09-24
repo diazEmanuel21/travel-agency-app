@@ -11,16 +11,16 @@ export const startNewHotel = () => {
 
         const newHotel = {
             // "id": "TZln44mBSPaUeitisiC5",
-            "hotelName": "Cali pachanguero",
+            "hotelName": "Name hotel",
             "imgURL": "https://images.unsplash.com/photo-1566071683285-e3558907b1e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80",
             "wifi": false,
             "restaurant": false,
             "pool": false,
             "state": true,
-            "rate": 2,
-            "location": 30,
-            "numberBedRooms": 3,
-            "details": "The best rooms in the city",
+            "rate": 1,
+            "location": 1,
+            "numberBedRooms": 1,
+            "details": "Details hotel",
             "rooms": []
         };
 

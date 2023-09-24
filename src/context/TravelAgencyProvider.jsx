@@ -9,7 +9,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export const TravelAgencyProvider = ({ children }) => {
     const [open, setOpen] = useState(false);
-    const [notification, setNotification] = useState({ type: '', message: '' });
+    const [notification, setNotification] = useState({ type: '', message: '', duration: 4000 });
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -18,12 +18,12 @@ export const TravelAgencyProvider = ({ children }) => {
         setOpen(false);
     };
 
-    const setNotify = (type, message) => {
+    const setNotify = (type, message, duration = 4000) => {
         const typeComing = Object.keys(type).length < 1 && true;
         const messageComing = Object.keys(message).length < 1 && true;
         if (typeComing && messageComing) return;
 
-        setNotification({ type, message });
+        setNotification({ type, message, duration });
         setOpen(true);
     };
 
@@ -36,7 +36,7 @@ export const TravelAgencyProvider = ({ children }) => {
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 open={open}
-                autoHideDuration={4000}
+                autoHideDuration={notification.duration}
                 onClose={handleClose}>
                 <Alert onClose={handleClose} severity={notification.type} sx={{ width: '100%' }}>
                     {notification.message}

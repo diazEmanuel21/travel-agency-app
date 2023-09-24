@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Reservation } from '../view';
+import { AccountComponent } from '../view';
 import { Box, SwipeableDrawer, Toolbar } from '@mui/material';
 
 export const DrawerAccount = ({ stateDrawer, handleDrawer }) => {
@@ -39,7 +39,7 @@ export const DrawerAccount = ({ stateDrawer, handleDrawer }) => {
                 width: { xs: 300, md: 500 }
             }}>
                 <Toolbar />
-                <Reservation fields={initFields} />
+                <AccountComponent handleDrawer={handleDrawer} fields={initFields} />
             </Box>
         </SwipeableDrawer>
     );

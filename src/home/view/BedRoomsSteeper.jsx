@@ -1,18 +1,15 @@
 import { forwardRef, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext } from '../../context';
-import { setActiveStep, setBedRoom, setDestination, setEnabledBtnSaveReserve, setShowNotifyReserve } from '../../store/home/homeSlice';
+import { setActiveStep, setDestination } from '../../store/home/homeSlice';
 import { Rooms, Summary } from '.';
-import { useTheme } from '@mui/material/styles';
 import {
     AppBar, Box, Dialog, DialogContent,
     DialogActions, IconButton, Slide, Tab,
-    Tabs, Toolbar, MobileStepper, Button, DialogTitle, DialogContentText,
+    Tabs, Toolbar, Button, DialogTitle, DialogContentText,
 } from '@mui/material';
 /* ICONS */
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -38,18 +35,12 @@ const TabPanel = ({ children, value, active }) => {
 const steeps = ['Rooms', 'Reservation'];
 
 export const BedRoomsSteeper = ({ open, handleClose }) => {
-    const theme = useTheme();
     const dispatch = useDispatch();
 
     const { mode } = useContext(ColorModeContext);
-    const { bedRoomSelected, enabledBtnSaveReserve, activeStep = 0, } = useSelector(store => store.home);
+    const { activeStep = 0, } = useSelector(store => store.home);
 
     const [openAlert, setOpen] = useState(false);
-    const maxSteps = steeps.length;
-
-    const handleOpenAlert = () => {
-        setOpen(true);
-    };
 
     const handleCloseAlert = () => {
         setOpen(false);
@@ -66,15 +57,12 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
     };
 
     const cleanWizard = () => {
-        dispatch(setBedRoom([]));
         dispatch(setActiveStep(0));
-        dispatch(setEnabledBtnSaveReserve(false));
     }
 
     const saveReserve = () => {
         dispatch(setDestination(''));
         cleanWizard();
-        dispatch(setShowNotifyReserve(true));
         handleCloseAlert(false);
         handleClose(false);
     };
@@ -150,48 +138,6 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         </TabPanel>
                     ))}
                 </DialogContent>
-                <DialogActions>
-                    <MobileStepper
-                        sx={{
-                            borderRadius: 2,
-                            width: '100%',
-                            justifyContent: 'space-between'
-                        }}
-                        steps={maxSteps}
-                        position="static"
-                        activeStep={activeStep}
-                        nextButton={
-                            <Button
-                                variant="contained"
-                                onClick={activeStep === (maxSteps - 1) ? handleOpenAlert : handleNext}
-                                disabled={activeStep === (maxSteps - 1) ? !enabledBtnSaveReserve : bedRoomSelected.length < 1}
-                                color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                            >
-                                {activeStep === (maxSteps - 1) ? 'Finish' : 'Next'}
-                                {theme.direction === 'rtl' ? (
-                                    <KeyboardArrowLeft />
-                                ) : (
-                                    <KeyboardArrowRight />
-                                )}
-                            </Button>
-                        }
-                        backButton={
-                            <Button
-                                variant="contained"
-                                onClick={handleBack}
-                                disabled={activeStep === 0}
-                                color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                            >
-                                {theme.direction === 'rtl' ? (
-                                    <KeyboardArrowRight />
-                                ) : (
-                                    <KeyboardArrowLeft />
-                                )}
-                                Back
-                            </Button>
-                        }
-                    />
-                </DialogActions>
             </Dialog >
 
             <div>

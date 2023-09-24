@@ -1,15 +1,14 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ResponsiveAppBar } from "../../components";
 import { DrawerAccount, DrawerFavorite, DrawerReservations, InfoBar } from "../components";
-import { TravelAgencyContext } from "../../context";
+// import { TravelAgencyContext } from "../../context";
 import { Backdrop, Box, CircularProgress, CssBaseline, Drawer } from "@mui/material";
 
 export const HomeLayout = ({ children, module: module_call }) => {
-    const { hotels } = useSelector(state => state.admin);
     const { status } = useSelector(state => state.auth);
     const { showBackdrop } = useSelector(store => store.home);
-    const { setNotify } = useContext(TravelAgencyContext);
+    // const { setNotify } = useContext(TravelAgencyContext);
 
     const [stateDrawerReserve, setStateDrawerReserve] = useState(false);
     const [stateDrawerFavorite, setStateDrawerFavorite] = useState(false);
