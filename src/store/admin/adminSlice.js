@@ -9,6 +9,7 @@ export const adminSlice = createSlice({
         active: null,
         activeRoom: [],
         location: 0,
+        steepActiveRoom: 0,
     },
     reducers: {
         savingNewHotel: (state) => {
@@ -71,7 +72,10 @@ export const adminSlice = createSlice({
         deleteHotelById: (state, action) => {
             state.active = null;
             state.hotels = state.hotels.filter(hotel => hotel.id !== action.payload);
-        }
+        },
+        changeSteepRoom: (state, action) => {
+            state.steepActiveRoom = action.payload;
+        },
     }
 });
 export const {
@@ -87,4 +91,5 @@ export const {
     setPhotosToActiveHotel,
     setSaving,
     updateHotel,
+    changeSteepRoom,
 } = adminSlice.actions;

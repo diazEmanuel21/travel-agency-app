@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { setActiveRoom } from '../../store/admin';
-import { v4 as uuidv4 } from 'uuid';
+import { changeSteepRoom, setActiveRoom } from '../../store/admin';
 import {
     FormControl,
     TextField,
@@ -14,7 +13,7 @@ import {
     CardContent,
 } from '@mui/material';
 
-export const FormBedRooms = () => {
+export const FormBedRooms = ({ id }) => {
     const dispatch = useDispatch();
     const { mode } = useContext(ColorModeContext);
     const { setNotify } = useContext(TravelAgencyContext);
@@ -49,7 +48,7 @@ export const FormBedRooms = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newItem = { ...formData, id: uuidv4() }; // Agregar un ID único
+        const newItem = { ...formData, };
         const {
             floor_level,
             views,
@@ -69,7 +68,6 @@ export const FormBedRooms = () => {
             type_bed,
             amount_people,
             state,
-            id,
         } = newItem;
 
         const roomDetails = {
@@ -82,6 +80,7 @@ export const FormBedRooms = () => {
         };
 
         const room = {
+            id,
             hotel_id: active.id,
             type_bedroom,
             base_cost,
@@ -92,11 +91,11 @@ export const FormBedRooms = () => {
             type_bed,
             amount_people,
             state,
-            id,
             roomDetails: roomDetails,
         };
 
         dispatch(setActiveRoom(room));
+        dispatch(changeSteepRoom(id + 1));
         setNotify('success', 'Add room correctly.')
     };
 
@@ -283,7 +282,7 @@ export const FormBedRooms = () => {
                                 variant="contained"
                                 fullWidth
                             >
-                                Save room
+                                next
                             </Button>
                         </Grid>
                     </Grid>

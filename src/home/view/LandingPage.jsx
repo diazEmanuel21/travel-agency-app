@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ColorModeContext, TravelAgencyContext } from '../../context'
-import { setDestination, setResHotels, setShowHotels } from '../../store/home/homeSlice'
+import { setDestination, setResHotels } from '../../store/home/homeSlice'
 import { Card, CardContent, Grid, Button } from '@mui/material'
 import { CityTexfield, CounterClients, FilterComponent } from '../components'
 
@@ -37,7 +37,6 @@ export const LandingPage = () => {
         if (resFilter.length < 1) return setNotify('info', 'No results found with that amount of people.');
 
         dispatch(setResHotels(resFilter));
-        dispatch(setShowHotels(true));
     }
 
     return (

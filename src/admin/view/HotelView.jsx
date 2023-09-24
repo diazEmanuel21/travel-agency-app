@@ -4,6 +4,7 @@ import { useForm } from '../../hooks';
 import { setActiveHotel } from '../../store/admin';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { CityTexfield } from '../../home/components/CityTexfield';
+import { setActiveStep } from '../../store/home/homeSlice';
 
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Box, CardActions, Button, Switch } from '@mui/material';
 
@@ -13,7 +14,7 @@ export const HotelView = () => {
   const { setNotify } = useContext(TravelAgencyContext);
   const colorMode = `${mode === 'dark' ? 'secondary' : 'primary'}`;
 
-  const { active: hotelActive, isSaving } = useSelector(state => state.admin);
+  const { active: hotelActive, isSaving, location } = useSelector(state => state.admin);
 
   const {
     hotelName,
@@ -29,14 +30,13 @@ export const HotelView = () => {
     formState,
   } = useForm(hotelActive);
 
-/*   useEffect(() => {
-    setNotify('info', 'Remember to click "Save changes" to save your changes.')
-  }, []) */
-
   const saveHotel = (e) => {
     e.preventDefault();
-    dispatch(setActiveHotel(formState));
+    let form = {...formState};
+    form.location = location
+    dispatch(setActiveHotel(form));
     setNotify('success', 'Hotel updated correctly.')
+    dispatch(setActiveStep(1));
   };
 
   return (

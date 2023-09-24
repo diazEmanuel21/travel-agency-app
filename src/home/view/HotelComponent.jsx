@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { BedRoomsSteeper } from './BedRoomsSteeper';
-import { setActiveStep, setBedRoom, setEnabledBtnSaveReserve, setHotel, setHotelRooms } from '../../store/home/homeSlice';
+import { setActiveStep, setBedRoom, setEnabledBtnSaveReserve, setHotel, setHotelRooms, setShowBackdrop } from '../../store/home/homeSlice';
 import { locationData } from '../../data';
 import {
     Badge,
@@ -21,16 +21,26 @@ import PoolIcon from '@mui/icons-material/Pool';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import RoomIcon from '@mui/icons-material/Room';
+import { useEffect } from 'react';
 
 export const HotelComponent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { setNotify } = useContext(TravelAgencyContext);
-    const { resHotels, hotelSelected: existingHotel } = useSelector(store => store.home);
+    const { hotels, resHotels, hotelSelected: existingHotel } = useSelector(store => store.home);
     const { status, rol } = useSelector(state => state.auth);
     const { mode } = useContext(ColorModeContext);
 
     const [open, setOpen] = useState(false);
+
+    const filterHotels = resHotels.length > 0 ? resHotels : hotels;
+
+/*     useEffect(() => {
+        dispatch(setShowBackdrop(true));
+        setTimeout(() => {
+            dispatch(setShowBackdrop(false));
+        }, 5000);
+    }, []); */
 
     const handleOpenBedRooms = (hotelRooms, id) => {
         if (status !== "authenticated") {
@@ -49,7 +59,7 @@ export const HotelComponent = () => {
         };
 
         setOpen(true);
-        const hotelSelected = resHotels.filter((hotel) => hotel.id === id)[0];
+        const hotelSelected = filterHotels.filter((hotel) => hotel.id === id)[0];
         dispatch(setHotel(hotelSelected));
         dispatch(setHotelRooms(hotelRooms));
     };
@@ -58,7 +68,7 @@ export const HotelComponent = () => {
         setOpen(false);
     };
 
-    const sortedHotels = resHotels.slice().sort((a, b) => {
+    const sortedHotels = filterHotels.slice().sort((a, b) => {
         const roomsInTrueStateA = a.rooms.filter((room) => room.state === true).length;
         const roomsInTrueStateB = b.rooms.filter((room) => room.state === true).length;
         return roomsInTrueStateB - roomsInTrueStateA;

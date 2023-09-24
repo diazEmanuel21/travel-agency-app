@@ -1,7 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { setActiveStep, setShowBackdrop } from '../../store/home/homeSlice';
+import { useAlert } from '../../hooks/useAlert';
 import { FormBedRooms } from '../components';
+import { changeSteepRoom, cleanActiveRoom, setActiveHotel, startSaveHotel } from '../../store/admin';
 import {
   Box,
   Stepper,
@@ -9,31 +12,56 @@ import {
   StepLabel,
   StepContent,
   Button,
-  Paper,
-  Typography
+  Typography,
+  Paper
 } from '@mui/material';
 
-export const BedRoomsView = ({ steps = [{ id: 0 }] }) => {
+export const BedRoomsView = ({ steps = [{ id: 0 }], handleClose }) => {
+  const dispatch = useDispatch();
+  const { steepActiveRoom, active, activeRoom } = useSelector(store => store.admin);
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
-  const [activeStep, setActiveStep] = useState(0);
+  const { DialogComponent, handleState: handelAlert } = useAlert({
+    title: 'Creation of new hotel',
+    description: 'A new hotel will be created, are you sure?',
+    onAgree: () => {
+      saveReserve()
+    },
+  });
 
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
 
- /*  useEffect(() => {
-    setNotify('info', 'Remember to click "Save room" to save your changes.')
-  }, []) */
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    dispatch(changeSteepRoom(steepActiveRoom - 1));
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const openAlert = () => {
+    handelAlert(true)
+  };
+
+  const saveReserve = () => {
+    let hotel = { ...active };
+    hotel.rooms = activeRoom;
+    dispatch(setActiveHotel(hotel));
+    handleSaveHotel();
+  };
+
+  const handleSaveHotel = async () => {
+    dispatch(setShowBackdrop(true));
+    const result = await dispatch(startSaveHotel());
+    if (result.ok) {
+      dispatch(setShowBackdrop(false));
+      setNotify('success', result.message);
+      /* Clean */
+      dispatch(setActiveStep(0));
+      dispatch(setActiveHotel(null))
+      dispatch(cleanActiveRoom());
+      handleClose();
+
+    } else {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', result.errorMessage);
+    }
   };
 
   return (
@@ -41,7 +69,7 @@ export const BedRoomsView = ({ steps = [{ id: 0 }] }) => {
       {
         steps.length > 0 && (
           <>
-            <Stepper activeStep={activeStep} orientation="vertical">
+            <Stepper activeStep={steepActiveRoom} orientation="vertical">
               {steps.map((step, index) => (
                 <Step key={step.id} >
                   <StepLabel
@@ -55,51 +83,43 @@ export const BedRoomsView = ({ steps = [{ id: 0 }] }) => {
                   </StepLabel>
                   <StepContent>
                     <Box>
-                      <FormBedRooms />
+                      <FormBedRooms id={step.id} />
                     </Box>
                     <Box sx={{ mb: 2 }}>
-                      <div>
-                        <Button
-                          color={colorMode}
-                          variant="contained"
-                          onClick={handleNext}
-                          sx={{
-                            mt: 1,
-                            mr: 1,
-                            display: `${index === steps.length - 1 ? 'none' : 'flex'}`
-                          }}
-                        >
-                          {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                        </Button>
-                        <Button
-                          color={colorMode}
-                          disabled={index === 0}
-                          onClick={handleBack}
-                          sx={{ mt: 1, mr: 1 }}
-                        >
-                          Back
-                        </Button>
-                      </div>
+                      <Button
+                        color={colorMode}
+                        disabled={index === 0}
+                        onClick={handleBack}
+                        sx={{ mt: 1, mr: 1 }}
+                      >
+                        Back
+                      </Button>
                     </Box>
                   </StepContent>
                 </Step>
               ))}
             </Stepper>
-            {activeStep === steps.length && (
-              <Paper square elevation={0} sx={{ p: 3 }}>
+            {steepActiveRoom === steps.length && (
+              <Paper square elevation={3} sx={{ p: 3 }}>
                 <Typography>All steps completed - you&apos;re finished</Typography>
                 <Button
+                  sx={{m: 1}}
                   color={colorMode}
-                  onClick={handleReset}
-                  sx={{ mt: 1, mr: 1 }}
+                  variant="contained"
+                  onClick={openAlert}
+                  fullWidth
                 >
-                  Reset
+                  Save hotel
                 </Button>
               </Paper>
             )}
           </>
         )
       }
+      <DialogComponent />
     </Box>
   );
 }
+
+
+

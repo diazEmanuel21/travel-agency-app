@@ -1,9 +1,8 @@
 import { forwardRef, useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { setActiveStep, setShowBackdrop } from '../../store/home/homeSlice';
-import { cleanActiveRoom, setActiveHotel, startSaveHotel } from '../../store/admin';
-import { useAlert } from '../../hooks/useAlert'
+import { ColorModeContext } from '../../context';
+import { setActiveStep, } from '../../store/home/homeSlice';
+import { cleanActiveRoom } from '../../store/admin';
 import { HotelView, BedRoomsView } from '../view';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -42,22 +41,10 @@ const steeps = ['Hotel', 'Rooms'];
 export const CreateManager = ({ open, handleClose }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
-
-    const { setNotify } = useContext(TravelAgencyContext);
     const { mode } = useContext(ColorModeContext);
-
     const { active, activeRoom } = useSelector(store => store.admin);
     const { activeStep = 0 } = useSelector(store => store.home);
-
     const [rooms, setRooms] = useState([]);
-
-    const { DialogComponent, handleState: handelAlert } = useAlert({
-        title: 'Creation of new hotel',
-        description: 'A new hotel will be created, are you sure?',
-        onAgree: () => {
-            saveReserve()
-        },
-    });
 
     const maxSteps = steeps.length;
 
@@ -82,41 +69,6 @@ export const CreateManager = ({ open, handleClose }) => {
     const handleBack = () => {
         if (activeStep > steeps) return;
         dispatch(setActiveStep(activeStep - 1));
-    };
-
-    const handleSaveHotel = async () => {
-        dispatch(setShowBackdrop(true));
-        const result = await dispatch(startSaveHotel());
-        if (result.ok) {
-            dispatch(setShowBackdrop(false));
-            setNotify('success', result.message);
-            /* Clean */
-            dispatch(setActiveStep(0));
-            dispatch(setActiveHotel(null))
-            dispatch(cleanActiveRoom());
-            handleClose();
-
-        } else {
-            dispatch(setShowBackdrop(false));
-            setNotify('error', result.errorMessage);
-        }
-    };
-
-    const saveReserve = () => {
-        const numBedrooms = parseInt(active?.numberBedRooms);
-        if (!Number.isNaN(numBedrooms) && numBedrooms === activeRoom.length) {
-            let hotel = { ...active };
-            hotel.rooms = activeRoom;
-            dispatch(setActiveHotel(hotel));
-            handleSaveHotel();
-        } else {
-            setNotify('error', 'Check the stored rooms, it seems there are still some to be stored.');
-        }
-    };
-
-    const openAlert = () => {
-        if (activeRoom.length === 0) return setNotify("error", "You haven't saved any rooms yet.");
-        handelAlert(true)
     };
 
     return (
@@ -179,54 +131,58 @@ export const CreateManager = ({ open, handleClose }) => {
                                 <HotelView />
                             )}
                             {index === 1 && (
-                                <BedRoomsView steps={rooms} />
+                                <BedRoomsView steps={rooms} handleClose={handleClose}/>
                             )}
                         </TabPanel>
                     ))}
                 </DialogContent>
-                <DialogActions>
-                    <MobileStepper
-                        sx={{
-                            borderRadius: 2,
-                            width: '100%',
-                            justifyContent: 'space-between'
-                        }}
-                        steps={maxSteps}
-                        position="static"
-                        activeStep={activeStep}
-                        nextButton={
-                            <Button
-                                variant="contained"
-                                onClick={activeStep === (maxSteps - 1) ? openAlert : handleNext}
-                                color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                            >
-                                {activeStep === (maxSteps - 1) ? 'Finish' : 'Next'}
-                                {theme.direction === 'rtl' ? (
-                                    <KeyboardArrowLeft />
-                                ) : (
-                                    <KeyboardArrowRight />
-                                )}
-                            </Button>
-                        }
-                        backButton={
-                            <Button
-                                variant="contained"
-                                onClick={handleBack}
-                                disabled={activeStep === 0}
-                                color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                            >
-                                {theme.direction === 'rtl' ? (
-                                    <KeyboardArrowRight />
-                                ) : (
-                                    <KeyboardArrowLeft />
-                                )}
-                                Back
-                            </Button>
-                        }
-                    />
-                </DialogActions>
+                {
+                    false && (
+                        <DialogActions>
+                            <MobileStepper
+                                sx={{
+                                    borderRadius: 2,
+                                    width: '100%',
+                                    justifyContent: 'space-between'
+                                }}
+                                steps={maxSteps}
+                                position="static"
+                                activeStep={activeStep}
+                                nextButton={
+                                    <Button
+                                        disabled={activeStep === (maxSteps - 1)}
+                                        variant="contained"
+                                        onClick={activeStep === (maxSteps - 1) ? handleNext : handleNext}
+                                        color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                                    >
+                                        {activeStep === (maxSteps - 1) ? 'Finish' : 'Next'}
+                                        {theme.direction === 'rtl' ? (
+                                            <KeyboardArrowLeft />
+                                        ) : (
+                                            <KeyboardArrowRight />
+                                        )}
+                                    </Button>
+                                }
+                                backButton={
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleBack}
+                                        disabled={activeStep === 0}
+                                        color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
+                                    >
+                                        {theme.direction === 'rtl' ? (
+                                            <KeyboardArrowRight />
+                                        ) : (
+                                            <KeyboardArrowLeft />
+                                        )}
+                                        Back
+                                    </Button>
+                                }
+                            />
+                        </DialogActions>
+                    )
+                }
             </Dialog >
-            <DialogComponent />
         </>
     );
 }

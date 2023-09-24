@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { ColorModeContext, TravelAgencyContext } from "../../context";
 import { HomeLayout } from "../../home/layout/HomeLayout";
 import { NothingSelectedView } from "../view"
 import { CreateManager, ListHotels } from "../components";
 import { setShowBackdrop } from "../../store/home/homeSlice";
-import { startNewHotel } from "../../store/admin";
+import { startLoadingHotels, startNewHotel } from "../../store/admin";
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
@@ -19,6 +19,24 @@ export const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
+
+
+  const handleLoadingHotel = async () => {
+    dispatch(setShowBackdrop(true));
+    const result = await dispatch(startLoadingHotels());
+    if (result.ok) {
+      dispatch(setShowBackdrop(false));
+      // setNotify('success', result.message);
+    } else {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', result.errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    handleLoadingHotel();
+  }, []);
+
 
   const handleCreateHotel = async (handleThunk) => {
     if (!handleThunk) return setOpen(true);

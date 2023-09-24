@@ -66,29 +66,23 @@ export const HomePage = () => {
       >
         <LandingPage />
       </Grid>
-      {
-        showHotels && (
-          <Grid
-            container
-            ref={scrollTargetRef}
-            sx={{
-              display: 'flex',
-              flex: 1,
-              padding: { xs: 1, md: '8px 8px 8px 82px' },
-              minHeight: '89vh',
-              msOverflowX: 'hidden',
-              backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
+      <Grid
+        container
+        ref={scrollTargetRef}
+        sx={{
+          display: 'flex',
+          flex: 1,
+          padding: { xs: 1, md: '8px 8px 8px 82px' },
+          minHeight: '89vh',
+          msOverflowX: 'hidden',
+          backgroundColor: `${mode === 'dark' ? 'darkslategrey' : 'lightslategrey'}`,
 
-              justifyContent: 'space-between',
-              flexDirection: 'column',
-            }}
-          >
-            {resHotels.length > 0 && (
-              <HotelComponent />
-            )}
-          </Grid>
-        )
-      }
+          justifyContent: 'space-between',
+          flexDirection: 'column',
+        }}
+      >
+        <HotelComponent />
+      </Grid>
     </HomeLayout >
   )
 }
