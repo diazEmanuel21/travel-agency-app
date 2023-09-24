@@ -19,6 +19,7 @@ export const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
+  const activateAction = mode === 'dark' ? 'primary' : 'secondary';
 
 
   const handleLoadingHotel = async () => {
@@ -74,12 +75,16 @@ export const AdminPage = () => {
         {hotels.length > 0 ? <ListHotels /> : <NothingSelectedView />}
         <Tooltip title={`${active !== null ? 'Resume action' : 'Create a new Hotel'}`}>
           <Fab
-            color={colorMode}
+            color={active !== null ? activateAction : colorMode}
             onClick={() => handleCreateHotel(active === null && true)}
             sx={{
               position: 'fixed',
               right: 50,
-              bottom: 50
+              bottom: 50,
+              transition: 'transform 0.5s',
+              '&:hover': {
+                transform: 'rotate(360deg)',
+              },
             }}
           >
             {active !== null ? <PlayArrowIcon /> : <AddOutlined />}
