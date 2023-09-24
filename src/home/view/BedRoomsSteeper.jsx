@@ -121,7 +121,7 @@ export const BedRoomsSteeper = ({ open, handleClose }) => {
                         <TabPanel
                             key={steep}
                             value={index}
-                            active={activeStep}
+                            active={0}
                         >
                             {index === 0 && (
                                 <Rooms
