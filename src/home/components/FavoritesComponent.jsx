@@ -7,24 +7,21 @@ import CancelIcon from '@mui/icons-material/Cancel';
 export const FavoritesComponent = ({ handleDrawer }) => {
     const { hotels } = useSelector(store => store.home);
     const { favorites } = useSelector(store => store.auth);
-    
-    let roomsToFind = [];
 
-    useEffect(() => {
+    const getRooms = () => {
+        let roomsToFind = [];
+
         hotels.forEach((hotel) => {
             hotel.rooms.forEach((room) => {
-                if (favorites.includes(room.id)) {  
+                if (favorites.includes(room.id)) {
                     roomsToFind.push(room);
                 }
             });
         });
-
-        if (roomsToFind.length > 0) {
-            alert("Habitaciones encontradas:", roomsToFind);
-        } else {
-            alert("No se encontraron habitaciones con los IDs deseados.");
-        }
-    }, []);
+        return roomsToFind;
+    };
+    
+    const rooms = getRooms();
 
     const handleExit = () => {
         handleDrawer(false);
@@ -46,9 +43,9 @@ export const FavoritesComponent = ({ handleDrawer }) => {
                     </Box>
                 </Toolbar>
             </AppBar>
-            {favorites.length > 0 && (
+            {rooms.length > 0 && (
                 <Grid container sx={{ justifyContent: 'center' }}>
-                    {favorites.map((favorite, index) => (
+                    {rooms.map((favorite, index) => (
                         <BedRoomsCard
                             key={favorite.id}
                             data={favorite}

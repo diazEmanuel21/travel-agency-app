@@ -19,7 +19,7 @@ export const HomePage = () => {
     const result = await dispatch(startLoadingHotels());
     if (result.ok) {
       dispatch(setShowBackdrop(false));
-      setNotify('success', result.message);
+      // setNotify('success', result.message);
     } else {
       dispatch(setShowBackdrop(false));
       setNotify('error', result.errorMessage);
