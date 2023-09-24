@@ -1,4 +1,4 @@
-import { Box, List, ListSubheader, SwipeableDrawer } from '@mui/material';
+import { Box, List, ListSubheader, SwipeableDrawer, Toolbar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ReservesComponent } from './';
 
@@ -13,10 +13,11 @@ export const DrawerReservations = ({ stateDrawer, handleDrawer }) => {
             onOpen={() => handleDrawer(true)}
         >
             <Box sx={{
-                width: 300
+                width: { xs: 300, md: 500 }
             }}>
+                <Toolbar />
                 <List
-                    sx={{ width: '100%', maxWidth: 300, bgcolor: 'background.paper' }}
+                    sx={{ width: '100%', maxWidth: { xs: 300, md: 500 }, bgcolor: 'background.paper' }}
                     component="nav"
                     aria-labelledby="nested-list-subheader"
                     subheader={

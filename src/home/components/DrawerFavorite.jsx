@@ -1,4 +1,4 @@
-import { Box, SwipeableDrawer } from '@mui/material';
+import { Box, SwipeableDrawer, Toolbar } from '@mui/material';
 import { FavoritesComponent } from './';
 
 export const DrawerFavorite = ({ stateDrawer, handleDrawer }) => {
@@ -10,7 +10,8 @@ export const DrawerFavorite = ({ stateDrawer, handleDrawer }) => {
             onOpen={() => handleDrawer(true)}
         >
             <Box>
-                <FavoritesComponent handleDrawer={handleDrawer}/>
+                <Toolbar />
+                <FavoritesComponent handleDrawer={handleDrawer} />
             </Box>
         </SwipeableDrawer>
     );

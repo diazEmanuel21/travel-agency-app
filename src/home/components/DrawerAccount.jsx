@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Reservation } from '../view';
-import { Box, SwipeableDrawer } from '@mui/material';
+import { Box, SwipeableDrawer, Toolbar } from '@mui/material';
 
 export const DrawerAccount = ({ stateDrawer, handleDrawer }) => {
     const { uid,
@@ -36,8 +36,9 @@ export const DrawerAccount = ({ stateDrawer, handleDrawer }) => {
             onOpen={() => handleDrawer(true)}
         >
             <Box sx={{
-                width: 500
+                width: { xs: 300, md: 500 }
             }}>
+                <Toolbar />
                 <Reservation fields={initFields} />
             </Box>
         </SwipeableDrawer>

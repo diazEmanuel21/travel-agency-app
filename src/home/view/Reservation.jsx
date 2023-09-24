@@ -61,17 +61,6 @@ export const Reservation = ({ fields }) => {
 
   return (
     <Card>
-      <Box sx={{
-        bgcolor: `${mode === 'dark' ? 'secondary.main' : 'primary.main'}`,
-        color: "#FFF",
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-        <Typography variant="button" p={1}>
-          Account information
-        </Typography>
-      </Box>
       <CardContent>
         <Grid container spacing={2} flexDirection={'column'}>
           <Grid item>
