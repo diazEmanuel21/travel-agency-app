@@ -1,8 +1,9 @@
 import { forwardRef, useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { ColorModeContext } from '../../context';
-import { setActiveStep, setBedRoom, setFavorite } from '../../store/home/homeSlice';
+import { ColorModeContext, TravelAgencyContext } from '../../context';
+import { addRoomToFavorites } from '../../store/user/thunks';
+import { setActiveStep, setBedRoom, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -50,14 +51,14 @@ const tableRoomQuality = ['Poor ', 'Fair', 'Good', 'Excellent', 'Very Good'];
 
 export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     const dispatch = useDispatch();
-
-    const stay_days = parseInt(localStorage.getItem('stay_days'));
-
+    const { setNotify } = useContext(TravelAgencyContext);
     const { mode } = useContext(ColorModeContext);
+    const { uid } = useSelector(store => store.auth);
     const { activeStep } = useSelector(store => store.home);
 
     const [expanded, setExpanded] = useState(-1);
 
+    const stay_days = parseInt(localStorage.getItem('stay_days'));
     const qualityRoom = tableRoomQuality[data.rate_room - 1];
     const isExpanded = expanded === index;
 
@@ -86,13 +87,26 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     const setRoomSelected = () => {
         dispatch(setBedRoom(data))
         dispatch(setActiveStep(activeStep + 1));
-        if(favorite) {
+        if (favorite) {
             handleDrawer(false);
+        }
+    };
+
+    const handleAddToFavorites = async () => {
+        dispatch(setShowBackdrop(true));
+        const result = await dispatch(addRoomToFavorites(uid, data.id));
+        if (result.ok) {
+            dispatch(setShowBackdrop(false));
+            setNotify('success', result.message);
+        } else {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', result.errorMessage);
         }
     };
 
     const setItemFavorite = () => {
         dispatch(setFavorite([data]));
+        handleAddToFavorites();
     };
 
     return (

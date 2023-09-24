@@ -45,6 +45,8 @@ export const useCheckAuth = () => {
                 phone = null,
                 name_contact = null,
                 phone_contact = null,
+                favorites = [],
+                bookings = [],
             } = userData;
 
             // Agregar todas las propiedades al objeto user
@@ -61,6 +63,8 @@ export const useCheckAuth = () => {
                 phone,
                 name_contact,
                 phone_contact,
+                favorites,
+                bookings
             }));
             // handleLoadingHotel()
         });

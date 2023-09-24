@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { useForm } from '../../hooks';
 import { updateUserData } from '../../store/home/thunks';
+import { setShowBackdrop } from '../../store/home/homeSlice';
 import { Card, CardContent, Typography, TextField, Grid, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Select, MenuItem, InputLabel, Box, CardActions, Button } from '@mui/material';
 
 export const Reservation = ({ fields }) => {
@@ -40,12 +41,13 @@ export const Reservation = ({ fields }) => {
 
 
   const handleUpdateUserData = async (uid, formData) => {
+    dispatch(setShowBackdrop(true));
     const result = await dispatch(updateUserData(uid, formData));
     if (result.ok) {
-      // La actualización se realizó con éxito
+      dispatch(setShowBackdrop(false));
       setNotify('success', result.message);
     } else {
-      // Hubo un error en la actualización
+      dispatch(setShowBackdrop(false));
       setNotify('error', result.errorMessage);
     }
   };

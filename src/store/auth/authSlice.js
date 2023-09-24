@@ -18,6 +18,8 @@ export const authSlice = createSlice({
         phone: null,
         name_contact: null,
         phone_contact: null,
+        bookings: [], 
+        favorites: [], 
     },
     reducers: {
         login: (state, { payload }) => {
@@ -35,6 +37,8 @@ export const authSlice = createSlice({
             state.phone = payload.phone;
             state.name_contact = payload.name_contact;
             state.phone_contact = payload.phone_contact;
+            state.bookings = payload.bookings;
+            state.favorites = payload.favorites;
             /* MSJ */
             state.errorMessage = null;
         },
@@ -53,6 +57,8 @@ export const authSlice = createSlice({
             state.phone = null;
             state.name_contact = null;
             state.phone_contact = null;
+            state.bookings = [];
+            state.favorites = [];
             /* MSJ */
             state.errorMessage = payload?.errorMessage;
         },

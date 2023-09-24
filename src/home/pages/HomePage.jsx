@@ -35,7 +35,7 @@ export const HomePage = () => {
   }, [showNotifyReserve])
 
   useEffect(() => {
-    if (resHotels.length < 0) return;
+    if (resHotels.length < 1) return;
     scrollToElement();
   }, [resHotels]);
 

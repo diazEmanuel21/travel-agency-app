@@ -10,36 +10,37 @@ export const signInWithGoogle = async () => {
         const result = await signInWithPopup(FirebaseAuth, googleProvider);
         const { displayName, email, photoURL, uid } = result.user;
 
-        // Comprobamos si el usuario ya existe en la colección "users" de Firestore
         const userDocRef = doc(collection(FirebaseDB, 'users'), uid);
         const userDocSnapshot = await getDoc(userDocRef);
 
-        // Variable para almacenar el rol
-        let rol = 'user';
+        let userData = {
+            uid,
+            displayName,
+            email,
+            rol: 'user',
+            photoURL,
+            birthdate: null,
+            gender: null,
+            type_document: null,
+            document_number: null,
+            phone: null,
+            name_contact: null,
+            phone_contact: null,
+            favorites: [],
+            bookings: [],
+        };
 
-        if (!userDocSnapshot.exists()) {
-            // El usuario es nuevo, agregamos el documento con el rol y otros datos
-            await setDoc(userDocRef, {
-                uid,
-                displayName,
-                email,
-                rol,
-                photoURL,
-            });
+        if (userDocSnapshot.exists()) {
+            userData = { ...userData, ...userDocSnapshot.data() };
         } else {
-            // El usuario ya existe, recuperamos su rol desde Firestore
-            const userData = userDocSnapshot.data();
-            rol = userData?.rol || rol;
+            // El usuario es nuevo, agregamos el documento con las propiedades iniciales
+            await setDoc(userDocRef, userData);
         }
 
         return {
             ok: true,
-            displayName,
-            email,
-            rol,
-            photoURL,
-            uid
-        }
+            ...userData,
+        };
     } catch (error) {
         // Handle Errors here.
         const errorCode = error.code;
@@ -48,12 +49,15 @@ export const signInWithGoogle = async () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         return {
             ok: false,
-            errorCode, errorMessage, email, credential
-        }
+            errorCode,
+            errorMessage,
+            email,
+            credential,
+        };
     }
-}
+};
 
-export const registerUserWhitEmailPassword = async ({ email, password, displayName, birthdate, gender, type_document, document_number, phone, name_contact, phone_contact }) => {
+export const registerUserWhitEmailPassword = async ({ email, password, displayName }) => {
     try {
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
         const { uid, photoURL } = resp.user;
@@ -71,6 +75,8 @@ export const registerUserWhitEmailPassword = async ({ email, password, displayNa
             phone: null, // Añadir phone
             name_contact: null, // Añadir name_contact
             phone_contact: null, // Añadir phone_contact
+            favorites: [],
+            bookings: [],
         }
 
         // Crea una referencia a la colección 'users' en Firestore y luego a un documento con el UID como nombre
@@ -91,12 +97,13 @@ export const registerUserWhitEmailPassword = async ({ email, password, displayNa
             phone: null, // Añadir phone
             name_contact: null, // Añadir name_contact
             phone_contact: null, // Añadir phone_contact
+            favorites: [],
+            bookings: [],
         }
     } catch (error) {
         return { ok: false, errorMessage: error.message }
     }
-}
-
+};
 
 export const loginWithEmailPassword = async ({ email, password }) => {
     try {
@@ -118,6 +125,8 @@ export const loginWithEmailPassword = async ({ email, password }) => {
             phone = null,
             name_contact = null,
             phone_contact = null,
+            favorites = [],
+            bookings = [],
         } = userData;
 
         return {
@@ -127,13 +136,15 @@ export const loginWithEmailPassword = async ({ email, password }) => {
             rol,
             photoURL,
             uid,
-            birthdate, // Añadir birthdate
-            gender, // Añadir gender
-            type_document, // Añadir type_document
-            document_number, // Añadir document_number
-            phone, // Añadir phone
-            name_contact, // Añadir name_contact
-            phone_contact, // Añadir phone_contact
+            birthdate,
+            gender,
+            type_document,
+            document_number,
+            phone,
+            name_contact,
+            phone_contact,
+            favorites,
+            bookings
         }
     } catch (error) {
         return {
