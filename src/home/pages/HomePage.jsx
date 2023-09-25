@@ -7,12 +7,15 @@ import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { startLoadingHotels } from '../../store/admin';
 import { fetchReserves } from '../../store/home/thunks';
 import { Grid } from '@mui/material';
+import { sendEmail } from '../../store/mail/thunks';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
   const { mode } = useContext(ColorModeContext);
   const { setNotify } = useContext(TravelAgencyContext);
   const { resHotels } = useSelector(store => store.home);
+  const { email, displayName } = useSelector(store => store.auth);
+  const { reserves } = useSelector(store => store.user);
   const scrollTargetRef = useRef(null);
 
   const getReserves = async () => {
@@ -54,6 +57,29 @@ export const HomePage = () => {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  /* TEST */
+  const sendEmailNow = async () => {
+    dispatch(setShowBackdrop(true));
+
+    const dataEmail = {
+      email,
+      displayName,
+      inDate: reserves[0].entry_date,
+      outDate: reserves[0].departure_date,
+      hotel_name: reserves[0].hotel_name,
+    };
+
+    const result = await dispatch(sendEmail(dataEmail));
+    debugger;
+    dispatch(setShowBackdrop(false));
+/*     if (result.ok) {
+      setNotify('success', result.message);
+    } else {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', JSON.stringify(result));
+    } */
+  }
+  /* TEST */
 
   return (
     <HomeLayout module='home'>
@@ -90,6 +116,9 @@ export const HomePage = () => {
         }}
       >
         <HotelComponent />
+
+
+        <button onClick={sendEmailNow}>send</button>
       </Grid>
     </HomeLayout >
   )
