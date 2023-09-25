@@ -29,3 +29,31 @@ export const addRoomToFavorites = (userId, roomId) => {
         }
     };
 };
+
+export const addRoomToBookings = (userId, roomId) => {
+    return async (dispatch, getState) => {
+        try {
+            // Crear una referencia al documento del usuario
+            const userDocRef = doc(FirebaseDB, `users/${userId}`);
+            // Obtener los datos del usuario
+            const userSnapshot = await getDoc(userDocRef);
+            const userData = userSnapshot.data();
+
+            // Verificar si la habitación ya está en la lista de reservas
+            if (userData.bookings && userData.bookings.includes(roomId)) {
+                return { ok: false, errorMessage: 'The room is already in your bookings.' };
+            };
+
+            // Si la habitación no está en la lista, agregarla
+            const updatedBookings = userData.bookings ? [...userData.bookings, roomId] : [roomId];
+
+            // Actualizar el documento del usuario con la nueva lista de reservas
+            await updateDoc(userDocRef, { bookings: updatedBookings });
+
+            return { ok: true, message: 'Room added to bookings successfully.' };
+        } catch (error) {
+            console.error('Error adding room to bookings:', error);
+            return { ok: false, errorMessage: 'Failed to add room to bookings.' };
+        }
+    };
+};

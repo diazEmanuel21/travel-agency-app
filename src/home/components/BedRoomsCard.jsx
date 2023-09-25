@@ -2,9 +2,10 @@ import { forwardRef, useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { addRoomToFavorites } from '../../store/user/thunks';
-import { setActiveStep, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
+import { addRoomToBookings, addRoomToFavorites } from '../../store/user/thunks';
+import { setActiveSteepBooking, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
 import { createBooking } from '../../store/home/thunks';
+import { useAlert } from '../../hooks/useAlert';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -18,6 +19,7 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import { updateBooking } from '../../store/auth';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -65,9 +67,16 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
         phone_contact
     } = useSelector(store => store.auth);
 
-    const { activeStep, hotelSelected } = useSelector(store => store.home);
-
+    const { activeSteepBooking, hotelSelected } = useSelector(store => store.home);
+    const { bookings: userBookings } = useSelector(store => store.auth);
     const [expanded, setExpanded] = useState(-1);
+    const { DialogComponent, handleState: handelAlert } = useAlert({
+        title: 'Creation booking',
+        description: 'A booking will be created, are you sure?',
+        onAgree: () => {
+            setRoomSelected()
+        },
+    });
 
     const stay_days = parseInt(localStorage.getItem('stay_days'));
     const qualityRoom = tableRoomQuality[data.rate_room - 1];
@@ -90,6 +99,20 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     const totalPrice = copPrice.format(priceTotal);
 
     localStorage.setItem('price_booking', priceTotal);
+
+    const booking = {
+        id: `${hotelSelected.id}_${data.id}_${uid}`,
+        bedrooms_id: data.id,
+        hotel_id: hotelSelected.id,
+        hotel_name: hotelSelected.hotelName,
+        user_id: uid,
+        entry_date: localStorage.getItem('entry_date'),
+        amount_people: localStorage.getItem('amount_people'),
+        departure_date: localStorage.getItem('departure_date'),
+        price_booking: localStorage.getItem('price_booking'),
+        stay_days: localStorage.getItem('stay_days'),
+        destination_city: hotelSelected.location,
+    };
 
     const handleExpandClick = () => {
         setExpanded(isExpanded ? -1 : index);
@@ -118,35 +141,38 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
             return;
         };
 
-        const booking = {
-            bedrooms_id: data.id,
-            hotel_id: hotelSelected.id,
-            hotel_name: hotelSelected.hotelName,
-            user_id: uid,
-            entry_date: localStorage.getItem('entry_date'),
-            amount_people: localStorage.getItem('amount_people'),
-            departure_date: localStorage.getItem('departure_date'),
-            price_booking: localStorage.getItem('price_booking'),
-            stay_days: localStorage.getItem('stay_days'),
-            destination_city: hotelSelected.location,
-        };
-
-        createNewBooking(booking);
-  
+        createNewBooking();
     };
 
-    const createNewBooking = async (bookingData) => {
+    const createNewBooking = async () => {
         dispatch(setShowBackdrop(true));
-        const result = await dispatch(createBooking(bookingData));
+        const result = await dispatch(createBooking(booking));
         if (result.ok) {
+            addBookingToUser();
+        } else {
             dispatch(setShowBackdrop(false));
-            dispatch(setActiveStep(activeStep + 1));
+            setNotify('error', result.errorMessage);
+        }
+    };
+
+    const addBookingToUser = async () => {
+        dispatch(setShowBackdrop(true));
+        const result = await dispatch(addRoomToBookings(uid, `${hotelSelected.id}_${data.id}_${uid}`));
+        if (result.ok) {
+            updateUserBooking();
+            dispatch(setActiveSteepBooking(activeSteepBooking + 1));
+            dispatch(setShowBackdrop(false));
             setNotify('success', result.message);
         } else {
             dispatch(setShowBackdrop(false));
             setNotify('error', result.errorMessage);
         }
     };
+
+    const updateUserBooking = () => {
+        const bookingPush = [...userBookings, booking.id];
+        dispatch(updateBooking(bookingPush));
+    }
 
     const handleAddToFavorites = async () => {
         dispatch(setShowBackdrop(true));
@@ -220,7 +246,7 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
                                     fullWidth
                                     variant="contained"
                                     color={`${mode === 'dark' ? 'secondary' : 'primary'}`}
-                                    onClick={setRoomSelected}
+                                    onClick={handelAlert}
                                 >
                                     Book now
                                 </Button>
@@ -280,6 +306,7 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
                 ) : (
                     <h1>No found rooms </h1>
                 )}
+            <DialogComponent />
         </>
     )
 }

@@ -18,23 +18,27 @@ export const FormBedRooms = ({ id }) => {
     const { mode } = useContext(ColorModeContext);
     const { setNotify } = useContext(TravelAgencyContext);
     const { active } = useSelector(store => store.admin);
-    const [formData, setFormData] = useState({
-        type_bedroom: 'Double Room',
-        base_cost: 1000,
-        taxes: 19,
-        rate_room: 1,
-        image_room_URL: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-        room_location: 'Ocean View',
-        type_bed: 'King',
-        amount_people: 1,
-        state: false,
-        floor_level: 'Floor 2',
-        views: 'Ocean View',
-        orientation: 'North Orientation',//agregar
-        distance_to_amenities: 'Close to the restaurant and pool',
-        accessibility: 'Accessible for people with reduced mobility',
-        noise: 'Quiet area',
-    });
+    const roomActive = active.rooms[id];
+    const hotel_data = { ...roomActive };
+    const data_bedRoom = {
+        type_bedroom: hotel_data.type_bedroom,
+        base_cost: hotel_data.base_cost,
+        taxes: hotel_data.taxes,
+        rate_room: hotel_data.rate_room,
+        image_room_URL: hotel_data.image_room_URL,
+        room_location: hotel_data.room_location,
+        type_bed: hotel_data.type_bed,
+        amount_people: hotel_data.amount_people,
+        state: hotel_data.state,
+        floor_level: hotel_data.roomDetails.floor_level,
+        views: hotel_data.roomDetails.views,
+        orientation: hotel_data.roomDetails.orientation,//agregar
+        distance_to_amenities: hotel_data.roomDetails.distance_to_amenities,
+        accessibility: hotel_data.roomDetails.accessibility,
+        noise: hotel_data.roomDetails.noise,
+    };
+
+    const [formData, setFormData] = useState(data_bedRoom);
 
     const colorMode = mode === 'dark' ? 'secondary' : 'primary';
 

@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { BedRoomsSteeper } from './BedRoomsSteeper';
-import { setActiveStep, setHotel, setHotelRooms } from '../../store/home/homeSlice';
+import { closetDialogBooking, setActiveSteepBooking, setHotel, setHotelRooms } from '../../store/home/homeSlice';
 import { locationData } from '../../data';
 import {
     Badge,
@@ -26,20 +26,11 @@ export const HotelComponent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { setNotify } = useContext(TravelAgencyContext);
-    const { hotels, resHotels, hotelSelected: existingHotel } = useSelector(store => store.home);
+    const { hotels, resHotels, hotelSelected: existingHotel, showDialogBooking } = useSelector(store => store.home);
     const { status, rol } = useSelector(state => state.auth);
     const { mode } = useContext(ColorModeContext);
 
-    const [open, setOpen] = useState(false);
-
     const filterHotels = resHotels.length > 0 ? resHotels : hotels;
-
-/*     useEffect(() => {
-        dispatch(setShowBackdrop(true));
-        setTimeout(() => {
-            dispatch(setShowBackdrop(false));
-        }, 5000);
-    }, []); */
 
     const handleOpenBedRooms = (hotelRooms, id) => {
         if (status !== "authenticated") {
@@ -51,18 +42,18 @@ export const HotelComponent = () => {
 
         if (hotelInReservationProcess !== undefined) {
             if (hotelInReservationProcess !== id) {
-                dispatch(setActiveStep(0));
+                dispatch(setActiveSteepBooking(0));
             }
         };
 
-        setOpen(true);
+        dispatch(closetDialogBooking(true));
         const hotelSelected = filterHotels.filter((hotel) => hotel.id === id)[0];
         dispatch(setHotel(hotelSelected));
         dispatch(setHotelRooms(hotelRooms));
     };
 
     const handleCloseBedRooms = () => {
-        setOpen(false);
+        dispatch(closetDialogBooking(false));
     };
 
     const sortedHotels = filterHotels.slice().sort((a, b) => {
@@ -174,7 +165,7 @@ export const HotelComponent = () => {
             })}
 
             <BedRoomsSteeper
-                open={open}
+                open={showDialogBooking}
                 handleClose={handleCloseBedRooms}
             />
         </Grid >

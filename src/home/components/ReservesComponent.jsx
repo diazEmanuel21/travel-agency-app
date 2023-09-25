@@ -41,31 +41,31 @@ export const ReservesComponent = ({ reserve }) => {
     {
       id: 'roomID',
       title: 'Room',
-      description: reserve.bedrooms_id,
+      description: reserve?.bedrooms_id,
       icon: <AirlineSeatFlatIcon />,
     },
     {
       id: 'location',
       title: 'Destination city',
-      description: destination_city.city,
+      description: destination_city?.city,
       icon: <FmdGoodIcon />,
     },
     {
       id: 'people',
       title: 'People',
-      description: reserve.amount_people,
+      description: reserve?.amount_people,
       icon: <GroupsIcon />,
     },
     {
       id: 'nights',
       title: 'Nights',
-      description: reserve.stay_days,
+      description: reserve?.stay_days,
       icon: <BedtimeIcon />,
     },
     {
       id: 'price',
       title: 'Total price with tax included',
-      description: reserve.price_booking,
+      description: reserve?.price_booking,
       icon: <MonetizationOnIcon />,
     }
   ];

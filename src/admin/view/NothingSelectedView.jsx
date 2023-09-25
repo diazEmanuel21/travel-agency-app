@@ -1,4 +1,4 @@
-import { Alert, Grid, Paper, Stack, Typography } from '@mui/material'
+import { Alert, Grid, Paper, Stack } from '@mui/material'
 
 export const NothingSelectedView = () => {
     return (

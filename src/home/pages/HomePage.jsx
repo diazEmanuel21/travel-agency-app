@@ -5,6 +5,7 @@ import { setShowBackdrop } from '../../store/home/homeSlice';
 import { HotelComponent, LandingPage } from '../view';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { startLoadingHotels } from '../../store/admin';
+import { fetchReserves } from '../../store/home/thunks';
 import { Grid } from '@mui/material';
 
 export const HomePage = () => {
@@ -14,17 +15,28 @@ export const HomePage = () => {
   const { resHotels } = useSelector(store => store.home);
   const scrollTargetRef = useRef(null);
 
-  const handleLoadingHotel = async () => {
+  const getReserves = async () => {
     dispatch(setShowBackdrop(true));
+    const result = await dispatch(fetchReserves());
+    if (!result.ok) {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', result.errorMessage);
+    }
+  };
+
+  const handleLoadingHotel = async () => {
     const result = await dispatch(startLoadingHotels());
     if (result.ok) {
       dispatch(setShowBackdrop(false));
-      // setNotify('success', result.message);
     } else {
       dispatch(setShowBackdrop(false));
       setNotify('error', result.errorMessage);
     }
   };
+
+  useEffect(() => {
+    getReserves();
+  }, []);
 
   useEffect(() => {
     handleLoadingHotel();

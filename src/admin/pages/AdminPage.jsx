@@ -10,6 +10,7 @@ import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { fetchReserves } from "../../store/home/thunks";
 
 export const AdminPage = () => {
   const dispatch = useDispatch();
@@ -22,8 +23,16 @@ export const AdminPage = () => {
   const activateAction = mode === 'dark' ? 'primary' : 'secondary';
 
 
-  const handleLoadingHotel = async () => {
+  const getReserves = async () => {
     dispatch(setShowBackdrop(true));
+    const result = await dispatch(fetchReserves());
+    if (!result.ok) {
+      dispatch(setShowBackdrop(false));
+      setNotify('error', result.errorMessage);
+    }
+  };
+
+  const handleLoadingHotel = async () => {
     const result = await dispatch(startLoadingHotels());
     if (result.ok) {
       dispatch(setShowBackdrop(false));
@@ -34,10 +43,15 @@ export const AdminPage = () => {
     }
   };
 
+    
+  useEffect(() => {
+    getReserves();
+  }, []);
+
   useEffect(() => {
     handleLoadingHotel();
   }, []);
-
+  
 
   const handleCreateHotel = async (handleThunk) => {
     if (!handleThunk) return setOpen(true);
@@ -57,6 +71,8 @@ export const AdminPage = () => {
   const handelCloseDialog = () => {
     setOpen(false);
   };
+
+
 
   return (
     <HomeLayout module={'admin-manager'}>

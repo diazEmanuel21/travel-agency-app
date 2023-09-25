@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { BedRoomsCard } from './BedRoomsCard';
 import { Grid, AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';

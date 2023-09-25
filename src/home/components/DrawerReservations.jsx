@@ -3,7 +3,12 @@ import { useSelector } from 'react-redux';
 import { ReservesComponent } from './';
 
 export const DrawerReservations = ({ stateDrawer, handleDrawer }) => {
-    const { bookings } = useSelector(store => store.home);
+    const { reserves } = useSelector(store => store.user);
+    const { bookings, rol } = useSelector(store => store.auth);
+    const isAdmin = rol === 'admin' && true;
+    const resBooking = reserves.filter((reserva) => bookings.includes(reserva.id));
+
+    const reserves_res = isAdmin ? reserves : resBooking;
 
     return (
         <SwipeableDrawer
@@ -26,8 +31,8 @@ export const DrawerReservations = ({ stateDrawer, handleDrawer }) => {
                         </ListSubheader>
                     }
                 >
-                    {bookings.length > 0 && (
-                        bookings.map((booking) => (
+                    {reserves_res.length > 0 && (
+                        reserves_res.map((booking) => (
                             <ReservesComponent key={booking.id} reserve={booking} />
                         ))
                     )}

@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+import { closetDialogBooking } from '../../store/home/homeSlice';
 import {
   Grid,
   Card,
@@ -9,6 +11,7 @@ import {
 } from '@mui/material';
 
 export const Summary = () => {
+  const dispatch = useDispatch();
   return (
     <Grid container justifyContent={'center'}>
       <Grid item>
@@ -30,7 +33,7 @@ export const Summary = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button fullWidth>Exit</Button>
+            <Button onClick={() => dispatch(closetDialogBooking(false))} fullWidth>Exit</Button>
           </CardActions>
         </Card>
       </Grid>
