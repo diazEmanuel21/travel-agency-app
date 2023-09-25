@@ -57,3 +57,40 @@ export const addRoomToBookings = (userId, roomId) => {
         }
     };
 };
+
+export const markRoomAsBooked = (hotelId, roomId) => {
+    return async (dispatch, getState) => {
+        try {
+            // Crear una referencia al documento del hotel
+            const hotelDocRef = doc(FirebaseDB, `hotels/${hotelId}`);
+            // Obtener los datos del hotel
+            const hotelSnapshot = await getDoc(hotelDocRef);
+            const hotelData = hotelSnapshot.data();
+
+            // Buscar la habitación dentro del hotel
+            const roomIndex = hotelData.rooms.findIndex((room) => room.id === roomId);
+
+            if (roomIndex !== -1) {
+                const room = hotelData.rooms[roomIndex];
+
+                // Validar si la llave 'isBooking' existe y actualizarla a true
+                if ('isBooking' in room) {
+                    room.isBooking = true;
+                } else {
+                    // Si la llave 'isBooking' no existe, agregarla y establecerla en true
+                    room.isBooking = true;
+                }
+
+                // Actualizar el documento del hotel con la habitación marcada como reservada
+                await updateDoc(hotelDocRef, { rooms: hotelData.rooms });
+
+                return { ok: true, message: 'Room marked as booked successfully.' };
+            } else {
+                return { ok: false, errorMessage: 'Room not found in the hotel.' };
+            }
+        } catch (error) {
+            console.error('Error marking room as booked:', error);
+            return { ok: false, errorMessage: 'Failed to mark room as booked.' };
+        }
+    };
+};

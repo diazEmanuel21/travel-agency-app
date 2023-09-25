@@ -57,23 +57,23 @@ export const HotelComponent = () => {
     };
 
     const sortedHotels = filterHotels.slice().sort((a, b) => {
-        const roomsInTrueStateA = a.rooms.filter((room) => room.state === true).length;
-        const roomsInTrueStateB = b.rooms.filter((room) => room.state === true).length;
-        return roomsInTrueStateB - roomsInTrueStateA;
+        return b.rate - a.rate; // Ordenar por rate de manera descendente
     });
 
     return (
         <Grid item>
             {sortedHotels.map((hotel) => {
+                const stateReserve = hotel.rooms?.isBooking;
+                const isReserve = stateReserve !== undefined && stateReserve && true;
                 const city = locationData.filter((city) => city.id === hotel.location)[0];
-                const roomsInTrueState = hotel.rooms.filter((room) => room.state === true);
+                const roomsInTrueState = hotel.rooms?.filter((room) => room.state === true);
                 const cantRoomsInTrueState = roomsInTrueState.length;
 
                 return (
                     <Box
                         key={hotel.id}
                     >
-                        {hotel.rooms.length > 0 && hotel.state && (
+                        {!isReserve && hotel.rooms.length > 0 && hotel.state && (
                             <Card
                                 sx={{
                                     display: 'flex',

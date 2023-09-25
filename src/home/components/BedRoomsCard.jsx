@@ -2,7 +2,7 @@ import { forwardRef, useContext, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
-import { addRoomToBookings, addRoomToFavorites } from '../../store/user/thunks';
+import { addRoomToBookings, addRoomToFavorites, markRoomAsBooked } from '../../store/user/thunks';
 import { setActiveSteepBooking, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
 import { createBooking } from '../../store/home/thunks';
 import { useAlert } from '../../hooks/useAlert';
@@ -156,8 +156,17 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     };
 
     const addBookingToUser = async () => {
-        dispatch(setShowBackdrop(true));
         const result = await dispatch(addRoomToBookings(uid, `${hotelSelected.id}_${data.id}_${uid}`));
+        if (result.ok) {
+            changeStateInReserveBedRoom();
+        } else {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', result.errorMessage);
+        }
+    };
+
+    const changeStateInReserveBedRoom = async () => {
+        const result = await dispatch(markRoomAsBooked(hotelSelected.id, data.id));
         if (result.ok) {
             updateUserBooking();
             dispatch(setActiveSteepBooking(activeSteepBooking + 1));
