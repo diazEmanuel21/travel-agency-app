@@ -6,6 +6,7 @@ import { addRoomToBookings, addRoomToFavorites, markRoomAsBooked } from '../../s
 import { setActiveSteepBooking, setFavorite, setShowBackdrop } from '../../store/home/homeSlice';
 import { createBooking } from '../../store/home/thunks';
 import { useAlert } from '../../hooks/useAlert';
+import axios from 'axios';
 import {
     Box, Grid, Button, Tooltip, Card,
     CardHeader, CardMedia, CardContent, CardActions,
@@ -68,7 +69,7 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
     } = useSelector(store => store.auth);
 
     const { activeSteepBooking, hotelSelected } = useSelector(store => store.home);
-    const { bookings: userBookings } = useSelector(store => store.auth);
+    const { bookings: userBookings, email, displayName } = useSelector(store => store.auth);
     const [expanded, setExpanded] = useState(-1);
     const { DialogComponent, handleState: handelAlert } = useAlert({
         title: 'Creation booking',
@@ -170,7 +171,6 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
         if (result.ok) {
             updateUserBooking();
             dispatch(setActiveSteepBooking(activeSteepBooking + 1));
-            dispatch(setShowBackdrop(false));
             setNotify('success', result.message);
         } else {
             dispatch(setShowBackdrop(false));
@@ -178,10 +178,36 @@ export const BedRoomsCard = ({ data, index, favorite, handleDrawer }) => {
         }
     };
 
+
     const updateUserBooking = () => {
         const bookingPush = [...userBookings, booking.id];
         dispatch(updateBooking(bookingPush));
-    }
+        sendEmailToUser();
+    };
+
+    const sendEmailToUser = async () => {
+        const dataEmail = {
+            email,
+            displayName,
+            inDate: booking.entry_date,
+            outDate: booking.departure_date,
+            hotel_name: booking.hotel_name,
+        };
+        try {
+            const response = await axios.post('https://api-send-mail-l2zv.vercel.app/api/email/sendEmail', dataEmail);
+            if (response.status === 200) {
+                dispatch(setShowBackdrop(false));
+                setNotify('success', 'Email enviado con éxito');
+            } else {
+                dispatch(setShowBackdrop(false));
+                setNotify('error', 'Hubo un error al enviar el email');
+            }
+        } catch (error) {
+            dispatch(setShowBackdrop(false));
+            setNotify('error', 'Hubo un error al enviar el email');
+        }
+    };
+
 
     const handleAddToFavorites = async () => {
         dispatch(setShowBackdrop(true));

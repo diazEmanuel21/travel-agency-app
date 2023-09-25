@@ -13,8 +13,8 @@ export const sendEmail = createAsyncThunk('email/sendEmail', async (emailData) =
 
     try {
         // Realiza la solicitud a tu API para enviar el correo
-        const response = await fetch('https://api-send-mail-l2zv.vercel.app/api/email/sendEmail', params);
 
+        const response = await fetch('https://api-send-mail-l2zv.vercel.app/api/email/sendEmail', params);
         // Verifica si la respuesta es exitosa
         if (!response.ok) {
             throw new Error('Error al enviar el correo'); // Lanza una excepción en caso de error
