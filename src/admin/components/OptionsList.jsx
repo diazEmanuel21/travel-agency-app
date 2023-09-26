@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TravelAgencyContext } from '../../context';
-import { setActiveHotel, startDeletingHotel } from '../../store/admin';
+import { setActiveHotel, setActiveRoom, startDeletingHotel } from '../../store/admin';
 import { setShowBackdrop } from '../../store/home/homeSlice';
 import { styled, alpha } from '@mui/material/styles';
 import { Menu, MenuItem, Divider, IconButton } from '@mui/material';
@@ -81,8 +81,10 @@ export const OptionsList = ({ hotel }) => {
     };
     const handleAction = (action) => {
         setAnchorEl(null);
-        if (active !== null) return setNotify('info', 'An action is in process, please finish it to be able to perform a new action.')
+        // if (active !== null) return setNotify('info', 'An action is in process, please finish it to be able to perform a new action.')
         if (action === 'edit') {
+            dispatch(setActiveRoom(0));
+            dispatch(setActiveRoom([]));
             dispatch(setActiveHotel({ ...hotel }));
         };
         if (action === 'delete') {

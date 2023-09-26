@@ -48,7 +48,7 @@ export const ResponsiveAppBar = ({handleDrawerReserve, handleDrawerFavorite, han
         };
 
         if (rol === 'admin') {
-            let local_setting = ['Home', 'Hotel manager', 'Reserves', 'Rooms', 'Logout'];
+            let local_setting = ['Home', 'Hotel manager', 'Reserves', 'Logout'];
             setSettings(local_setting);
         };
 

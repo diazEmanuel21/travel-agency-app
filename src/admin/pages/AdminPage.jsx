@@ -4,8 +4,8 @@ import { ColorModeContext, TravelAgencyContext } from "../../context";
 import { HomeLayout } from "../../home/layout/HomeLayout";
 import { NothingSelectedView } from "../view"
 import { CreateManager, ListHotels } from "../components";
-import { setShowBackdrop } from "../../store/home/homeSlice";
-import { startLoadingHotels, startNewHotel } from "../../store/admin";
+import { setActiveStep, setShowBackdrop } from "../../store/home/homeSlice";
+import { setActiveRoom, startLoadingHotels, startNewHotel } from "../../store/admin";
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
@@ -43,7 +43,7 @@ export const AdminPage = () => {
     }
   };
 
-    
+
   useEffect(() => {
     getReserves();
   }, []);
@@ -51,7 +51,7 @@ export const AdminPage = () => {
   useEffect(() => {
     handleLoadingHotel();
   }, []);
-  
+
 
   const handleCreateHotel = async (handleThunk) => {
     if (!handleThunk) return setOpen(true);
@@ -69,6 +69,8 @@ export const AdminPage = () => {
   };
 
   const handelCloseDialog = () => {
+    dispatch(setActiveStep(0));
+    dispatch(setActiveRoom([]));
     setOpen(false);
   };
 
