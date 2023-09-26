@@ -5,7 +5,7 @@ import { HomeLayout } from "../../home/layout/HomeLayout";
 import { NothingSelectedView } from "../view"
 import { CreateManager, ListHotels } from "../components";
 import { setActiveStep, setShowBackdrop } from "../../store/home/homeSlice";
-import { setActiveRoom, startLoadingHotels, startNewHotel } from "../../store/admin";
+import { changeSteepRoom, setActiveRoom, startLoadingHotels, startNewHotel } from "../../store/admin";
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
@@ -70,6 +70,7 @@ export const AdminPage = () => {
 
   const handelCloseDialog = () => {
     dispatch(setActiveStep(0));
+    dispatch(changeSteepRoom(0));
     dispatch(setActiveRoom([]));
     setOpen(false);
   };

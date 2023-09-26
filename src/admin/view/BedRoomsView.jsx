@@ -54,6 +54,7 @@ export const BedRoomsView = ({ steps = [{ id: 0 }], handleClose }) => {
       setNotify('success', result.message);
       /* Clean */
       dispatch(setActiveStep(0));
+      dispatch(changeSteepRoom(0))
       dispatch(setActiveHotel(null))
       dispatch(cleanActiveRoom());
       handleClose();

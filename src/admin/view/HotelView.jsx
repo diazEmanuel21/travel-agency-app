@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../hooks';
-import { setActiveHotel } from '../../store/admin';
+import { changeSteepRoom, setActiveHotel } from '../../store/admin';
 import { ColorModeContext, TravelAgencyContext } from '../../context';
 import { CityTexfield } from '../../home/components/CityTexfield';
 import { setActiveStep } from '../../store/home/homeSlice';
@@ -45,6 +45,7 @@ export const HotelView = () => {
     dispatch(setActiveHotel(form));
     setNotify('success', 'Hotel updated correctly.')
     dispatch(setActiveStep(1));
+    dispatch(changeSteepRoom(0));
   };
 
   return (
