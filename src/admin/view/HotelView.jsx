@@ -236,7 +236,7 @@ export const HotelView = () => {
         <CardActions>
           <Button
             onClick={handelAlert}
-            disabled={isSaving}
+            // disabled={isSaving}
             variant="contained"
             color={colorMode}
             fullWidth
