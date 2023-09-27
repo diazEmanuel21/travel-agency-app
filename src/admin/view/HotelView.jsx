@@ -87,7 +87,7 @@ export const HotelView = () => {
             </Grid>
 
             <Grid item>
-              <CityTexfield admin />
+              <CityTexfield admin valueField={location}/>
             </Grid>
 
             <Grid item>

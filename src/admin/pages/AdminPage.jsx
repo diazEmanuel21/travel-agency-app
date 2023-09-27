@@ -9,7 +9,7 @@ import { changeSteepRoom, setActiveRoom, startLoadingHotels, startNewHotel } fro
 import { Fab, Grid, Tooltip } from "@mui/material"
 /* ICONS */
 import { AddOutlined } from "@mui/icons-material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+// import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { fetchReserves } from "../../store/home/thunks";
 
 export const AdminPage = () => {
@@ -20,7 +20,7 @@ export const AdminPage = () => {
 
   const [open, setOpen] = useState(false);
   const colorMode = mode === 'dark' ? 'secondary' : 'primary';
-  const activateAction = mode === 'dark' ? 'primary' : 'secondary';
+  // const activateAction = mode === 'dark' ? 'primary' : 'secondary';
 
 
   const getReserves = async () => {
@@ -53,8 +53,8 @@ export const AdminPage = () => {
   }, []);
 
 
-  const handleCreateHotel = async (handleThunk) => {
-    if (!handleThunk) return setOpen(true);
+  const handleCreateHotel = async () => {
+    // if (!handleThunk) return setOpen(true);
     dispatch(setShowBackdrop(true));
     const result = await dispatch(startNewHotel());
     if (result.ok) {
@@ -89,11 +89,14 @@ export const AdminPage = () => {
           flexDirection: 'column',
         }}
       >
-        {hotels.length > 0 ? <ListHotels handleOpen={setOpen}/> : <NothingSelectedView />}
-        <Tooltip title={`${active !== null ? 'Resume action' : 'Create a new Hotel'}`}>
+        {hotels.length > 0 ? <ListHotels handleOpen={setOpen} /> : <NothingSelectedView />}
+        {/* <Tooltip title={`${active !== null ? 'Resume action' : 'Create a new Hotel'}`}> */}
+        <Tooltip title={'Create a new Hotel'}>
           <Fab
-            color={active !== null ? activateAction : colorMode}
-            onClick={() => handleCreateHotel(active === null && true)}
+            // color={active !== null ? activateAction : colorMode}
+            color={colorMode}
+            // onClick={() => handleCreateHotel(active === null && true)}
+            onClick={() => handleCreateHotel()}
             sx={{
               position: 'fixed',
               right: 50,
@@ -104,7 +107,8 @@ export const AdminPage = () => {
               },
             }}
           >
-            {active !== null ? <PlayArrowIcon /> : <AddOutlined />}
+            {/* {active !== null ? <PlayArrowIcon /> : <AddOutlined />} */}
+            <AddOutlined />
           </Fab >
         </Tooltip>
       </Grid>

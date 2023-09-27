@@ -48,7 +48,7 @@ export const CreateManager = ({ open, handleClose }) => {
     const [rooms, setRooms] = useState([]);
 
     const { DialogComponent, handleState: handelAlert } = useAlert({
-        title: 'Save hotel',
+        title: 'Exit',
         description: `The changes will be removed, are you sure?`,
         onAgree: () => {
             closeModalDialog()
