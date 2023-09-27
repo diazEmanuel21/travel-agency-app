@@ -75,8 +75,6 @@ export const AdminPage = () => {
     setOpen(false);
   };
 
-
-
   return (
     <HomeLayout module={'admin-manager'}>
       <Grid container

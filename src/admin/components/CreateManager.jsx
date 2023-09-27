@@ -14,6 +14,7 @@ import {
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { useAlert } from '../../hooks/useAlert';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,6 +47,14 @@ export const CreateManager = ({ open, handleClose }) => {
     const { activeStep = 0 } = useSelector(store => store.home);
     const [rooms, setRooms] = useState([]);
 
+    const { DialogComponent, handleState: handelAlert } = useAlert({
+        title: 'Save hotel',
+        description: `The changes will be removed, are you sure?`,
+        onAgree: () => {
+            closeModalDialog()
+        },
+    });
+
     const maxSteps = steeps.length;
 
     useEffect(() => {
@@ -71,6 +80,10 @@ export const CreateManager = ({ open, handleClose }) => {
         dispatch(setActiveStep(activeStep - 1));
     };
 
+    const closeModalDialog = () => {
+        handleClose();
+    }
+
     return (
         <>
             <Dialog
@@ -82,7 +95,7 @@ export const CreateManager = ({ open, handleClose }) => {
                 <AppBar position="static" sx={{ bgcolor: `${mode === 'dark' ? '#12151C' : '#001e3c'}` }} >
                     <Toolbar>
                         <IconButton
-                            onClick={handleClose}
+                            onClick={handelAlert}
                             size="large"
                             edge="start"
                             color="inherit"
@@ -131,7 +144,7 @@ export const CreateManager = ({ open, handleClose }) => {
                                 <HotelView />
                             )}
                             {index === 1 && (
-                                <BedRoomsView steps={rooms} handleClose={handleClose}/>
+                                <BedRoomsView steps={rooms} handleClose={handleClose} />
                             )}
                         </TabPanel>
                     ))}
@@ -182,6 +195,7 @@ export const CreateManager = ({ open, handleClose }) => {
                         </DialogActions>
                     )
                 }
+                <DialogComponent />
             </Dialog >
         </>
     );

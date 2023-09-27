@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useAlert } from '../../hooks/useAlert';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -60,6 +61,14 @@ export const OptionsList = ({ hotel, handleOpen }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
+    const { DialogComponent, handleState: handelAlert } = useAlert({
+        title: 'Edit hotel',
+        description: `You will miss the changes at the hotel "${active?.hotelName}", are you sure?`,
+        onAgree: () => {
+            editAction()
+        },
+    });
+
     const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
@@ -82,17 +91,18 @@ export const OptionsList = ({ hotel, handleOpen }) => {
     const handleAction = (action) => {
         setAnchorEl(null);
         // if (active !== null) return setNotify('info', 'An action is in process, please finish it to be able to perform a new action.')
-        if (action === 'edit') {
-            //alert se perderan cambios anteriroes, are u sure name de hotel ?
-            handleOpen(true);
-            dispatch(setActiveRoom(0));
-            dispatch(setActiveRoom([]));
-            dispatch(setActiveHotel({ ...hotel }));
-        };
         if (action === 'delete') {
             handleDeleteHotel();
         };
     };
+
+    const editAction = () => {
+        setAnchorEl(null);
+        handleOpen(true);
+        dispatch(setActiveRoom(0));
+        dispatch(setActiveRoom([]));
+        dispatch(setActiveHotel({ ...hotel }));
+    }
 
     return (
         <div>
@@ -116,7 +126,7 @@ export const OptionsList = ({ hotel, handleOpen }) => {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => handleAction('edit')} disableRipple>
+                <MenuItem onClick={active === null ? editAction : handelAlert} disableRipple>
                     <EditIcon />
                     Edit
                 </MenuItem>
@@ -134,6 +144,7 @@ export const OptionsList = ({ hotel, handleOpen }) => {
                     More
                 </MenuItem>
             </StyledMenu>
+            <DialogComponent />
         </div>
     );
 }
