@@ -6,13 +6,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const getDateNow = (isDate) => {
+  debugger;
   const currentDate = new Date();
 
   const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
   const day = currentDate.getDate().toString().padStart(2, '0');
   const year = currentDate.getFullYear().toString();
 
-  const parseDay = JSON.parse(day);
+  const parseDay = parseInt(day);
   const endDay = (isDate === 'end' ? parseDay + 1 : day);
 
   const formatDate = `${month} ${endDay.toString()} ${year}`;
